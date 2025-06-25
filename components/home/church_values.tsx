@@ -34,7 +34,7 @@ export function ChurchValues() {
           Discover the principles that guide our ministry and community
         </p>
       </div>
-      <div className='flex items-center flex-col md:flex-row justify-center gap-8 md:gap-4 px-6'>
+      <div className='flex items-start flex-col md:flex-row justify-center gap-8 md:gap-4 px-6'>
         {CHURCH_VALUES.map((value, idx) => (
           <React.Fragment key={value.title}>
             <div
