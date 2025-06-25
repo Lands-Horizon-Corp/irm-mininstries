@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
+import { getProxiedImageUrl, isTigrisUrl } from "@/lib/image-utils"
 import { Button } from "@/components/ui/button"
 
 interface ChurchCover {
@@ -65,7 +66,13 @@ export default function ChurchHeroCarousel({
             {/* Background image */}
             <div className='relative w-full h-full'>
               <Image
-                src={cover.coverImage || "/placeholder.svg"}
+                src={
+                  cover.coverImage
+                    ? isTigrisUrl(cover.coverImage)
+                      ? getProxiedImageUrl(cover.coverImage)
+                      : cover.coverImage
+                    : "/placeholder.svg"
+                }
                 alt={cover.name}
                 fill
                 className='object-cover'
