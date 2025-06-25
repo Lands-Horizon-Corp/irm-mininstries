@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google"
 
 import "./globals.css"
 
+import { Suspense } from "react"
+
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import Footer from "@/components/layout/footer"
 import { Navbar } from "@/components/layout/navbar"
@@ -33,16 +35,24 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute='class'
-          defaultTheme='system'
-          enableSystem
-          disableTransitionOnChange
+        <Suspense
+          fallback={
+            <div className='flex items-center justify-center h-screen'>
+              Loading...
+            </div>
+          }
         >
-          <Navbar />
-          {children}
-          <Footer />
-        </ThemeProvider>
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='system'
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar />
+            {children}
+            <Footer />
+          </ThemeProvider>
+        </Suspense>
       </body>
     </html>
   )

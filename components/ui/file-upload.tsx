@@ -1,8 +1,17 @@
 "use client"
 
 import React, { useRef, useState } from "react"
-import { File, Image as ImageIcon, Upload, X } from "lucide-react"
+import {
+  File,
+  FileSpreadsheet,
+  FileText,
+  FileVideo,
+  Image as ImageIcon,
+  Upload,
+  X,
+} from "lucide-react"
 
+import { cn } from "@/lib/utils"
 import { useFileUpload } from "@/hooks/use-file-upload"
 import { Button } from "@/components/ui/button"
 
@@ -19,32 +28,29 @@ interface FileUploadProps {
   folder?: string
   accept?: string
   maxSize?: number
-  multiple?: boolean
   className?: string
-  onUploadSuccess?: (files: UploadedFile[]) => void
+  onUploadSuccess?: (file: UploadedFile | null) => void
   onUploadError?: (error: string) => void
 }
 
 export default function FileUpload({
   folder = "uploads",
-  accept = "image/*,.pdf,.doc,.docx,.txt",
-  maxSize = 10 * 1024 * 1024, // 10MB default
-  multiple = false,
+  accept = "image/*,.pdf,.doc,.docx,.txt,.xlsx,.xls,.mp4,.avi,.mov",
+  maxSize = 10 * 1024 * 1024,
   className = "",
   onUploadSuccess,
   onUploadError,
 }: FileUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [dragActive, setDragActive] = useState(false)
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
+  const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(null)
 
   const { uploading, progress, error, uploadFile, reset } = useFileUpload({
     folder,
     onSuccess: file => {
       if (file) {
-        const newFiles = [...uploadedFiles, file]
-        setUploadedFiles(newFiles)
-        onUploadSuccess?.(newFiles)
+        setUploadedFile(file)
+        onUploadSuccess?.(file)
       }
     },
     onError: error => {
@@ -80,23 +86,19 @@ export default function FileUpload({
   }
 
   const handleFiles = async (files: FileList) => {
-    if (uploading) return
-
-    const file = files[0] // For now, handle one file at a time
-
-    // Validate file size
+    if (uploading || uploadedFile) return
+    const file = files[0]
     if (file.size > maxSize) {
       onUploadError?.(`File size exceeds ${formatFileSize(maxSize)} limit`)
       return
     }
-
     await uploadFile(file)
   }
 
-  const removeFile = (index: number) => {
-    const newFiles = uploadedFiles.filter((_, i) => i !== index)
-    setUploadedFiles(newFiles)
-    onUploadSuccess?.(newFiles)
+  const removeFile = () => {
+    setUploadedFile(null)
+    onUploadSuccess?.(null)
+    reset()
   }
 
   const formatFileSize = (bytes: number) => {
@@ -107,22 +109,48 @@ export default function FileUpload({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
   }
 
-  const getFileIcon = (type: string) => {
-    if (type.startsWith("image/")) {
-      return <ImageIcon className='h-4 w-4' />
-    }
-    return <File className='h-4 w-4' />
+  // File type icon logic
+  const getFileIcon = (type: string, name?: string) => {
+    if (type.startsWith("image/"))
+      return <ImageIcon className='size-5 text-blue-500 dark:text-blue-400' />
+    if (type.startsWith("video/"))
+      return (
+        <FileVideo className='size-5 text-purple-500 dark:text-purple-400' />
+      )
+    if (type === "application/pdf" || (name && name.match(/\.pdf$/i)))
+      return <FileText className='size-5 text-red-500 dark:text-red-400' />
+    if (
+      type ===
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+      type === "application/vnd.ms-excel" ||
+      (name && name.match(/\.(xlsx|xls)$/i))
+    )
+      return (
+        <FileSpreadsheet className='size-5 text-green-600 dark:text-green-400' />
+      )
+    if (
+      type ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+      type === "application/msword" ||
+      (name && name.match(/\.(docx|doc)$/i))
+    )
+      return <FileText className='size-5 text-blue-700 dark:text-blue-300' />
+    if (type.startsWith("text/"))
+      return <FileText className='size-5 text-gray-500 dark:text-gray-300' />
+    return <File className='size-5 text-muted-foreground' />
   }
 
   return (
-    <div className={`w-full ${className}`}>
+    <div className={cn("w-full", className)}>
       {/* Upload Area */}
       <div
-        className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+        className={cn(
+          "relative border-2 border-dashed rounded-lg p-6 text-center transition-colors",
           dragActive
-            ? "border-blue-500 bg-blue-50"
-            : "border-gray-300 hover:border-gray-400"
-        } ${uploading ? "pointer-events-none opacity-50" : ""}`}
+            ? "border-primary bg-accent"
+            : "border-border bg-background hover:border-accent",
+          (uploading || uploadedFile) && "pointer-events-none opacity-50"
+        )}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
@@ -132,46 +160,59 @@ export default function FileUpload({
           ref={fileInputRef}
           type='file'
           accept={accept}
-          multiple={multiple}
           onChange={handleChange}
           className='hidden'
-          disabled={uploading}
+          disabled={uploading || !!uploadedFile}
         />
 
         {uploading ? (
           <div className='space-y-4'>
             <div className='flex items-center justify-center'>
-              <Upload className='h-8 w-8 animate-spin text-blue-500' />
+              <Upload className='size-8 animate-spin text-primary' />
             </div>
             <div className='space-y-2'>
-              <p className='text-sm text-gray-600'>Uploading...</p>
-              <div className='w-full bg-gray-200 rounded-full h-2'>
+              <p className='text-sm text-muted-foreground'>Uploading...</p>
+              <div className='w-full bg-muted rounded-full h-2'>
                 <div
-                  className='bg-blue-600 h-2 rounded-full transition-all duration-300'
+                  className='bg-primary h-2 rounded-full transition-all duration-300'
                   style={{ width: `${progress}%` }}
                 />
               </div>
-              <p className='text-xs text-gray-500'>{progress}%</p>
+              <p className='text-xs text-muted-foreground'>{progress}%</p>
+            </div>
+          </div>
+        ) : uploadedFile ? (
+          <div className='space-y-4'>
+            <div className='flex items-center justify-center'>
+              <Upload className='size-8 text-green-600 dark:text-green-400' />
+            </div>
+            <div>
+              <p className='text-sm text-green-700 dark:text-green-400 font-medium'>
+                File uploaded successfully!
+              </p>
+              <p className='text-xs text-muted-foreground mt-1'>
+                Remove the current file to upload a new one
+              </p>
             </div>
           </div>
         ) : (
           <div className='space-y-4'>
             <div className='flex items-center justify-center'>
-              <Upload className='h-8 w-8 text-gray-400' />
+              <Upload className='size-8 text-muted-foreground' />
             </div>
             <div>
-              <p className='text-sm text-gray-600'>
+              <p className='text-sm text-muted-foreground'>
                 Drag and drop your file here, or{" "}
                 <button
                   type='button'
-                  className='text-blue-600 hover:text-blue-800 font-medium'
+                  className='text-primary hover:underline font-medium'
                   onClick={() => fileInputRef.current?.click()}
                 >
                   browse
                 </button>
               </p>
-              <p className='text-xs text-gray-500 mt-1'>
-                Max size: {formatFileSize(maxSize)}
+              <p className='text-xs text-muted-foreground mt-1'>
+                Max size: {formatFileSize(maxSize)} • One file only
               </p>
             </div>
           </div>
@@ -180,43 +221,36 @@ export default function FileUpload({
 
       {/* Error Display */}
       {error && (
-        <div className='mt-4 p-3 bg-red-50 border border-red-200 rounded-md'>
-          <p className='text-sm text-red-600'>{error}</p>
+        <div className='mt-4 p-3 bg-destructive/10 border border-destructive rounded-md'>
+          <p className='text-sm text-destructive'>{error}</p>
           <Button variant='outline' size='sm' onClick={reset} className='mt-2'>
             Try Again
           </Button>
         </div>
       )}
 
-      {/* Uploaded Files List */}
-      {uploadedFiles.length > 0 && (
-        <div className='mt-4 space-y-2'>
-          <h4 className='text-sm font-medium text-gray-700'>Uploaded Files:</h4>
-          {uploadedFiles.map((file, index) => (
-            <div
-              key={index}
-              className='flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-md'
-            >
-              <div className='flex items-center space-x-3'>
-                {getFileIcon(file.type)}
-                <div>
-                  <p className='text-sm font-medium text-gray-900'>
-                    {file.originalName}
-                  </p>
-                  <p className='text-xs text-gray-500'>
-                    {formatFileSize(file.size)}
-                  </p>
-                </div>
+      {/* Uploaded File Display */}
+      {uploadedFile && (
+        <div className='mt-4'>
+          <h4 className='text-sm font-medium text-muted-foreground mb-2'>
+            Uploaded File:
+          </h4>
+          <div className='flex items-center justify-between p-3 bg-accent border border-border rounded-md'>
+            <div className='flex items-center space-x-3'>
+              {getFileIcon(uploadedFile.type, uploadedFile.fileName)}
+              <div>
+                <p className='text-sm font-medium text-foreground'>
+                  {uploadedFile.originalName}
+                </p>
+                <p className='text-xs text-muted-foreground'>
+                  {formatFileSize(uploadedFile.size)}
+                </p>
               </div>
-              <Button
-                variant='outline'
-                size='sm'
-                onClick={() => removeFile(index)}
-              >
-                <X className='h-4 w-4' />
-              </Button>
             </div>
-          ))}
+            <Button variant='outline' size='sm' onClick={removeFile}>
+              <X className='h-4 w-4' />
+            </Button>
+          </div>
         </div>
       )}
     </div>
