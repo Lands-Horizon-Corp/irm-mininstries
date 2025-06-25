@@ -33,10 +33,83 @@ interface FileUploadProps {
   onUploadError?: (error: string) => void
 }
 
+const DEFAULT_ACCEPT = "image/*,.pdf,.doc,.docx,.txt,.xlsx,.xls,.mp4,.avi,.mov"
+const DEFAULT_MAX_SIZE = 10 * 1024 * 1024
+
+const FILE_SIZE_UNITS = ["Bytes", "KB", "MB", "GB"] as const
+
+// Utility functions
+const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return "0 Bytes"
+  const k = 1024
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${FILE_SIZE_UNITS[i]}`
+}
+
+const getFileIcon = (type: string, name?: string) => {
+  const iconClasses = "size-5"
+
+  if (type.startsWith("image/")) {
+    return (
+      <ImageIcon
+        className={`${iconClasses} text-blue-500 dark:text-blue-400`}
+      />
+    )
+  }
+
+  if (type.startsWith("video/")) {
+    return (
+      <FileVideo
+        className={`${iconClasses} text-purple-500 dark:text-purple-400`}
+      />
+    )
+  }
+
+  if (type === "application/pdf" || name?.match(/\.pdf$/i)) {
+    return (
+      <FileText className={`${iconClasses} text-red-500 dark:text-red-400`} />
+    )
+  }
+
+  const isSpreadsheet =
+    [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
+    ].includes(type) || name?.match(/\.(xlsx|xls)$/i)
+
+  if (isSpreadsheet) {
+    return (
+      <FileSpreadsheet
+        className={`${iconClasses} text-green-600 dark:text-green-400`}
+      />
+    )
+  }
+
+  const isDocument =
+    [
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/msword",
+    ].includes(type) || name?.match(/\.(docx|doc)$/i)
+
+  if (isDocument) {
+    return (
+      <FileText className={`${iconClasses} text-blue-700 dark:text-blue-300`} />
+    )
+  }
+
+  if (type.startsWith("text/")) {
+    return (
+      <FileText className={`${iconClasses} text-gray-500 dark:text-gray-300`} />
+    )
+  }
+
+  return <File className={`${iconClasses} text-muted-foreground`} />
+}
+
 export default function FileUpload({
   folder = "uploads",
-  accept = "image/*,.pdf,.doc,.docx,.txt,.xlsx,.xls,.mp4,.avi,.mov",
-  maxSize = 10 * 1024 * 1024,
+  accept = DEFAULT_ACCEPT,
+  maxSize = DEFAULT_MAX_SIZE,
   className = "",
   onUploadSuccess,
   onUploadError,
@@ -58,14 +131,14 @@ export default function FileUpload({
     },
   })
 
-  const handleDrag = (e: React.DragEvent) => {
+  const isDisabled = uploading || !!uploadedFile
+
+  const handleDragEvents = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true)
-    } else if (e.type === "dragleave") {
-      setDragActive(false)
-    }
+
+    const isDragEnterOrOver = e.type === "dragenter" || e.type === "dragover"
+    setDragActive(isDragEnterOrOver)
   }
 
   const handleDrop = (e: React.DragEvent) => {
@@ -73,71 +146,104 @@ export default function FileUpload({
     e.stopPropagation()
     setDragActive(false)
 
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFiles(e.dataTransfer.files)
+    const files = e.dataTransfer.files
+    if (files?.[0]) {
+      handleFiles(files)
     }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
-    if (e.target.files && e.target.files[0]) {
-      handleFiles(e.target.files)
+    const files = e.target.files
+    if (files?.[0]) {
+      handleFiles(files)
     }
   }
 
   const handleFiles = async (files: FileList) => {
-    if (uploading || uploadedFile) return
+    if (isDisabled) return
+
     const file = files[0]
     if (file.size > maxSize) {
       onUploadError?.(`File size exceeds ${formatFileSize(maxSize)} limit`)
       return
     }
+
     await uploadFile(file)
   }
 
-  const removeFile = () => {
+  const handleRemoveFile = () => {
     setUploadedFile(null)
     onUploadSuccess?.(null)
     reset()
   }
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return "0 Bytes"
-    const k = 1024
-    const sizes = ["Bytes", "KB", "MB", "GB"]
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+  const handleBrowseClick = () => {
+    fileInputRef.current?.click()
   }
 
-  // File type icon logic
-  const getFileIcon = (type: string, name?: string) => {
-    if (type.startsWith("image/"))
-      return <ImageIcon className='size-5 text-blue-500 dark:text-blue-400' />
-    if (type.startsWith("video/"))
-      return (
-        <FileVideo className='size-5 text-purple-500 dark:text-purple-400' />
-      )
-    if (type === "application/pdf" || (name && name.match(/\.pdf$/i)))
-      return <FileText className='size-5 text-red-500 dark:text-red-400' />
-    if (
-      type ===
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
-      type === "application/vnd.ms-excel" ||
-      (name && name.match(/\.(xlsx|xls)$/i))
-    )
-      return (
-        <FileSpreadsheet className='size-5 text-green-600 dark:text-green-400' />
-      )
-    if (
-      type ===
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-      type === "application/msword" ||
-      (name && name.match(/\.(docx|doc)$/i))
-    )
-      return <FileText className='size-5 text-blue-700 dark:text-blue-300' />
-    if (type.startsWith("text/"))
-      return <FileText className='size-5 text-gray-500 dark:text-gray-300' />
-    return <File className='size-5 text-muted-foreground' />
+  // Component render helpers
+  const renderUploadingState = () => (
+    <div className='space-y-4'>
+      <div className='flex items-center justify-center'>
+        <Upload className='size-8 animate-spin text-primary' />
+      </div>
+      <div className='space-y-2'>
+        <p className='text-sm text-muted-foreground'>Uploading...</p>
+        <div className='w-full bg-muted rounded-full h-2'>
+          <div
+            className='bg-primary h-2 rounded-full transition-all duration-300'
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        <p className='text-xs text-muted-foreground'>{progress}%</p>
+      </div>
+    </div>
+  )
+
+  const renderSuccessState = () => (
+    <div className='space-y-4'>
+      <div className='flex items-center justify-center'>
+        <Upload className='size-8 text-green-600 dark:text-green-400' />
+      </div>
+      <div>
+        <p className='text-sm text-green-700 dark:text-green-400 font-medium'>
+          File uploaded successfully!
+        </p>
+        <p className='text-xs text-muted-foreground mt-1'>
+          Remove the current file to upload a new one
+        </p>
+      </div>
+    </div>
+  )
+
+  const renderIdleState = () => (
+    <div className='space-y-4'>
+      <div className='flex items-center justify-center'>
+        <Upload className='size-8 text-muted-foreground' />
+      </div>
+      <div>
+        <p className='text-sm text-muted-foreground'>
+          Drag and drop your file here, or{" "}
+          <button
+            type='button'
+            className='text-primary hover:underline font-medium'
+            onClick={handleBrowseClick}
+          >
+            browse
+          </button>
+        </p>
+        <p className='text-xs text-muted-foreground mt-1'>
+          Max size: {formatFileSize(maxSize)} • One file only
+        </p>
+      </div>
+    </div>
+  )
+
+  const renderUploadArea = () => {
+    if (uploading) return renderUploadingState()
+    if (uploadedFile) return renderSuccessState()
+    return renderIdleState()
   }
 
   return (
@@ -149,11 +255,11 @@ export default function FileUpload({
           dragActive
             ? "border-primary bg-accent"
             : "border-border bg-background hover:border-accent",
-          (uploading || uploadedFile) && "pointer-events-none opacity-50"
+          isDisabled && "pointer-events-none opacity-50"
         )}
-        onDragEnter={handleDrag}
-        onDragLeave={handleDrag}
-        onDragOver={handleDrag}
+        onDragEnter={handleDragEvents}
+        onDragLeave={handleDragEvents}
+        onDragOver={handleDragEvents}
         onDrop={handleDrop}
       >
         <input
@@ -162,61 +268,9 @@ export default function FileUpload({
           accept={accept}
           onChange={handleChange}
           className='hidden'
-          disabled={uploading || !!uploadedFile}
+          disabled={isDisabled}
         />
-
-        {uploading ? (
-          <div className='space-y-4'>
-            <div className='flex items-center justify-center'>
-              <Upload className='size-8 animate-spin text-primary' />
-            </div>
-            <div className='space-y-2'>
-              <p className='text-sm text-muted-foreground'>Uploading...</p>
-              <div className='w-full bg-muted rounded-full h-2'>
-                <div
-                  className='bg-primary h-2 rounded-full transition-all duration-300'
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-              <p className='text-xs text-muted-foreground'>{progress}%</p>
-            </div>
-          </div>
-        ) : uploadedFile ? (
-          <div className='space-y-4'>
-            <div className='flex items-center justify-center'>
-              <Upload className='size-8 text-green-600 dark:text-green-400' />
-            </div>
-            <div>
-              <p className='text-sm text-green-700 dark:text-green-400 font-medium'>
-                File uploaded successfully!
-              </p>
-              <p className='text-xs text-muted-foreground mt-1'>
-                Remove the current file to upload a new one
-              </p>
-            </div>
-          </div>
-        ) : (
-          <div className='space-y-4'>
-            <div className='flex items-center justify-center'>
-              <Upload className='size-8 text-muted-foreground' />
-            </div>
-            <div>
-              <p className='text-sm text-muted-foreground'>
-                Drag and drop your file here, or{" "}
-                <button
-                  type='button'
-                  className='text-primary hover:underline font-medium'
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  browse
-                </button>
-              </p>
-              <p className='text-xs text-muted-foreground mt-1'>
-                Max size: {formatFileSize(maxSize)} • One file only
-              </p>
-            </div>
-          </div>
-        )}
+        {renderUploadArea()}
       </div>
 
       {/* Error Display */}
@@ -247,7 +301,7 @@ export default function FileUpload({
                 </p>
               </div>
             </div>
-            <Button variant='outline' size='sm' onClick={removeFile}>
+            <Button variant='outline' size='sm' onClick={handleRemoveFile}>
               <X className='h-4 w-4' />
             </Button>
           </div>

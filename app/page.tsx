@@ -37,12 +37,6 @@ const churchCovers = [
 ]
 
 export default function Home() {
-  // Example function to handle file uploads
-  // const handleFileUpload = (files: any[]) => {
-  //   console.log("Files uploaded successfully:", files)
-  //   // Handle uploaded files here - maybe save to database
-  // }
-
   return (
     <div>
       <ChurchHeroCarousel churchCovers={churchCovers} />
