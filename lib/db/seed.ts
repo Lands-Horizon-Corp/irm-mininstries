@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm"
 
 import { hashPassword } from "@/lib/auth-utils"
-import { churchCoverPhotos, db, users } from "@/lib/db"
+import { churchCoverPhotos, churchEvents, db, users } from "@/lib/db"
 
 const seedData = [
   {
@@ -33,6 +33,49 @@ const seedData = [
     description:
       "Building lives on the solid foundation of Christ's love and teachings.",
     coverImage: "/placeholder.svg?height=1080&width=1920",
+  },
+]
+
+const eventSeedData = [
+  {
+    name: "Sunday Morning Worship",
+    description:
+      "Join us for our weekly worship service with inspiring music, prayer, and biblical teaching.",
+    place: "Main Sanctuary",
+    datetime: new Date("2025-01-05T10:00:00"),
+    imageUrl: "/placeholder.svg?height=600&width=800",
+  },
+  {
+    name: "Youth Group Meeting",
+    description:
+      "Weekly fellowship and bible study for teens and young adults.",
+    place: "Youth Center",
+    datetime: new Date("2025-01-08T19:00:00"),
+    imageUrl: "/placeholder.svg?height=600&width=800",
+  },
+  {
+    name: "Community Outreach Day",
+    description:
+      "Join us as we serve our local community through food distribution and volunteer work.",
+    place: "Community Center",
+    datetime: new Date("2025-01-11T09:00:00"),
+    imageUrl: "/placeholder.svg?height=600&width=800",
+  },
+  {
+    name: "Bible Study Group",
+    description:
+      "Deep dive into God's word with fellow believers in an intimate small group setting.",
+    place: "Fellowship Hall",
+    datetime: new Date("2025-01-15T18:30:00"),
+    imageUrl: "/placeholder.svg?height=600&width=800",
+  },
+  {
+    name: "Prayer and Worship Night",
+    description:
+      "An evening dedicated to worship, prayer, and seeking God's presence together.",
+    place: "Main Sanctuary",
+    datetime: new Date("2025-01-18T19:30:00"),
+    imageUrl: "/placeholder.svg?height=600&width=800",
   },
 ]
 
@@ -71,7 +114,25 @@ async function seed() {
     } else {
       console.log("👤 Admin user already exists, skipping...")
     }
-    await db.insert(churchCoverPhotos).values(seedData)
+
+    // Seed church covers
+    const existingCovers = await db.select().from(churchCoverPhotos).limit(1)
+    if (existingCovers.length === 0) {
+      await db.insert(churchCoverPhotos).values(seedData)
+      console.log("🖼️ Church covers seeded successfully!")
+    } else {
+      console.log("🖼️ Church covers already exist, skipping...")
+    }
+
+    // Seed church events
+    const existingEvents = await db.select().from(churchEvents).limit(1)
+    if (existingEvents.length === 0) {
+      await db.insert(churchEvents).values(eventSeedData)
+      console.log("📅 Church events seeded successfully!")
+    } else {
+      console.log("📅 Church events already exist, skipping...")
+    }
+
     console.log("✅ Database seeded successfully!")
   } catch (error) {
     console.error("❌ Error seeding database:", error)

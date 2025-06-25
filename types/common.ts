@@ -13,3 +13,14 @@ export interface ChurchCoverPhoto {
   createdAt: Date
   updatedAt: Date
 }
+
+export interface ChurchEvent {
+  id: number
+  name: string
+  description: string
+  place: string
+  datetime: Date
+  imageUrl?: string
+  createdAt: Date
+  updatedAt: Date
+}
