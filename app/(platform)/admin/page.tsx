@@ -21,9 +21,11 @@ export default function AdminPage() {
   const router = useRouter()
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      router.push("/login")
-    }
+    console.log(isAdmin)
+    console.log(isAuthenticated)
+    // if (!loading && !isAuthenticated) {
+    //   router.push("/login")
+    // }
   }, [isAuthenticated, loading, router])
 
   if (loading) {
