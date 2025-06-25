@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-import { db, churchCoverPhotos } from "@/lib/db"
+
+import { churchCoverPhotos, db } from "@/lib/db"
 
 // GET /api/church-covers - Get all church covers
 export async function GET() {
@@ -28,11 +29,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const newCover = await db.insert(churchCoverPhotos).values({
-      name,
-      description,
-      coverImage,
-    }).returning()
+    const newCover = await db
+      .insert(churchCoverPhotos)
+      .values({
+        name,
+        description,
+        coverImage,
+      })
+      .returning()
 
     return NextResponse.json(newCover[0], { status: 201 })
   } catch (error) {

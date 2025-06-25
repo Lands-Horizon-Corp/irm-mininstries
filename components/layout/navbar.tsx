@@ -3,29 +3,70 @@
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Building2, Globe, Home, LogIn, Menu, Phone, X } from "lucide-react"
+import {
+  Building2,
+  Globe,
+  Home,
+  LogIn,
+  LogOut,
+  LucideIcon,
+  Menu,
+  Phone,
+  Shield,
+  User,
+  X,
+} from "lucide-react"
 
+import { useAuthSimple } from "@/hooks/use-auth-simple"
 import { useLanguage } from "@/hooks/use-language"
 
 import { Language, LanguageSelect } from "../ui/language-select"
 import { ModeToggle } from "../ui/mode-toggle"
 import Logo from "./logo"
 
+interface Route {
+  href: string
+  label: string
+  icon: LucideIcon
+  isButton?: boolean
+  requiresAdmin?: boolean
+}
+
 export const LANGUAGES: Language[] = [
   { code: "en", label: "ENG", countryCode: "US", title: "English" },
 ]
 
-const ROUTES = [
+const BASE_ROUTES = [
   { href: "/", label: "Home", icon: Home },
   { href: "/contact", label: "Contact", icon: Phone },
   { href: "/churches", label: "Churches", icon: Building2 },
-  { href: "/login", label: "Login", icon: LogIn, isButton: true },
 ]
 
 export function Navbar() {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { selected, setSelected } = useLanguage(LANGUAGES)
+  const { user, logout, isAuthenticated, isAdmin } = useAuthSimple()
+
+  const handleLogout = async () => {
+    await logout()
+    setIsMenuOpen(false)
+  }
+
+  // Dynamic routes based on authentication status
+  const routes: Route[] = [
+    ...BASE_ROUTES,
+    ...(isAuthenticated
+      ? [
+          {
+            href: "/admin",
+            label: "Dashboard",
+            icon: Shield,
+            requiresAdmin: true,
+          },
+        ]
+      : [{ href: "/login", label: "Login", icon: LogIn, isButton: true }]),
+  ]
 
   return (
     <nav className='border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
@@ -38,8 +79,11 @@ export function Navbar() {
 
           {/* Desktop nav */}
           <div className='hidden items-center space-x-8 md:flex'>
-            {ROUTES.map((route, index) =>
-              route.isButton ? (
+            {routes.map((route, index) => {
+              // Skip admin routes for non-admin users
+              if (route.requiresAdmin && !isAdmin) return null
+
+              return route.isButton ? (
                 <Link
                   key={index}
                   href={route.href}
@@ -62,7 +106,39 @@ export function Navbar() {
                   {route.label}
                 </Link>
               )
+            })}
+
+            {/* User Profile & Logout for authenticated users */}
+            {isAuthenticated && (
+              <div className='flex items-center gap-3 ml-4 pl-4 border-l border-border'>
+                <div className='flex items-center gap-2'>
+                  <div className='p-1.5 bg-primary/10 rounded-full'>
+                    <User className='h-4 w-4 text-primary' />
+                  </div>
+                  <div className='flex flex-col'>
+                    <span className='text-xs font-medium text-foreground'>
+                      {user?.email}
+                    </span>
+                    {isAdmin && (
+                      <div className='flex items-center gap-1'>
+                        <Shield className='h-3 w-3 text-amber-500' />
+                        <span className='text-xs text-amber-600 dark:text-amber-400'>
+                          Admin
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className='inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors'
+                >
+                  <LogOut className='h-4 w-4' />
+                  Logout
+                </button>
+              </div>
             )}
+
             {/* Language selector with current language */}
             <div className='ml-6 flex items-center space-x-2 border-l border-border pl-6'>
               <Globe className='size-8 text-muted-foreground' />
@@ -102,10 +178,13 @@ export function Navbar() {
       {isMenuOpen && (
         <div className='border-t border-border bg-background md:hidden'>
           <div className='space-y-2 px-4 py-4'>
-            {ROUTES.map(route =>
-              route.isButton ? (
+            {routes.map((route, index) => {
+              // Skip admin routes for non-admin users
+              if (route.requiresAdmin && !isAdmin) return null
+
+              return route.isButton ? (
                 <Link
-                  key={route.href}
+                  key={index}
                   href={route.href}
                   className='mt-2 flex items-center justify-center gap-2 rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
                   onClick={() => setIsMenuOpen(false)}
@@ -128,7 +207,39 @@ export function Navbar() {
                   {route.label}
                 </Link>
               )
+            })}
+
+            {/* User Profile & Logout for authenticated users on mobile */}
+            {isAuthenticated && (
+              <div className='mt-4 pt-4 border-t border-border space-y-3'>
+                <div className='flex items-center gap-3 px-3 py-2 bg-muted/50 rounded-md'>
+                  <div className='p-1.5 bg-primary/10 rounded-full'>
+                    <User className='h-4 w-4 text-primary' />
+                  </div>
+                  <div className='flex-1'>
+                    <div className='text-sm font-medium text-foreground'>
+                      {user?.email}
+                    </div>
+                    {isAdmin && (
+                      <div className='flex items-center gap-1 mt-0.5'>
+                        <Shield className='h-3 w-3 text-amber-500' />
+                        <span className='text-xs text-amber-600 dark:text-amber-400'>
+                          Admin
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className='w-full flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors'
+                >
+                  <LogOut className='h-4 w-4' />
+                  Logout
+                </button>
+              </div>
             )}
+
             <div className='mt-4 flex items-center justify-between border-t border-border pt-4'>
               <div className='flex items-center gap-2 text-sm text-muted-foreground'>
                 <Globe className='h-4 w-4' />

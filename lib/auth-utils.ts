@@ -1,4 +1,11 @@
 import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
+
+export interface UserPayload {
+  id: number
+  email: string
+  role: string
+}
 
 /**
  * Hash a password using bcrypt
@@ -21,4 +28,39 @@ export async function verifyPassword(
   hash: string
 ): Promise<boolean> {
   return await bcrypt.compare(password, hash)
+}
+
+/**
+ * Generate a JWT token for a user
+ * @param payload - User data to include in the token
+ * @returns string - The JWT token
+ */
+export function generateToken(payload: UserPayload): string {
+  const secret = process.env.JWT_SECRET
+  if (!secret) {
+    throw new Error("JWT_SECRET environment variable is required")
+  }
+
+  return jwt.sign(payload, secret, {
+    expiresIn: "7d", // Token expires in 7 days
+  })
+}
+
+/**
+ * Verify and decode a JWT token
+ * @param token - The JWT token to verify
+ * @returns UserPayload | null - The decoded user data or null if invalid
+ */
+export function verifyToken(token: string): UserPayload | null {
+  try {
+    const secret = process.env.JWT_SECRET
+    if (!secret) {
+      throw new Error("JWT_SECRET environment variable is required")
+    }
+
+    const decoded = jwt.verify(token, secret) as UserPayload
+    return decoded
+  } catch {
+    return null
+  }
 }
