@@ -4,3 +4,12 @@ export interface Language {
   countryCode: string
   title: string
 }
+
+export interface ChurchCoverPhoto {
+  id: number
+  name: string
+  description: string
+  coverImage: string
+  createdAt: Date
+  updatedAt: Date
+}
