@@ -6,10 +6,11 @@ import { churchCoverPhotos, db } from "@/lib/db"
 // GET /api/church-covers/[id] - Get a specific church cover
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: idString } = await params
+    const id = parseInt(idString)
     if (isNaN(id)) {
       return NextResponse.json({ error: "Invalid ID format" }, { status: 400 })
     }
@@ -39,10 +40,11 @@ export async function GET(
 // PUT /api/church-covers/[id] - Update a church cover
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: idString } = await params
+    const id = parseInt(idString)
     if (isNaN(id)) {
       return NextResponse.json({ error: "Invalid ID format" }, { status: 400 })
     }
@@ -88,10 +90,11 @@ export async function PUT(
 // DELETE /api/church-covers/[id] - Delete a church cover
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: idString } = await params
+    const id = parseInt(idString)
     if (isNaN(id)) {
       return NextResponse.json({ error: "Invalid ID format" }, { status: 400 })
     }
