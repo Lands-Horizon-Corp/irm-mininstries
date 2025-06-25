@@ -5,9 +5,7 @@ export default defineConfig({
   out: "./lib/db/migrations",
   dialect: "postgresql",
   dbCredentials: {
-    url:
-      process.env.DATABASE_URL ||
-      "postgres://postgres:qAbxNt2Dq4clny0@irm-ministries-db.flycast:5432",
+    url: process.env.DATABASE_URL || "",
   },
   verbose: true,
   strict: true,

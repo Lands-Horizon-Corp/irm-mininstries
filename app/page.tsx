@@ -4,62 +4,13 @@ import { churchCoverPhotos, db } from "@/lib/db"
 import ChurchValues from "@/components/home/church_values"
 import ChurchHeroCarousel from "@/components/home/home_hero"
 
-// Fallback data for when database is not accessible
-const fallbackChurchCovers = [
-  {
-    id: 1,
-    name: "Grace Community Church",
-    description:
-      "A place where faith meets community, and hearts find their home in God's love.",
-    coverImage: "/placeholder.svg?height=1080&width=1920",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: 2,
-    name: "New Life Fellowship",
-    description:
-      "Transforming lives through the power of Christ and building lasting relationships.",
-    coverImage: "/placeholder.svg?height=1080&width=1920",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: 3,
-    name: "Hope Baptist Church",
-    description:
-      "Spreading hope and joy through worship, service, and fellowship in our community.",
-    coverImage: "/placeholder.svg?height=1080&width=1920",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: 4,
-    name: "Trinity Methodist Church",
-    description:
-      "United in faith, strengthened by tradition, and committed to serving others.",
-    coverImage: "/placeholder.svg?height=1080&width=1920",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: 5,
-    name: "Cornerstone Assembly",
-    description:
-      "Building lives on the solid foundation of Christ's love and teachings.",
-    coverImage: "/placeholder.svg?height=1080&width=1920",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-]
-
 async function getChurchCovers() {
   try {
     const covers = await db.select().from(churchCoverPhotos)
-    return covers.length > 0 ? covers : fallbackChurchCovers
+    return covers.length > 0 ? covers : []
   } catch (error) {
     console.log("Database not accessible, using fallback data:", error)
-    return fallbackChurchCovers
+    return []
   }
 }
 
