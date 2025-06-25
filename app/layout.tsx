@@ -4,7 +4,9 @@ import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 
 import { Suspense } from "react"
+import { QueryProvider } from "@/providers/query-provider"
 
+import { Toaster } from "@/components/ui/sonner"
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import Footer from "@/components/layout/footer"
 import { Navbar } from "@/components/layout/navbar"
@@ -48,9 +50,12 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Navbar />
-            {children}
-            <Footer />
+            <QueryProvider>
+              <Navbar />
+              {children}
+              <Footer />
+              <Toaster />
+            </QueryProvider>
           </ThemeProvider>
         </Suspense>
       </body>

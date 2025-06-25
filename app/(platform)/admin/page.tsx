@@ -4,7 +4,7 @@ import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { FileText, Loader2, Settings, Shield, Users } from "lucide-react"
 
-import { useAuthSimple } from "@/hooks/use-auth-simple"
+import { useAuth } from "@/hooks/use-auth"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -17,15 +17,13 @@ import { LogoutButton } from "@/components/auth/logout-button"
 import { UserProfile } from "@/components/auth/user-profile"
 
 export default function AdminPage() {
-  const { loading, isAuthenticated, isAdmin } = useAuthSimple()
+  const { loading, isAuthenticated, isAdmin } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
-    console.log(isAdmin)
-    console.log(isAuthenticated)
-    // if (!loading && !isAuthenticated) {
-    //   router.push("/login")
-    // }
+    if (!loading && !isAuthenticated) {
+      router.push("/login")
+    }
   }, [isAuthenticated, loading, router])
 
   if (loading) {

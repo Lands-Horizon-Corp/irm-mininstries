@@ -17,7 +17,7 @@ import {
   X,
 } from "lucide-react"
 
-import { useAuthSimple } from "@/hooks/use-auth-simple"
+import { useAuth } from "@/hooks/use-auth"
 import { useLanguage } from "@/hooks/use-language"
 
 import { Language, LanguageSelect } from "../ui/language-select"
@@ -46,7 +46,7 @@ export function Navbar() {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { selected, setSelected } = useLanguage(LANGUAGES)
-  const { user, logout, isAuthenticated, isAdmin } = useAuthSimple()
+  const { user, logout, isAuthenticated, isAdmin } = useAuth()
 
   const handleLogout = async () => {
     await logout()

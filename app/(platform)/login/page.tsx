@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Eye, EyeOff, Loader2, LogIn } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { useAuthSimple } from "@/hooks/use-auth-simple"
+import { useAuth } from "@/hooks/use-auth"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -24,7 +24,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const { login, user, loading } = useAuthSimple()
+  const { login, user, loading } = useAuth()
   const router = useRouter()
 
   // Redirect if already authenticated

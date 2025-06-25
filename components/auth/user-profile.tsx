@@ -2,12 +2,12 @@
 
 import { Shield, User } from "lucide-react"
 
-import { useAuthSimple } from "@/hooks/use-auth-simple"
+import { useAuth } from "@/hooks/use-auth"
 
 import { LogoutButton } from "./logout-button"
 
 export function UserProfile() {
-  const { user, loading, isAuthenticated, isAdmin } = useAuthSimple()
+  const { user, loading, isAuthenticated, isAdmin } = useAuth()
 
   if (loading) {
     return (

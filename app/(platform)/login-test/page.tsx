@@ -4,11 +4,11 @@ import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Loader2 } from "lucide-react"
 
-import { useAuthSimple } from "@/hooks/use-auth-simple"
+import { useAuth } from "@/hooks/use-auth"
 import { LoginForm } from "@/components/auth/login-form"
 
 export default function LoginTestPage() {
-  const { loading, isAuthenticated } = useAuthSimple()
+  const { loading, isAuthenticated } = useAuth()
   const router = useRouter()
 
   // Redirect if already authenticated

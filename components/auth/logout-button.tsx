@@ -2,11 +2,11 @@
 
 import { LogOut } from "lucide-react"
 
-import { useAuthSimple } from "@/hooks/use-auth-simple"
+import { useAuth } from "@/hooks/use-auth"
 import { Button } from "@/components/ui/button"
 
 export function LogoutButton() {
-  const { logout, loading, user } = useAuthSimple()
+  const { logout, loading, user } = useAuth()
 
   const handleLogout = async () => {
     await logout()
