@@ -1,3 +1,6 @@
+import { Suspense } from "react"
+import { Toaster } from "sonner"
+
 import ChurchValues from "@/components/home/church_values"
 import ChurchHeroCarousel from "@/components/home/home_hero"
 
@@ -37,8 +40,11 @@ const churchCovers = [
 export default function Home() {
   return (
     <div>
-      <ChurchHeroCarousel churchCovers={churchCovers} />
-      <ChurchValues />
+      <Suspense>
+        <ChurchHeroCarousel churchCovers={churchCovers} />
+        <ChurchValues />
+        <Toaster />
+      </Suspense>
     </div>
   )
 }
