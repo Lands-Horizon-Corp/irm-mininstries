@@ -41,7 +41,6 @@ export default function Home() {
     <div>
       <ChurchHeroCarousel churchCovers={churchCovers} />
       <ChurchValues />
-
       <Toaster />
     </div>
   )
