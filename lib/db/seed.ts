@@ -1,4 +1,7 @@
-import { churchCoverPhotos, db } from "@/lib/db"
+import { eq } from "drizzle-orm"
+
+import { hashPassword } from "@/lib/auth-utils"
+import { churchCoverPhotos, db, users } from "@/lib/db"
 
 const seedData = [
   {
@@ -37,9 +40,38 @@ async function seed() {
   try {
     console.log("🌱 Seeding database...")
 
-    // Insert seed data
-    await db.insert(churchCoverPhotos).values(seedData)
+    // Create admin user
+    const adminEmail = process.env.ADMIN_EMAIL
+    const adminPassword = process.env.ADMIN_PASSWORD
 
+    if (!adminEmail || !adminPassword) {
+      throw new Error(
+        "ADMIN_EMAIL and ADMIN_PASSWORD environment variables are required"
+      )
+    }
+
+    // Check if admin user already exists
+    const existingAdmin = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, adminEmail))
+      .limit(1)
+
+    if (existingAdmin.length === 0) {
+      const hashedPassword = await hashPassword(adminPassword)
+
+      await db.insert(users).values({
+        email: adminEmail,
+        contactNumber: "000-000-0000", // Default contact number, can be updated later
+        password: hashedPassword,
+        role: "admin",
+      })
+
+      console.log("👤 Admin user created successfully!")
+    } else {
+      console.log("👤 Admin user already exists, skipping...")
+    }
+    await db.insert(churchCoverPhotos).values(seedData)
     console.log("✅ Database seeded successfully!")
   } catch (error) {
     console.error("❌ Error seeding database:", error)

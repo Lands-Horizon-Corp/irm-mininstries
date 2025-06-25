@@ -8,6 +8,13 @@
       "when": 1750861411610,
       "tag": "0000_massive_agent_zero",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1750863410477,
+      "tag": "0001_optimal_manta",
+      "breakpoints": true
     }
   ]
 }
