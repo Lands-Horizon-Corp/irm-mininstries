@@ -105,7 +105,7 @@ async function seed() {
 
       await db.insert(users).values({
         email: adminEmail,
-        contactNumber: "000-000-0000", // Default contact number, can be updated later
+        contactNumber: "000-000-0000",
         password: hashedPassword,
         role: "admin",
       })

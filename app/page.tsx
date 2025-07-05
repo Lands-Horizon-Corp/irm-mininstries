@@ -88,6 +88,7 @@ export default function Home() {
         <ChurchHeroCarousel churchCovers={churchCovers} />
       )}
       <ChurchValues />
+
       <ChurchEventsSection
         events={churchEvents}
         isLoading={eventsLoading}
