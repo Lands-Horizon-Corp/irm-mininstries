@@ -41,3 +41,13 @@ export const churchLocations = pgTable("church_locations", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 })
+
+export const contactUs = pgTable("contact_us", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  contactNumber: text("contact_number").notNull(),
+  description: text("description").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+})

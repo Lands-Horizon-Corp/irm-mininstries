@@ -36,3 +36,13 @@ export interface ChurchLocation {
   createdAt: Date
   updatedAt: Date
 }
+
+export interface ContactUs {
+  id: number
+  name: string
+  email: string
+  contactNumber: string
+  description: string
+  createdAt: Date
+  updatedAt: Date
+}

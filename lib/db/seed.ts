@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm"
 
 import { hashPassword } from "@/lib/auth-utils"
-import { churchCoverPhotos, churchEvents, db, users } from "@/lib/db"
+import { churchCoverPhotos, churchEvents, contactUs, db, users } from "@/lib/db"
 
 const seedData = [
   {
@@ -79,6 +79,21 @@ const eventSeedData = [
   },
 ]
 
+const contactUsSeedData = [
+  {
+    name: "John Doe",
+    email: "john@example.com",
+    contactNumber: "+1234567890",
+    description: "Interested in learning more about your ministry.",
+  },
+  {
+    name: "Jane Smith",
+    email: "jane@example.com",
+    contactNumber: "+1987654321",
+    description: "Would like to volunteer for upcoming events.",
+  },
+]
+
 async function seed() {
   try {
     console.log("🌱 Seeding database...")
@@ -132,6 +147,12 @@ async function seed() {
     } else {
       console.log("📅 Church events already exist, skipping...")
     }
+
+    // Seed contact_us
+    for (const contact of contactUsSeedData) {
+      await db.insert(contactUs).values(contact)
+    }
+    console.log("📞 Contact us data seeded successfully!")
 
     console.log("✅ Database seeded successfully!")
   } catch (error) {

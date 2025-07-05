@@ -8,6 +8,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Church,
+  ContactIcon,
   Crown,
   Home,
   Image,
@@ -48,6 +49,11 @@ const sidebarItems = [
     title: "Members",
     href: "/admin/members",
     icon: Users,
+  },
+  {
+    title: "Contact Us",
+    href: "/admin/contact-us",
+    icon: ContactIcon,
   },
   {
     title: "Users",
