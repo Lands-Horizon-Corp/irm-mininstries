@@ -84,6 +84,7 @@ export const MapPicker: React.FC<MapPickerProps> = ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const autocompleteServiceRef = useRef<any | null>(null)
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const justOpenedRef = useRef(false)
 
   const formatLocation = (location: LatLng): string => {
     return `${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}`
@@ -301,8 +302,19 @@ export const MapPicker: React.FC<MapPickerProps> = ({
 
   // Sync internal state with external value
   useEffect(() => {
+    if (isOpen) {
+      justOpenedRef.current = true
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    if (isOpen && justOpenedRef.current) {
+      // Ignore the first value change after opening
+      justOpenedRef.current = false
+      return
+    }
     setSelectedLocation(value || null)
-  }, [value])
+  }, [value, isOpen])
 
   useEffect(() => {
     if (isOpen) {
@@ -418,6 +430,7 @@ export const MapPicker: React.FC<MapPickerProps> = ({
         disabled={disabled}
         className={className}
         onClick={() => setIsOpen(true)}
+        type='button'
       >
         <MapPin className='h-4 w-4 mr-2' />
         {value ? formatLocation(value) : placeholder}
@@ -461,6 +474,7 @@ export const MapPicker: React.FC<MapPickerProps> = ({
                 {searchValue && (
                   <Button
                     variant='ghost'
+                    type='button'
                     size='sm'
                     className='absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0 z-10'
                     onClick={() => {
@@ -560,6 +574,7 @@ export const MapPicker: React.FC<MapPickerProps> = ({
                   </Label>
                   <div className='flex gap-2'>
                     <Button
+                      type='button'
                       variant='ghost'
                       size='sm'
                       onClick={handleClear}
@@ -568,6 +583,7 @@ export const MapPicker: React.FC<MapPickerProps> = ({
                       Clear
                     </Button>
                     <Button
+                      type='button'
                       size='sm'
                       onClick={() => handleQuickSelect(selectedLocation)}
                       className='h-8 px-3'
@@ -614,10 +630,11 @@ export const MapPicker: React.FC<MapPickerProps> = ({
           </div>
 
           <DialogFooter className='gap-2'>
-            <Button variant='outline' onClick={handleCancel}>
+            <Button type='button' variant='outline' onClick={handleCancel}>
               Cancel
             </Button>
             <Button
+              type='button'
               disabled={!selectedLocation}
               onClick={handleConfirm}
               className='min-w-[100px]'
