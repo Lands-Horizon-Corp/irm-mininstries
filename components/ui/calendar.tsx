@@ -36,7 +36,7 @@ function Calendar({
       )}
       captionLayout={captionLayout}
       formatters={{
-        formatMonthDropdown: (date) =>
+        formatMonthDropdown: date =>
           date.toLocaleString("default", { month: "short" }),
         ...formatters,
       }}
@@ -125,7 +125,7 @@ function Calendar({
         Root: ({ className, rootRef, ...props }) => {
           return (
             <div
-              data-slot="calendar"
+              data-slot='calendar'
               ref={rootRef}
               className={cn(className)}
               {...props}
@@ -156,7 +156,7 @@ function Calendar({
         WeekNumber: ({ children, ...props }) => {
           return (
             <td {...props}>
-              <div className="flex size-(--cell-size) items-center justify-center text-center">
+              <div className='flex size-(--cell-size) items-center justify-center text-center'>
                 {children}
               </div>
             </td>
@@ -185,8 +185,8 @@ function CalendarDayButton({
   return (
     <Button
       ref={ref}
-      variant="ghost"
-      size="icon"
+      variant='ghost'
+      size='icon'
       data-day={day.date.toLocaleDateString()}
       data-selected-single={
         modifiers.selected &&
