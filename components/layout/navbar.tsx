@@ -38,7 +38,7 @@ export const LANGUAGES: Language[] = [
 
 const BASE_ROUTES = [
   { href: "/", label: "Home", icon: Home },
-  { href: "/contact", label: "Contact", icon: Phone },
+  { href: "/contact-us", label: "Contact", icon: Phone },
   { href: "/churches", label: "Churches", icon: Building2 },
 ]
 
