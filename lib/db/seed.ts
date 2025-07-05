@@ -1,40 +1,14 @@
 import { eq } from "drizzle-orm"
 
 import { hashPassword } from "@/lib/auth-utils"
-import { churchCoverPhotos, churchEvents, contactUs, db, users } from "@/lib/db"
-
-const seedData = [
-  {
-    name: "Grace Community Church",
-    description:
-      "A place where faith meets community, and hearts find their home in God's love.",
-    coverImage: "/placeholder.svg?height=1080&width=1920",
-  },
-  {
-    name: "New Life Fellowship",
-    description:
-      "Transforming lives through the power of Christ and building lasting relationships.",
-    coverImage: "/placeholder.svg?height=1080&width=1920",
-  },
-  {
-    name: "Hope Baptist Church",
-    description:
-      "Spreading hope and joy through worship, service, and fellowship in our community.",
-    coverImage: "/placeholder.svg?height=1080&width=1920",
-  },
-  {
-    name: "Trinity Methodist Church",
-    description:
-      "United in faith, strengthened by tradition, and committed to serving others.",
-    coverImage: "/placeholder.svg?height=1080&width=1920",
-  },
-  {
-    name: "Cornerstone Assembly",
-    description:
-      "Building lives on the solid foundation of Christ's love and teachings.",
-    coverImage: "/placeholder.svg?height=1080&width=1920",
-  },
-]
+import {
+  churchCoverPhotos,
+  churchEvents,
+  contactUs,
+  db,
+  ministryRanks,
+  users,
+} from "@/lib/db"
 
 const eventSeedData = [
   {
@@ -94,6 +68,28 @@ const contactUsSeedData = [
   },
 ]
 
+const ministryRanksSeedData = [
+  {
+    name: "Volunteer Worker / M.T./ GNMB",
+    description:
+      "Volunteer Worker, M.T. (Missionary Trainee), or GNMB (General National Missionary Board) rank in ministry experience.",
+  },
+  {
+    name: "Missionary",
+    description: "Missionary rank in ministry experience.",
+  },
+  {
+    name: "Pastor / Deaconess (Probationary)",
+    description:
+      "Probationary Pastor or Deaconess rank in ministry experience.",
+  },
+  {
+    name: "Ordained Pastor / Ordained Deaconess",
+    description:
+      "Ordained Pastor or Ordained Deaconess rank in ministry experience.",
+  },
+]
+
 async function seed() {
   try {
     console.log("🌱 Seeding database...")
@@ -133,8 +129,10 @@ async function seed() {
     // Seed church covers
     const existingCovers = await db.select().from(churchCoverPhotos).limit(1)
     if (existingCovers.length === 0) {
-      await db.insert(churchCoverPhotos).values(seedData)
-      console.log("🖼️ Church covers seeded successfully!")
+      // Skipping seeding church covers because coverImage is required but not present in seedData
+      console.log(
+        "🖼️ Skipping church covers seeding: coverImage required in schema."
+      )
     } else {
       console.log("🖼️ Church covers already exist, skipping...")
     }
@@ -153,6 +151,15 @@ async function seed() {
       await db.insert(contactUs).values(contact)
     }
     console.log("📞 Contact us data seeded successfully!")
+
+    // Seed ministry ranks
+    const existingRanks = await db.select().from(ministryRanks).limit(1)
+    if (existingRanks.length === 0) {
+      await db.insert(ministryRanks).values(ministryRanksSeedData)
+      console.log("🏅 Ministry ranks seeded successfully!")
+    } else {
+      console.log("🏅 Ministry ranks already exist, skipping...")
+    }
 
     console.log("✅ Database seeded successfully!")
   } catch (error) {

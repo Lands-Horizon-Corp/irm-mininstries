@@ -51,3 +51,11 @@ export const contactUs = pgTable("contact_us", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 })
+
+export const ministryRanks = pgTable("ministry_ranks", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull().unique(),
+  description: text("description").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+})

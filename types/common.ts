@@ -46,3 +46,11 @@ export interface ContactUs {
   createdAt: Date
   updatedAt: Date
 }
+
+export interface MinistryRanks {
+  id: number
+  name: string
+  description: string
+  createdAt: Date
+  updatedAt: Date
+}

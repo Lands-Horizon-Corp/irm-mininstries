@@ -43,6 +43,13 @@
       "when": 1751744035787,
       "tag": "0005_green_human_torch",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1751745451425,
+      "tag": "0006_fuzzy_vulcan",
+      "breakpoints": true
     }
   ]
 }
