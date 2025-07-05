@@ -99,9 +99,10 @@ export const MapPicker: React.FC<MapPickerProps> = ({
 
     if (window.google.maps.Marker) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      markerRef.current = new google.maps.marker.AdvancedMarkerElement({
+      markerRef.current = new window.google.maps.Marker({
         map: mapRef.current,
         position: location,
+        draggable: true,
       })
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

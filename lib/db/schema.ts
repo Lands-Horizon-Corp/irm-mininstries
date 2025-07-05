@@ -29,3 +29,15 @@ export const churchEvents = pgTable("church_events", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 })
+
+export const churchLocations = pgTable("church_locations", {
+  id: serial("id").primaryKey(),
+  imageUrl: text("image_url").notNull(),
+  longitude: text("longitude").notNull(),
+  latitude: text("latitude").notNull(),
+  address: text("address").notNull(),
+  email: text("email").notNull(),
+  description: text("description").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+})

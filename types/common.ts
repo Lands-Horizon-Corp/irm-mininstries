@@ -24,3 +24,15 @@ export interface ChurchEvent {
   createdAt: Date
   updatedAt: Date
 }
+
+export interface ChurchLocation {
+  id: number
+  imageUrl: string
+  longitude: string
+  latitude: string
+  address: string
+  email: string
+  description: string
+  createdAt: Date
+  updatedAt: Date
+}

@@ -36,7 +36,7 @@ const sidebarItems = [
   },
   {
     title: "Churches",
-    href: "/admin/churches",
+    href: "/admin/church-locations",
     icon: Church,
   },
   {
