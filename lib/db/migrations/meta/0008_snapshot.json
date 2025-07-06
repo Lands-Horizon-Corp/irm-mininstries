@@ -293,12 +293,8 @@
           "name": "member_awards_recognitions_member_id_members_id_fk",
           "tableFrom": "member_awards_recognitions",
           "tableTo": "members",
-          "columnsFrom": [
-            "member_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["member_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -370,12 +366,8 @@
           "name": "member_children_member_id_members_id_fk",
           "tableFrom": "member_children",
           "tableTo": "members",
-          "columnsFrom": [
-            "member_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["member_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -453,12 +445,8 @@
           "name": "member_education_backgrounds_member_id_members_id_fk",
           "tableFrom": "member_education_backgrounds",
           "tableTo": "members",
-          "columnsFrom": [
-            "member_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["member_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -530,12 +518,8 @@
           "name": "member_emergency_contacts_member_id_members_id_fk",
           "tableFrom": "member_emergency_contacts",
           "tableTo": "members",
-          "columnsFrom": [
-            "member_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["member_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -607,12 +591,8 @@
           "name": "member_employment_records_member_id_members_id_fk",
           "tableFrom": "member_employment_records",
           "tableTo": "members",
-          "columnsFrom": [
-            "member_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["member_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -684,12 +664,8 @@
           "name": "member_ministry_experiences_member_id_members_id_fk",
           "tableFrom": "member_ministry_experiences",
           "tableTo": "members",
-          "columnsFrom": [
-            "member_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["member_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -761,12 +737,8 @@
           "name": "member_ministry_records_member_id_members_id_fk",
           "tableFrom": "member_ministry_records",
           "tableTo": "members",
-          "columnsFrom": [
-            "member_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["member_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -774,12 +746,8 @@
           "name": "member_ministry_records_church_location_id_church_locations_id_fk",
           "tableFrom": "member_ministry_records",
           "tableTo": "church_locations",
-          "columnsFrom": [
-            "church_location_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["church_location_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -833,12 +801,8 @@
           "name": "member_ministry_skills_member_id_members_id_fk",
           "tableFrom": "member_ministry_skills",
           "tableTo": "members",
-          "columnsFrom": [
-            "member_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["member_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -846,12 +810,8 @@
           "name": "member_ministry_skills_ministry_skill_id_ministry_skills_id_fk",
           "tableFrom": "member_ministry_skills",
           "tableTo": "ministry_skills",
-          "columnsFrom": [
-            "ministry_skill_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["ministry_skill_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -929,12 +889,8 @@
           "name": "member_seminars_conferences_member_id_members_id_fk",
           "tableFrom": "member_seminars_conferences",
           "tableTo": "members",
-          "columnsFrom": [
-            "member_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["member_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1268,9 +1224,7 @@
         "ministry_ranks_name_unique": {
           "name": "ministry_ranks_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
+          "columns": ["name"]
         }
       },
       "policies": {},
@@ -1321,9 +1275,7 @@
         "ministry_skills_name_unique": {
           "name": "ministry_skills_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
+          "columns": ["name"]
         }
       },
       "policies": {},
@@ -1387,9 +1339,7 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
