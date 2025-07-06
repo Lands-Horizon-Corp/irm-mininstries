@@ -216,5 +216,5 @@ export interface Member {
   seminarsConferences?: MemberSeminarConference[]
   parent?: Member
   childrenMembers?: Member[]
-  pictureUrl?: string
+  imageUrl?: string
 }

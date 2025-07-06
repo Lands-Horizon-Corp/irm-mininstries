@@ -50,7 +50,7 @@ export const memberSchema = z.object({
   signatureByCertifiedImageUrl: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-
+  imageUrl: z.string().optional().nullable(),
   // Relations
   children: z
     .array(

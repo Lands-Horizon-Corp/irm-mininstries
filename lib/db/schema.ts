@@ -121,6 +121,7 @@ export const members = pgTable("members", {
   certifiedBy: text("certified_by"),
   signatureImageUrl: text("signature_image_url"),
   signatureByCertifiedImageUrl: text("signature_by_certified_image_url"),
+  imageUrl: text("image_url"),
 })
 
 export const memberChildren = pgTable("member_children", {
