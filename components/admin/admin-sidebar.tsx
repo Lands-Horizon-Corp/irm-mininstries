@@ -12,7 +12,7 @@ import {
   Crown,
   Home,
   Image,
-  UserCog,
+  SkullIcon,
   Users,
 } from "lucide-react"
 
@@ -46,19 +46,20 @@ const sidebarItems = [
     icon: Crown,
   },
   {
-    title: "Members",
-    href: "/admin/members",
-    icon: Users,
+    title: "Ministry Skills",
+    href: "/admin/ministry-skills",
+    icon: SkullIcon,
   },
+
   {
     title: "Contact Us",
     href: "/admin/contact-us",
     icon: ContactIcon,
   },
   {
-    title: "Users",
-    href: "/admin/users",
-    icon: UserCog,
+    title: "Members",
+    href: "/admin/members",
+    icon: Users,
   },
 ]
 

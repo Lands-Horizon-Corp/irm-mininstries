@@ -54,3 +54,11 @@ export interface MinistryRanks {
   createdAt: Date
   updatedAt: Date
 }
+
+export interface MinistrySkills {
+  id: number
+  name: string
+  description: string
+  createdAt: Date
+  updatedAt: Date
+}
