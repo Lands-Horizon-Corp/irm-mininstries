@@ -1,12 +1,10 @@
 "use client"
 
-import { useState } from "react"
 import { AlertTriangle, Church, RefreshCw } from "lucide-react"
 
 import { useChurchCovers } from "@/hooks/use-church-covers"
 import { useChurchEvents } from "@/hooks/use-church-events"
 import { Button } from "@/components/ui/button"
-import ImageCapture from "@/components/ui/image-capture"
 import ChurchValues from "@/components/home/church_values"
 import ChurchEventsSection from "@/components/home/church-events-section"
 import ChurchHeroCarousel from "@/components/home/home_hero"
@@ -80,8 +78,6 @@ export default function Home() {
     error: eventsError,
   } = useChurchEvents()
 
-  const [imageFile, setImageFile] = useState<File>()
-
   return (
     <div className='min-h-screen'>
       {isLoading ? (
@@ -92,12 +88,6 @@ export default function Home() {
         <ChurchHeroCarousel churchCovers={churchCovers} />
       )}
       <ChurchValues />
-
-      <ImageCapture
-        className='w-50'
-        value={imageFile}
-        onChange={file => setImageFile(file)}
-      />
 
       <ChurchEventsSection
         events={churchEvents}
