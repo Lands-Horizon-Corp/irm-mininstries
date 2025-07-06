@@ -722,6 +722,29 @@ const ministrySkillsSeedData = [
     description:
       "Offering expertise and advice to churches seeking to improve or expand their ministries.",
   },
+  {
+    name: "Composing",
+    description: "Composing music and songs for worship and ministry use.",
+  },
+  {
+    name: "Mobilization",
+    description:
+      "Encouraging and organizing people for ministry involvement and outreach.",
+  },
+  {
+    name: "Creative Writing",
+    description:
+      "Writing original content for ministry, devotionals, and publications.",
+  },
+  {
+    name: "Church Planting Support",
+    description:
+      "Supporting and assisting in the establishment of new churches.",
+  },
+  {
+    name: "Other Specialized Skills",
+    description: "Other ministry-related skills as needed.",
+  },
 ]
 
 async function seed() {
