@@ -57,6 +57,13 @@
       "when": 1751789284884,
       "tag": "0007_bored_gravity",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1751796316695,
+      "tag": "0008_famous_rawhide_kid",
+      "breakpoints": true
     }
   ]
 }

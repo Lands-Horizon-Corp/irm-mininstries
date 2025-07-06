@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import Image from "next/image"
 import {
   ColumnDef,
@@ -13,6 +13,8 @@ import { Loader2 } from "lucide-react"
 
 import { Member } from "@/lib/member-schema"
 import { useMembers } from "@/hooks/use-member"
+import { useMinistryRanks } from "@/hooks/use-ministry-ranks"
+import { useMinistrySkills } from "@/hooks/use-ministry-skills"
 import { Input } from "@/components/ui/input"
 import {
   Pagination,
@@ -37,6 +39,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import MemberForm from "@/components/admin/member-form"
 
 const PAGE_SIZE = 10
 const genderOptions = ["male", "female"]
@@ -58,7 +61,18 @@ export default function MembersAdminPage() {
     email: "",
   })
   const [pageIndex, setPageIndex] = useState(0)
-  const { members, isLoading } = useMembers()
+  const [showForm, setShowForm] = useState(false)
+  const [editingMember, setEditingMember] = useState<Member | null>(null)
+  const {
+    members,
+    isLoading,
+    createMember,
+    updateMember,
+    deleteMember,
+    refetch,
+  } = useMembers()
+  const { ministrySkills } = useMinistrySkills()
+  const { ministryRanks } = useMinistryRanks()
 
   const filteredMembers = useMemo(() => {
     return members.filter(member => {
@@ -82,6 +96,14 @@ export default function MembersAdminPage() {
       )
     })
   }, [members, search])
+
+  const handleDelete = useCallback(
+    async (id: number) => {
+      await deleteMember(id)
+      await refetch()
+    },
+    [deleteMember, refetch]
+  )
 
   const columns = useMemo<ColumnDef<Member>[]>(
     () => [
@@ -135,8 +157,33 @@ export default function MembersAdminPage() {
         header: "# of Ranks",
         cell: info => info.row.original.ministryRecords?.length || 0,
       },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => (
+          <div className='flex gap-2'>
+            <button
+              className='px-2 py-1 rounded bg-blue-500 text-white hover:bg-blue-600 text-xs'
+              onClick={() => {
+                setEditingMember(row.original)
+                setShowForm(true)
+              }}
+              type='button'
+            >
+              Edit
+            </button>
+            <button
+              className='px-2 py-1 rounded bg-red-500 text-white hover:bg-red-600 text-xs'
+              onClick={() => handleDelete(row.original.id!)}
+              type='button'
+            >
+              Delete
+            </button>
+          </div>
+        ),
+      },
     ],
-    []
+    [handleDelete]
   )
 
   const pageCount = Math.ceil(filteredMembers.length / PAGE_SIZE)
@@ -158,10 +205,28 @@ export default function MembersAdminPage() {
     manualPagination: false,
   })
 
+  async function handleFormSubmit(data: Member) {
+    console.log("Submitting member data:", data)
+    if (editingMember) {
+      await updateMember({ id: editingMember.id!, data })
+    } else {
+      await createMember(data)
+    }
+    setShowForm(false)
+    setEditingMember(null)
+    await refetch()
+  }
+
   return (
     <div className='p-6'>
       <div className='flex items-center justify-between mb-4'>
         <h1 className='text-2xl font-bold'>Members</h1>
+        <button
+          className='px-3 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 text-sm'
+          onClick={() => setShowForm(true)}
+        >
+          Add Member
+        </button>
       </div>
       <div className='mb-4 grid grid-cols-1 md:grid-cols-3 gap-2'>
         <Input
@@ -180,14 +245,16 @@ export default function MembersAdminPage() {
           onChange={e => setSearch(s => ({ ...s, middleName: e.target.value }))}
         />
         <Select
-          value={search.gender}
-          onValueChange={val => setSearch(s => ({ ...s, gender: val }))}
+          value={search.gender || "all"}
+          onValueChange={val =>
+            setSearch(s => ({ ...s, gender: val === "all" ? "" : val }))
+          }
         >
           <SelectTrigger>
             <SelectValue placeholder='Gender' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value=''>All</SelectItem>
+            <SelectItem value='all'>All</SelectItem>
             {genderOptions.map(opt => (
               <SelectItem key={opt} value={opt}>
                 {opt}
@@ -196,14 +263,16 @@ export default function MembersAdminPage() {
           </SelectContent>
         </Select>
         <Select
-          value={search.civilStatus}
-          onValueChange={val => setSearch(s => ({ ...s, civilStatus: val }))}
+          value={search.civilStatus || "all"}
+          onValueChange={val =>
+            setSearch(s => ({ ...s, civilStatus: val === "all" ? "" : val }))
+          }
         >
           <SelectTrigger>
             <SelectValue placeholder='Civil Status' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value=''>All</SelectItem>
+            <SelectItem value='all'>All</SelectItem>
             {civilStatusOptions.map(opt => (
               <SelectItem key={opt} value={opt}>
                 {opt}
@@ -285,6 +354,18 @@ export default function MembersAdminPage() {
           </PaginationContent>
         </Pagination>
       </div>
+      <MemberForm
+        open={showForm}
+        onClose={() => {
+          setShowForm(false)
+          setEditingMember(null)
+        }}
+        onSubmit={handleFormSubmit}
+        initialData={editingMember}
+        isLoading={isLoading}
+        ministrySkillsOptions={ministrySkills}
+        ministryRanksOptions={ministryRanks}
+      />
     </div>
   )
 }
