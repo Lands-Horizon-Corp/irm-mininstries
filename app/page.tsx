@@ -5,6 +5,7 @@ import { AlertTriangle, Church, RefreshCw } from "lucide-react"
 import { useChurchCovers } from "@/hooks/use-church-covers"
 import { useChurchEvents } from "@/hooks/use-church-events"
 import { Button } from "@/components/ui/button"
+import ImageCapture from "@/components/ui/image-capture"
 import ChurchValues from "@/components/home/church_values"
 import ChurchEventsSection from "@/components/home/church-events-section"
 import ChurchHeroCarousel from "@/components/home/home_hero"
@@ -88,7 +89,7 @@ export default function Home() {
         <ChurchHeroCarousel churchCovers={churchCovers} />
       )}
       <ChurchValues />
-
+      <ImageCapture />
       <ChurchEventsSection
         events={churchEvents}
         isLoading={eventsLoading}
