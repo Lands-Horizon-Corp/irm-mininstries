@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 import {
   Award,
@@ -11,6 +12,7 @@ import {
   ChevronRight,
   Crown,
   LayoutDashboard,
+  LogOut,
   MessageCircle,
   Users,
 } from "lucide-react";
@@ -59,6 +61,10 @@ const sidebarItems = [
 export function AdminSidebar({ className }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
+
+  const handleSignOut = async () => {
+    await signOut({ callbackUrl: "/" });
+  };
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -114,12 +120,29 @@ export function AdminSidebar({ className }: SidebarProps) {
               key={item.href}
               title={isCollapsed ? item.title : undefined}
             >
+              {isActive && <div className="bg-primary h-full w-1 rounded" />}
               <Icon className="h-5 w-5 flex-shrink-0" />
               {!isCollapsed && <span>{item.title}</span>}
             </Link>
           );
         })}
       </nav>
+
+      {/* Logout Button */}
+      <div className="p-2">
+        <Button
+          className={cn(
+            "hover:bg-destructive hover:text-destructive-foreground text-muted-foreground flex w-full items-center justify-start gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+            isCollapsed && "justify-center px-2"
+          )}
+          title={isCollapsed ? "Logout" : undefined}
+          variant="ghost"
+          onClick={handleSignOut}
+        >
+          <LogOut className="h-5 w-5 flex-shrink-0" />
+          {!isCollapsed && <span>Logout</span>}
+        </Button>
+      </div>
 
       <Separator />
 
