@@ -1,16 +1,16 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail, MapPin } from "lucide-react";
-import { toast } from "sonner";
-import { z } from "zod";
+import type z from "zod";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Divider } from "@/components/ui/divider";
 import {
   Form,
   FormControl,
@@ -20,44 +20,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
-import { Card } from "../ui/card";
-import { Divider } from "../ui/divider";
-import { Textarea } from "../ui/textarea";
+import { useSubmitContactForm } from "./contact-us-service";
+import { contactUsFormSchema } from "./contact-us-validation";
 
-const formSchema = z
-  .object({
-    description: z.string().min(10, {
-      message: "Message must be at least 10 characters.",
-    }),
-    email: z.string().email("Email is not valid."),
-    name: z.string().min(2, {
-      message: "First and last name must be at least 2 characters.",
-    }),
-    prayerRequest: z.string().optional(),
-    repeatEmail: z.string().email("Email is not valid."),
-    subject: z.string().min(3, {
-      message: "Subject is required.",
-    }),
-    supportEmail: z.string().email("Support email is not valid."),
-  })
-  .superRefine((data, ctx) => {
-    if (data.email !== data.repeatEmail) {
-      ctx.addIssue({
-        code: "custom",
-        message: "Emails do not match",
-        path: ["repeatEmail"],
-      });
-    }
-  });
-export type ContactFormData = z.infer<typeof formSchema>;
 const MAX_CHARS = 1000;
 
 export default function ContactForm() {
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const submitContactForm = useSubmitContactForm();
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<z.infer<typeof contactUsFormSchema>>({
     defaultValues: {
       description: "",
       email: "",
@@ -67,44 +41,19 @@ export default function ContactForm() {
       subject: "",
       supportEmail: "info@irmministries.org",
     },
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(contactUsFormSchema),
   });
 
   const descriptionValue = form.watch("description");
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      setIsSubmitting(true);
-
-      const response = await fetch("/api/submit-contact", {
-        body: JSON.stringify(values),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-      });
-
-      const data = await response.json();
-
-      if (!data.success) {
-        throw new Error(data.error || "Failed to submit form");
-      }
-
-      toast.success("Message sent successfully!", {
-        description: "Our ministry team will get back to you soon. God bless!",
-      });
-
-      setTimeout(() => {
-        router.push("/");
-      }, 2000);
-    } catch (error) {
-      toast.error("Failed to send message", {
-        description:
-          error instanceof Error ? error.message : "Please try again later",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+  async function onSubmit(values: z.infer<typeof contactUsFormSchema>) {
+    submitContactForm.mutate(values, {
+      onSuccess: () => {
+        setTimeout(() => {
+          router.push("/");
+        }, 2000);
+      },
+    });
   }
 
   return (
@@ -239,10 +188,10 @@ export default function ContactForm() {
             <Divider className="hidden md:block" />
             <Button
               className="float-none w-full md:float-right md:w-auto"
-              disabled={isSubmitting}
+              disabled={submitContactForm.isPending}
               type="submit"
             >
-              {isSubmitting ? "Sending..." : "Send Message →"}
+              {submitContactForm.isPending ? "Sending..." : "Send Message →"}
             </Button>
           </form>
         </Form>

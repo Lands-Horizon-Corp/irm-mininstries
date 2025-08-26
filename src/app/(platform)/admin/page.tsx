@@ -14,7 +14,6 @@ export default function AdminPage() {
     <div className="flex min-h-screen items-center justify-center">
       <div className="text-center">
         <div className="border-primary mb-4 h-8 w-8 animate-spin rounded-full border-4 border-t-transparent"></div>
-        <p className="text-muted-foreground">Redirecting to dashboard...</p>
       </div>
     </div>
   );

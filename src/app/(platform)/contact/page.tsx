@@ -1,5 +1,5 @@
-import Form from "@/components/ContactUs/Form";
-import Heading from "@/components/ContactUs/Heading";
+import ContactUsHeading from "@/modules/contact-us/components/contact-us-heading";
+import ContactUsForm from "@/modules/contact-us/contact-us-form";
 
 export default function ContactPage() {
   return (
@@ -7,12 +7,12 @@ export default function ContactPage() {
       <div className="to-background/0 via-background/0 from-primary/50 absolute right-0 -z-10 -mt-16 h-screen w-full bg-radial-[ellipse_at_100%_0%] to-100%" />
       <div className="to-background/0 via-background/0 from-primary/20 absolute right-0 -z-10 h-screen w-full bg-radial-[ellipse_at_0%_50%] to-100%" />
 
-      <Heading
+      <ContactUsHeading
         subHeader="Response Within 24 Hours"
         title="Contact us directly"
       />
       <div className="flex justify-center">
-        <Form />
+        <ContactUsForm />
       </div>
     </div>
   );

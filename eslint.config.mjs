@@ -5,8 +5,6 @@ import jsxA11y from "eslint-plugin-jsx-a11y";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
-import sortKeysFix from "eslint-plugin-sort-keys-fix";
-import typescriptSortKeys from "eslint-plugin-typescript-sort-keys";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -36,8 +34,6 @@ const eslintConfig = [
       react,
       "react-hooks": reactHooks,
       "simple-import-sort": simpleImportSort,
-      "sort-keys-fix": sortKeysFix,
-      "typescript-sort-keys": typescriptSortKeys,
     },
     rules: {
       "@typescript-eslint/consistent-type-imports": [
@@ -99,13 +95,6 @@ const eslintConfig = [
           ],
         },
       ],
-
-      // Object key sorting
-      "sort-keys-fix/sort-keys-fix": "error",
-
-      "typescript-sort-keys/interface": "error",
-
-      "typescript-sort-keys/string-enum": "error",
     },
   },
   {
