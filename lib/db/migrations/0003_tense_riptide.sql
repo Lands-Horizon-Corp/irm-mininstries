@@ -1,1 +1,0 @@
-ALTER TABLE "church_events" ADD COLUMN "image_url" text;
