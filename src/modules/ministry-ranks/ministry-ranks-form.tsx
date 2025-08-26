@@ -58,8 +58,6 @@ export default function MinistryRanksForm({
     resolver: zodResolver(ministryRanksSchema),
   });
 
-  const descriptionValue = form.watch("description");
-
   async function onSubmit(values: z.infer<typeof ministryRanksSchema>) {
     if (isEdit) {
       updateMinistryRank.mutate(
@@ -155,7 +153,7 @@ export default function MinistryRanksForm({
                 />
               </FormControl>
               <div className="text-muted-foreground absolute right-2 bottom-2 text-xs">
-                {descriptionValue.length}/{MAX_CHARS}
+                {field.value.length}/{MAX_CHARS}
               </div>
               <FormMessage />
             </FormItem>
