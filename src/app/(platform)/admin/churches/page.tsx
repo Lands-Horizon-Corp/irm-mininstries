@@ -45,7 +45,7 @@ export default function ChurchesPage() {
                   Add Church
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-h-[80vh] max-w-4xl overflow-y-auto">
+              <DialogContent className="max-h-[80vh] min-w-5xl overflow-y-auto">
                 <DialogTitle className="sr-only">Add New Church</DialogTitle>
                 <ChurchForm
                   isDialog={true}

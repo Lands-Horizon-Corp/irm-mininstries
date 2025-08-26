@@ -26,7 +26,7 @@ export const churchSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   description: z
     .string()
-    .min(20, "Description must be at least 20 characters")
+    .min(1, "Description must be at least 1 character")
     .max(1000, "Description too long"),
 });
 

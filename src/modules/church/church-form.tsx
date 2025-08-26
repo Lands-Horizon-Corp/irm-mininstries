@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MapPin } from "lucide-react";
 import type z from "zod";
 
+import { Base64ImageUpload } from "@/components/ui/base64-image-upload";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Divider } from "@/components/ui/divider";
@@ -19,6 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { MapPicker } from "@/components/ui/map-picker";
 import { Textarea } from "@/components/ui/textarea";
 
 import type { Church } from "./church-schema";
@@ -60,9 +62,6 @@ export default function ChurchForm({
     },
     resolver: zodResolver(churchSchema),
   });
-
-  const descriptionValue = form.watch("description");
-  const addressValue = form.watch("address");
 
   const isPending = isEdit ? updateChurch.isPending : createChurch.isPending;
   const buttonText = isEdit
@@ -149,14 +148,13 @@ export default function ChurchForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-sm md:text-base">
-                  Church Image URL<span className="text-destructive">*</span>
+                  Church Image<span className="text-destructive">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    className="bg-background"
-                    placeholder="https://example.com/church-image.jpg"
-                    type="url"
-                    {...field}
+                  <Base64ImageUpload
+                    placeholder="Upload Church Image"
+                    value={field.value}
+                    onChange={field.onChange}
                   />
                 </FormControl>
                 <FormMessage />
@@ -189,7 +187,7 @@ export default function ChurchForm({
                   />
                 </FormControl>
                 <div className="text-muted-foreground absolute right-2 bottom-2 text-xs">
-                  {addressValue.length}/{MAX_ADDRESS_CHARS}
+                  {field.value.length}/{MAX_ADDRESS_CHARS}
                 </div>
                 <FormMessage />
               </FormItem>
@@ -203,45 +201,85 @@ export default function ChurchForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm md:text-base">
-                    Latitude<span className="text-destructive">*</span>
+                    Church Location<span className="text-destructive">*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      className="bg-background"
-                      placeholder="e.g., 40.7128"
-                      {...field}
+                    <MapPicker
+                      placeholder="Click to select church location"
+                      title="Select Church Location"
+                      value={
+                        field.value && form.watch("longitude")
+                          ? {
+                              lat: parseFloat(field.value),
+                              lng: parseFloat(form.watch("longitude")),
+                            }
+                          : null
+                      }
+                      variant="outline"
+                      onChange={(location) => {
+                        if (location) {
+                          form.setValue("latitude", location.lat.toString());
+                          form.setValue("longitude", location.lng.toString());
+                        } else {
+                          form.setValue("latitude", "");
+                          form.setValue("longitude", "");
+                        }
+                      }}
                     />
                   </FormControl>
                   <p className="text-muted-foreground text-xs">
-                    Range: -90 to 90
+                    Click to select the church location on the map
                   </p>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="longitude"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm md:text-base">
-                    Longitude<span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      className="bg-background"
-                      placeholder="e.g., -74.0060"
-                      {...field}
-                    />
-                  </FormControl>
-                  <p className="text-muted-foreground text-xs">
-                    Range: -180 to 180
-                  </p>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="latitude"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm md:text-base">
+                        Latitude<span className="text-destructive">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          readOnly
+                          className="bg-background"
+                          placeholder="e.g., 40.7128"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="longitude"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm md:text-base">
+                        Longitude<span className="text-destructive">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          readOnly
+                          className="bg-background"
+                          placeholder="e.g., -74.0060"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -263,7 +301,7 @@ export default function ChurchForm({
                 />
               </FormControl>
               <div className="text-muted-foreground absolute right-2 bottom-2 text-xs">
-                {descriptionValue.length}/{MAX_DESCRIPTION_CHARS}
+                {field.value.length}/{MAX_DESCRIPTION_CHARS}
               </div>
               <FormMessage />
             </FormItem>
