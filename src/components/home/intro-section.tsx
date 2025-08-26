@@ -10,96 +10,100 @@ const IntroSection = () => {
       <div className="mx-auto">
         <div className="mx-auto w-full max-w-5xl rounded-2xl">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-12">
-            <div className="relative order-2 aspect-[4/3] overflow-hidden rounded-lg md:order-1">
+            <div className="relative order-2 aspect-[4/5] overflow-hidden rounded-lg md:order-1">
               <Image
                 alt="Intro Section Image"
-                className="object-cover"
+                className="object-cover opacity-85"
                 height={1000}
-                src="/images/software.webp"
+                src="/images/bible.png"
                 width={1000}
               />
+              <div className="animate-float to-background/0 via-background/0 from-primary/50 absolute top-0 right-0 -z-10 h-full w-full bg-radial-[ellipse_at_50%_50%] to-100%" />
             </div>
             <div className="order-1 md:order-2">
               <h2 className="mb-4 text-2xl font-bold md:mb-6 md:text-3xl">
-                Cooperative Banking, Simplified
+                Join Our Ministry Family
               </h2>
 
               <p className="mb-4 text-current/70 md:mb-6">
-                AI-powered, secure platform tailored for cooperatives — easy to
-                use, built for scale and security.
+                A welcoming community rooted in God&apos;s Word, united in
+                prayer, and committed to transforming lives through intentional
+                discipleship and servant leadership.
               </p>
               <p className="text-muted-foreground mb-4">
-                Launch date: January 6, 2026
+                Please join us as one of the ministry family.
               </p>
 
               <div className="space-y-3 md:space-y-4">
                 <h3 className="text-lg font-semibold md:text-xl">
-                  What we offer
+                  How to Join Us
                 </h3>
                 <ul className="space-y-2">
                   <li className="flex items-start gap-3">
                     <Check aria-hidden className="text-primary h-5 w-5" />
                     <span className="text-current/70">
-                      AI forecasting & planning (LLMs + time-series)
+                      Completely welcoming – no barriers, all are welcome
                     </span>
                   </li>
 
                   <li className="flex items-start gap-3">
                     <Check aria-hidden className="text-primary h-5 w-5" />
                     <span className="text-current/70">
-                      Advanced security: encryption, hashing, secure key
-                      management
+                      Simple process – connect with us in just a few minutes
                     </span>
                   </li>
 
                   <li className="flex items-start gap-3">
                     <Check aria-hidden className="text-primary h-5 w-5" />
                     <span className="text-current/70">
-                      Member & employee management, accounts, and reporting
+                      Open doors – no prerequisites required, come as you are
                     </span>
                   </li>
 
                   <li className="flex items-start gap-3">
                     <Check aria-hidden className="text-primary h-5 w-5" />
                     <span className="text-current/70">
-                      Automated loan calculations and blotter validation
+                      Personal connection – ministry leaders will reach out to
+                      welcome you
                     </span>
                   </li>
 
                   <li className="flex items-start gap-3">
                     <Check aria-hidden className="text-primary h-5 w-5" />
                     <span className="text-current/70">
-                      Accounts: time deposits, savings, ledgers and
-                      reconciliations
+                      Christ-centered faith – believing in Jesus as our Savior
+                      and Lord
                     </span>
                   </li>
 
                   <li className="flex items-start gap-3">
                     <Check aria-hidden className="text-primary h-5 w-5" />
                     <span className="text-current/70">
-                      Role-based access (tellers, managers, owners, employees)
+                      Spirit-led ministry – guided by the Holy Spirit in all we
+                      do
                     </span>
                   </li>
 
                   <li className="flex items-start gap-3">
                     <Check aria-hidden className="text-primary h-5 w-5" />
                     <span className="text-current/70">
-                      Modern, proven UI/UX for efficient workflows
+                      Loving community – caring for one another as family
                     </span>
                   </li>
 
                   <li className="flex items-start gap-3">
                     <Check aria-hidden className="text-primary h-5 w-5" />
                     <span className="text-current/70">
-                      Fast, scalable backend with real-time updates (built for
-                      billions of transactions)
+                      Great Commission focus – sharing God&apos;s love through
+                      word and deed
                     </span>
                   </li>
 
                   <li className="flex items-start gap-3">
                     <Check aria-hidden className="text-primary h-5 w-5" />
                     <span className="text-current/70">
-                      Global cloud infrastructure with high availability
+                      Hope in Christ&apos;s return – living faithfully until He
+                      comes
                     </span>
                   </li>
                 </ul>

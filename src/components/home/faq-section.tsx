@@ -9,49 +9,44 @@ import {
 export default function FaqSection() {
   const faqs = [
     {
-      answer: "January 6, 2026.",
-      question: "When is the launch date?",
+      answer:
+        "Anyone who believes in Jesus Christ as their personal Savior and Lord is welcome to join our ministry family. There are no barriers - come as you are.",
+      question: "Who can join IRM Ministries?",
     },
     {
       answer:
-        "Unlimited — the platform is built to scale and can support millions or more members and users.",
-      question: "How many employees or members can use it?",
+        "Simply fill out our membership form with your personal details, upload required documents (photo and ID), and wait for our ministry leaders to contact you personally.",
+      question: "How do I become a member?",
     },
     {
-      answer: `Yes. Developer APIs and webhook support are available for transactions,
-        forecasting, and other integrations. Authorization keys are securely stored
-        on your account, and API documentation (endpoints, requests, and responses)
-        is provided in the developer portal.`,
-      question: "Is there an API or webhooks for developers?",
+      answer:
+        "Our mission is the Redemption and Transformation of Nations. We exist to glorify God by obeying the Great Commandment and fulfilling the Great Commission.",
+      question: "What is IRM Ministries' mission?",
     },
     {
-      answer: `We use industry-standard measures: encryption at rest and in transit,
-        secure authentication, role-based access controls, and regular security
-        audits. Our infrastructure is hosted on Fly.io. See our Security Policy for
-        full details.`,
-      question: "How does the platform ensure data security?",
+      answer:
+        "Our core values include Loving God, Personal Holiness, Loving people, Servant Leadership, Spirit-led Ministry, Holistic Mission, and Shared Resources.",
+      question: "What are your core values?",
     },
     {
-      answer: `e-coop-suite is a digital platform from Lands Horizon Corp that helps
-        cooperatives manage memberships, finances, and operations with secure,
-        user-friendly tools.`,
-      question: "What is e-coop-suite?",
+      answer:
+        "We believe in the Trinity - God the Father, Jesus Christ as fully God and fully man, and the Holy Spirit. We believe in salvation by grace through faith in Jesus Christ alone.",
+      question: "What do you believe about God and salvation?",
     },
     {
-      answer: `Cooperatives, cooperative banks, their members, staff, and directors.
-        Any cooperative looking to modernize operations can register and subscribe.`,
-      question: "Who can use e-coop-suite?",
+      answer:
+        "We are a welcoming community rooted in God's Word, united in prayer, and committed to transforming lives through intentional discipleship and servant leadership.",
+      question: "What kind of community is IRM Ministries?",
     },
     {
-      answer: `Email us at lands.horizon.corp@gmail.com or call +63 991 617 1081. Our
-        support team will assist with inquiries and technical issues.`,
-      question: "Who do I contact for support?",
+      answer:
+        "After submitting your information, our ministry leaders will personally review your application and contact you to welcome you into our church family and guide your next steps.",
+      question: "What happens after I apply for membership?",
     },
     {
-      answer: `We offer Basic, Standard, Premium, and Enterprise plans tailored to
-        cooperative needs. Each plan includes different features and pricing —
-        see the Subscription Plans page for details.`,
-      question: "What subscription plans are available?",
+      answer:
+        "Contact us through our website contact form or reach out to our ministry leaders. We're here to answer any questions about faith, membership, or our community.",
+      question: "How can I get more information or support?",
     },
   ];
 
