@@ -117,7 +117,7 @@ const ChurchActions = ({ church }: ChurchActionsProps) => {
 
       {/* View Dialog */}
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="min-w-4xl">
           <DialogHeader>
             <DialogTitle>Church Details</DialogTitle>
             <DialogDescription>
@@ -193,7 +193,7 @@ const ChurchActions = ({ church }: ChurchActionsProps) => {
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
+        <DialogContent className="max-h-[90vh] min-w-4xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="sr-only">Edit Church</DialogTitle>
           </DialogHeader>
@@ -256,23 +256,7 @@ const columns: ColumnDef<Church>[] = [
       <div className="font-mono text-sm">{row.getValue("id")}</div>
     ),
   },
-  {
-    accessorKey: "imageUrl",
-    header: "Image",
-    cell: ({ row }) => {
-      const imageUrl = row.getValue("imageUrl") as string;
-      return (
-        <div className="h-12 w-12 overflow-hidden rounded-md">
-          <Image
-            fill
-            alt="Church"
-            className="h-full w-full object-cover"
-            src={imageUrl}
-          />
-        </div>
-      );
-    },
-  },
+
   {
     accessorKey: "description",
     header: ({ column }) => (
