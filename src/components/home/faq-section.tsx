@@ -15,8 +15,8 @@ export default function FaqSection() {
     },
     {
       answer:
-        "Simply fill out our membership form with your personal details, upload required documents (photo and ID), and wait for our ministry leaders to contact you personally.",
-      question: "How do I become a member?",
+        "Simply fill out our ministry form with your personal details, upload required documents (photo and ID), and wait for our ministry leaders to contact you personally.",
+      question: "How do I become a Minister?",
     },
     {
       answer:
@@ -41,11 +41,11 @@ export default function FaqSection() {
     {
       answer:
         "After submitting your information, our ministry leaders will personally review your application and contact you to welcome you into our church family and guide your next steps.",
-      question: "What happens after I apply for membership?",
+      question: "What happens after I apply for ministry?",
     },
     {
       answer:
-        "Contact us through our website contact form or reach out to our ministry leaders. We're here to answer any questions about faith, membership, or our community.",
+        "Contact us through our website contact form or reach out to our ministry leaders. We're here to answer any questions about faith, ministry, or our community.",
       question: "How can I get more information or support?",
     },
   ];

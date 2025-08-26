@@ -7,8 +7,8 @@ export default function MinistryHeading() {
       <div className="text-center">
         <Heading
           className="mb-4"
-          description="Manage ministry members and their detailed profiles. Add new members with comprehensive information including personal details, family information, ministry experiences, and professional background to build a complete member directory."
-          title="Ministry Members"
+          description="Manage ministry Ministers and their detailed profiles. Add new Ministers with comprehensive information including personal details, family information, ministry experiences, and professional background to build a complete Ministers directory."
+          title="Ministry"
         />
       </div>
     </Container>

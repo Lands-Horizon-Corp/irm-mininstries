@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 
 import { z } from "zod";
 
+import { db } from "@/db/drizzle";
+import { churches } from "@/modules/church/church-schema";
 import { churchSchema } from "@/modules/church/church-validation";
 
 export async function POST(request: NextRequest) {
@@ -13,40 +15,31 @@ export async function POST(request: NextRequest) {
     // Validate the request data against our schema
     const validatedData = churchSchema.parse(body);
 
-    // Log the church submission (for debugging - remove in production)
-    console.log("Church submission:", {
-      email: validatedData.email,
-      address: validatedData.address.substring(0, 50) + "...",
-      coordinates: {
+    // Save to database
+    const [savedChurch] = await db
+      .insert(churches)
+      .values({
+        imageUrl: validatedData.imageUrl,
+        email: validatedData.email,
+        address: validatedData.address,
+        description: validatedData.description,
         latitude: validatedData.latitude,
         longitude: validatedData.longitude,
-      },
-      timestamp: new Date().toISOString(),
-    });
-
-    // Here you would typically:
-    // 1. Save to database with auto-generated ID and timestamps
-    // 2. Validate coordinates are real locations
-    // 3. Check for duplicate churches (email/coordinates)
-    // 4. Send notification to admin
-    // 5. Update church directory cache
-    // 6. Log audit trail
-
-    // For now, we'll simulate processing
-    await new Promise((resolve) => setTimeout(resolve, 1200)); // Simulate processing time
+      })
+      .returning();
 
     // Return success response
     return NextResponse.json({
       success: true,
       message: "Church added successfully",
       data: {
-        id: Math.random().toString(36).substring(7), // Generate a fake ID
-        email: validatedData.email,
+        id: savedChurch.id,
+        email: savedChurch.email,
         coordinates: {
-          latitude: parseFloat(validatedData.latitude),
-          longitude: parseFloat(validatedData.longitude),
+          latitude: parseFloat(savedChurch.latitude),
+          longitude: parseFloat(savedChurch.longitude),
         },
-        timestamp: new Date().toISOString(),
+        timestamp: savedChurch.createdAt,
       },
     });
   } catch (error) {

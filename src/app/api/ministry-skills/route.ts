@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 
 import { z } from "zod";
 
+import { db } from "@/db/drizzle";
+import { ministrySkills } from "@/modules/ministry-skills/ministry-skills-schema";
 import { ministrySkillsSchema } from "@/modules/ministry-skills/ministry-skills-validation";
 
 export async function POST(request: NextRequest) {
@@ -20,23 +22,31 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
 
-    // Here you would typically:
-    // 1. Save to database
-    // 2. Send notification to admin
-    // 3. Update ministry skills cache
-    // 4. Log audit trail
+    // Save to database
+    const [savedSkill] = await db
+      .insert(ministrySkills)
+      .values({
+        name: validatedData.name,
+        description: validatedData.description,
+      })
+      .returning();
 
-    // For now, we'll simulate processing
-    await new Promise((resolve) => setTimeout(resolve, 800)); // Simulate processing time
+    // Here you would typically also:
+    // 1. Send notification to admin
+    // 2. Update ministry skills cache
+    // 3. Log audit trail
+
+    // Simulate additional processing time
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
     // Return success response
     return NextResponse.json({
       success: true,
       message: "Ministry skill added successfully",
       data: {
-        id: Math.random().toString(36).substring(7), // Generate a fake ID
-        name: validatedData.name,
-        timestamp: new Date().toISOString(),
+        id: savedSkill.id,
+        name: savedSkill.name,
+        timestamp: savedSkill.createdAt,
       },
     });
   } catch (error) {

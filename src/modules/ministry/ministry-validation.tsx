@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const memberSchema = z.object({
+export const ministerSchema = z.object({
   id: z.number().int().optional(),
   firstName: z.string(),
   lastName: z.string(),
@@ -168,4 +168,4 @@ export const memberSchema = z.object({
     .optional(),
 });
 
-export type Member = z.infer<typeof memberSchema>;
+export type Minister = z.infer<typeof ministerSchema>;

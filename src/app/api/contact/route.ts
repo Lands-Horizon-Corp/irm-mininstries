@@ -3,40 +3,33 @@ import { NextResponse } from "next/server";
 
 import { z } from "zod";
 
+import { db } from "@/db/drizzle";
+import { contactSubmissions } from "@/modules/contact-us/contact-us-schema";
 import { contactUsFormSchema } from "@/modules/contact-us/contact-us-validation";
 
 export async function POST(request: NextRequest) {
   try {
-    // Parse the JSON body
     const body = await request.json();
-
-    // Validate the request data against our schema
     const validatedData = contactUsFormSchema.parse(body);
-
-    // Log the contact form submission (for debugging - remove in production)
-    console.log("Contact form submission:", {
-      name: validatedData.name,
-      email: validatedData.email,
-      subject: validatedData.subject,
-      timestamp: new Date().toISOString(),
-    });
-
-    // Here you would typically:
-    // 1. Save to database
-    // 2. Send email notification
-    // 3. Send auto-reply email
-    // 4. Integrate with CRM
-
-    // For now, we'll simulate processing
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate processing time
+    const [savedContact] = await db
+      .insert(contactSubmissions)
+      .values({
+        name: validatedData.name,
+        email: validatedData.email,
+        subject: validatedData.subject,
+        description: validatedData.description,
+        prayerRequest: validatedData.prayerRequest || null,
+        supportEmail: validatedData.supportEmail,
+      })
+      .returning();
 
     // Return success response
     return NextResponse.json({
       success: true,
       message: "Contact form submitted successfully",
       data: {
-        id: Math.random().toString(36).substring(7), // Generate a fake ID
-        timestamp: new Date().toISOString(),
+        id: savedContact.id,
+        timestamp: savedContact.createdAt,
       },
     });
   } catch (error) {

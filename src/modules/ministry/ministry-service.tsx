@@ -1,9 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import type { Member } from "./ministry-validation";
+import type { Minister } from "./ministry-validation";
 
-interface SubmitMemberResponse {
+interface SubmitMinisterResponse {
   success: boolean;
   message?: string;
   error?: string;
@@ -14,8 +14,10 @@ interface SubmitMemberResponse {
 }
 
 // API service function
-const submitMember = async (data: Member): Promise<SubmitMemberResponse> => {
-  const response = await fetch("/api/members", {
+const submitMinister = async (
+  data: Minister
+): Promise<SubmitMinisterResponse> => {
+  const response = await fetch("/api/minister", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -30,23 +32,23 @@ const submitMember = async (data: Member): Promise<SubmitMemberResponse> => {
   const result = await response.json();
 
   if (!result.success) {
-    throw new Error(result.error || "Failed to submit member");
+    throw new Error(result.error || "Failed to submit minister");
   }
 
   return result;
 };
 
 // React Query hook
-export const useSubmitMember = () => {
+export const useSubmitMinister = () => {
   return useMutation({
-    mutationFn: submitMember,
+    mutationFn: submitMinister,
     onSuccess: () => {
-      toast.success("Member added successfully!", {
-        description: "The member has been added to our ministry database.",
+      toast.success("Minister added successfully!", {
+        description: "The minister has been added to our ministry database.",
       });
     },
     onError: (error: Error) => {
-      toast.error("Failed to add member", {
+      toast.error("Failed to add minister", {
         description: error.message || "Please try again later",
       });
     },

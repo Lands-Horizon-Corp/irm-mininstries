@@ -79,7 +79,7 @@ const faqData = [
     ],
   },
   {
-    category: "Membership & Joining",
+    category: "ministry & Joining",
     questions: [
       {
         answer:
@@ -88,18 +88,18 @@ const faqData = [
       },
       {
         answer:
-          "The process is simple: Fill out our membership form with your personal details, upload required documents (photo and identification), and wait for our ministry leaders to contact you personally to welcome you into our church family.",
-        question: "How do I become a member of IRM Ministries?",
+          "The process is simple: Fill out our ministry form with your personal details, upload required documents (photo and identification), and wait for our ministry leaders to contact you personally to welcome you into our church family.",
+        question: "How do I become a one of the ministries of IRM Ministries?",
       },
       {
         answer:
           "You'll need to provide a recent photo, valid identification, and any relevant ministry certificates or training credentials you may have. Our form will guide you through the specific requirements.",
-        question: "What documents do I need to provide for membership?",
+        question: "What documents do I need to provide for ministry?",
       },
       {
         answer:
           "After submitting your information, our ministry leaders will personally review your application and contact you to welcome you into our church family and guide your next steps in your spiritual journey with us.",
-        question: "What happens after I apply for membership?",
+        question: "What happens after I apply for ministry?",
       },
     ],
   },
@@ -123,7 +123,7 @@ const faqData = [
       },
       {
         answer:
-          "You can reach us at our main church location at 351 Tandang Sora Avenue, Quezon City, Philippines, or call (02) 8951 7975. You can also visit our website or use our contact form for inquiries about faith, membership, or our community.",
+          "You can reach us at our main church location at 351 Tandang Sora Avenue, Quezon City, Philippines, or call (02) 8951 7975. You can also visit our website or use our contact form for inquiries about faith, ministry, or our community.",
         question: "How can I contact IRM Ministries?",
       },
     ],
@@ -186,7 +186,7 @@ export default function FaqPage() {
           </h1>
           <p className="text-muted-foreground mx-auto max-w-3xl text-lg leading-relaxed">
             Welcome to the IRM Ministries FAQ page! Here you will find answers
-            to common questions about our ministry, beliefs, membership, and how
+            to common questions about our ministry, beliefs, ministry, and how
             to join our faith community.
           </p>
         </div>
@@ -226,7 +226,7 @@ export default function FaqPage() {
                 Contact us at our church office or visit our contact page for
                 further assistance. We&apos;re here to help you on your
                 spiritual journey and answer any questions about faith,
-                membership, or our ministry community.
+                ministry, or our ministry community.
               </p>
               <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <div className="text-sm">

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   description:
-    "Admin login for IRM Ministries. Access your ministry administration panel to manage content, members, and ministry activities.",
+    "Admin login for IRM Ministries. Access your ministry administration panel to manage content, ministers, and ministry activities.",
   openGraph: {
     description:
       "Secure admin access for IRM Ministries. Login to manage your ministry administration panel.",

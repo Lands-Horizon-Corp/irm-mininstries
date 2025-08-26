@@ -96,13 +96,13 @@ export default function DashboardPage() {
 
             <Card className="p-6">
               <h3 className="text-foreground mb-2 text-lg font-semibold">
-                Member Management
+                Minister Management
               </h3>
               <p className="text-muted-foreground mb-4 text-sm">
-                View and manage ministry members and contacts
+                View and manage ministers and contacts
               </p>
               <Button className="w-full" variant="outline">
-                View Members
+                View Ministers
               </Button>
             </Card>
 
@@ -164,7 +164,7 @@ export default function DashboardPage() {
               <div className="text-center">
                 <div className="text-primary text-2xl font-bold">0</div>
                 <div className="text-muted-foreground text-sm">
-                  Active Members
+                  Active Ministers
                 </div>
               </div>
               <div className="text-center">

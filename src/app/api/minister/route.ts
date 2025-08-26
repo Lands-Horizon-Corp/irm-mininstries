@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 import { z } from "zod";
 
-import { memberSchema } from "@/modules/ministry/ministry-validation";
+import { ministerSchema } from "@/modules/ministry/ministry-validation";
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,10 +11,10 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     // Validate the request data against our schema
-    const validatedData = memberSchema.parse(body);
+    const validatedData = ministerSchema.parse(body);
 
-    // Log the member submission (for debugging - remove in production)
-    console.log("Ministry member submission:", {
+    // Log the minister submission (for debugging - remove in production)
+    console.log("Ministry submission:", {
       firstName: validatedData.firstName,
       lastName: validatedData.lastName,
       email: validatedData.email || "No email provided",
@@ -27,8 +27,8 @@ export async function POST(request: NextRequest) {
     // 2. Process all the nested arrays (children, education, etc.)
     // 3. Handle file uploads for images/signatures
     // 4. Send notification to admin
-    // 5. Send welcome email to new member
-    // 6. Update member directory cache
+    // 5. Send welcome email to new minister
+    // 6. Update minister directory cache
     // 7. Log comprehensive audit trail
 
     // For now, we'll simulate processing
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     // Return success response
     return NextResponse.json({
       success: true,
-      message: "Ministry member added successfully",
+      message: "Ministry minister added successfully",
       data: {
         id: Math.random().toString(36).substring(7), // Generate a fake ID
         name: `${validatedData.firstName} ${validatedData.lastName}`,
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Ministry member submission error:", error);
+    console.error("Ministry minister submission error:", error);
 
     // Handle Zod validation errors
     if (error instanceof z.ZodError) {

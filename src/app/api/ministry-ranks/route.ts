@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 
 import { z } from "zod";
 
+import { db } from "@/db/drizzle";
+import { ministryRanks } from "@/modules/ministry-ranks/ministry-ranks-schema";
 import { ministryRanksSchema } from "@/modules/ministry-ranks/ministry-ranks-validation";
 
 export async function POST(request: NextRequest) {
@@ -13,31 +15,25 @@ export async function POST(request: NextRequest) {
     // Validate the request data against our schema
     const validatedData = ministryRanksSchema.parse(body);
 
-    // Log the ministry rank submission (for debugging - remove in production)
-    console.log("Ministry rank submission:", {
-      name: validatedData.name,
-      description: validatedData.description.substring(0, 50) + "...",
-      timestamp: new Date().toISOString(),
-    });
+    // Save to database
+    const [savedRank] = await db
+      .insert(ministryRanks)
+      .values({
+        name: validatedData.name,
+        description: validatedData.description,
+      })
+      .returning();
 
-    // Here you would typically:
-    // 1. Save to database
-    // 2. Send notification to admin
-    // 3. Update ministry ranks cache
-    // 4. Log audit trail
-    // 5. Check for duplicate ranks
-
-    // For now, we'll simulate processing
-    await new Promise((resolve) => setTimeout(resolve, 800)); // Simulate processing time
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
     // Return success response
     return NextResponse.json({
       success: true,
       message: "Ministry rank added successfully",
       data: {
-        id: Math.random().toString(36).substring(7), // Generate a fake ID
-        name: validatedData.name,
-        timestamp: new Date().toISOString(),
+        id: savedRank.id,
+        name: savedRank.name,
+        timestamp: savedRank.createdAt,
       },
     });
   } catch (error) {
