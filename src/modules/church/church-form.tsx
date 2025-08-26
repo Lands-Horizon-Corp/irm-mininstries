@@ -21,7 +21,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-import { useSubmitChurch } from "./church-service";
+import type { Church } from "./church-schema";
+import { useCreateChurch, useUpdateChurch } from "./church-service";
 import { churchSchema } from "./church-validation";
 
 const MAX_DESCRIPTION_CHARS = 1000;
@@ -30,23 +31,32 @@ const MAX_ADDRESS_CHARS = 500;
 interface ChurchFormProps {
   onClose?: () => void;
   isDialog?: boolean;
+  mode?: "create" | "edit";
+  initialData?: Church;
+  onSuccess?: () => void;
 }
 
 export default function ChurchForm({
   onClose,
   isDialog = false,
+  mode = "create",
+  initialData,
+  onSuccess,
 }: ChurchFormProps) {
   const router = useRouter();
-  const submitChurch = useSubmitChurch();
+  const createChurch = useCreateChurch();
+  const updateChurch = useUpdateChurch();
+
+  const isEdit = mode === "edit" && initialData;
 
   const form = useForm<z.infer<typeof churchSchema>>({
     defaultValues: {
-      imageUrl: "",
-      longitude: "",
-      latitude: "",
-      address: "",
-      email: "",
-      description: "",
+      imageUrl: initialData?.imageUrl || "",
+      longitude: initialData?.longitude || "",
+      latitude: initialData?.latitude || "",
+      address: initialData?.address || "",
+      email: initialData?.email || "",
+      description: initialData?.description || "",
     },
     resolver: zodResolver(churchSchema),
   });
@@ -54,19 +64,57 @@ export default function ChurchForm({
   const descriptionValue = form.watch("description");
   const addressValue = form.watch("address");
 
+  const isPending = isEdit ? updateChurch.isPending : createChurch.isPending;
+  const buttonText = isEdit
+    ? isPending
+      ? "Updating..."
+      : "Update Church"
+    : isPending
+      ? "Adding Church..."
+      : "Add Church";
+  const formTitle = isEdit ? "Edit Church" : "Add New Church";
+  const formDescription = isEdit
+    ? "Update this church's information and location details."
+    : "Add a new church location to expand our ministry network and connect with more communities.";
+
   async function onSubmit(values: z.infer<typeof churchSchema>) {
-    submitChurch.mutate(values, {
-      onSuccess: () => {
-        form.reset();
-        if (isDialog && onClose) {
-          onClose();
-        } else {
-          setTimeout(() => {
-            router.push("/admin/churches");
-          }, 1500);
+    if (isEdit) {
+      updateChurch.mutate(
+        {
+          id: initialData.id,
+          data: values,
+        },
+        {
+          onSuccess: () => {
+            form.reset();
+            if (onSuccess) {
+              onSuccess();
+            } else if (isDialog && onClose) {
+              onClose();
+            } else {
+              setTimeout(() => {
+                router.push("/admin/churches");
+              }, 1500);
+            }
+          },
         }
-      },
-    });
+      );
+    } else {
+      createChurch.mutate(values, {
+        onSuccess: () => {
+          form.reset();
+          if (onSuccess) {
+            onSuccess();
+          } else if (isDialog && onClose) {
+            onClose();
+          } else {
+            setTimeout(() => {
+              router.push("/admin/churches");
+            }, 1500);
+          }
+        },
+      });
+    }
   }
 
   const FormContent = () => (
@@ -232,8 +280,8 @@ export default function ChurchForm({
           >
             Cancel
           </Button>
-          <Button disabled={submitChurch.isPending} type="submit">
-            {submitChurch.isPending ? "Adding Church..." : "Add Church"}
+          <Button disabled={isPending} type="submit">
+            {buttonText}
           </Button>
         </div>
       </form>
@@ -244,11 +292,8 @@ export default function ChurchForm({
     return (
       <div className="space-y-6">
         <div>
-          <h2 className="mb-2 text-xl font-bold">Add New Church</h2>
-          <p className="text-muted-foreground text-sm">
-            Add a new church location to expand our ministry network and connect
-            with more communities.
-          </p>
+          <h2 className="mb-2 text-xl font-bold">{formTitle}</h2>
+          <p className="text-muted-foreground text-sm">{formDescription}</p>
         </div>
         <FormContent />
       </div>
@@ -258,11 +303,8 @@ export default function ChurchForm({
   return (
     <Card className="mx-auto max-w-4xl px-6 py-10">
       <div className="mb-6">
-        <h2 className="mb-2 text-2xl font-bold">Add New Church</h2>
-        <p className="text-muted-foreground">
-          Add a new church location to expand our ministry network and connect
-          with more communities.
-        </p>
+        <h2 className="mb-2 text-2xl font-bold">{formTitle}</h2>
+        <p className="text-muted-foreground">{formDescription}</p>
       </div>
       <FormContent />
     </Card>

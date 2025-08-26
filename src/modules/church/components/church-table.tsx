@@ -56,6 +56,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import ChurchForm from "../church-form";
 import type { Church } from "../church-schema";
 import { useChurches, useDeleteChurch } from "../church-service";
 
@@ -66,6 +67,7 @@ interface ChurchActionsProps {
 
 const ChurchActions = ({ church }: ChurchActionsProps) => {
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const deleteChurchMutation = useDeleteChurch();
 
@@ -76,6 +78,10 @@ const ChurchActions = ({ church }: ChurchActionsProps) => {
     } catch (error) {
       console.error("Failed to delete church:", error);
     }
+  };
+
+  const handleEditSuccess = () => {
+    setIsEditDialogOpen(false);
   };
 
   return (
@@ -94,7 +100,7 @@ const ChurchActions = ({ church }: ChurchActionsProps) => {
             <Eye className="mr-2 h-4 w-4" />
             View
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
             <Edit className="mr-2 h-4 w-4" />
             Edit
           </DropdownMenuItem>
@@ -182,6 +188,22 @@ const ChurchActions = ({ church }: ChurchActionsProps) => {
               </div>
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-h-[90vh] max-w-4xl overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="sr-only">Edit Church</DialogTitle>
+          </DialogHeader>
+          <ChurchForm
+            initialData={church}
+            isDialog={true}
+            mode="edit"
+            onClose={() => setIsEditDialogOpen(false)}
+            onSuccess={handleEditSuccess}
+          />
         </DialogContent>
       </Dialog>
 

@@ -56,6 +56,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import MinistrySkillsForm from "../ministry-skills-form";
 import type { MinistrySkill } from "../ministry-skills-schema";
 import {
   useDeleteMinistrySkill,
@@ -69,6 +70,7 @@ interface MinistrySkillActionsProps {
 
 const MinistrySkillActions = ({ ministrySkill }: MinistrySkillActionsProps) => {
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const deleteMinistrySkillMutation = useDeleteMinistrySkill();
 
@@ -97,7 +99,7 @@ const MinistrySkillActions = ({ ministrySkill }: MinistrySkillActionsProps) => {
             <Eye className="mr-2 h-4 w-4" />
             View
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
             <Edit className="mr-2 h-4 w-4" />
             Edit
           </DropdownMenuItem>
@@ -180,6 +182,19 @@ const MinistrySkillActions = ({ ministrySkill }: MinistrySkillActionsProps) => {
               </div>
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogTitle className="sr-only">Edit Ministry Skill</DialogTitle>
+          <MinistrySkillsForm
+            initialData={ministrySkill}
+            isDialog={true}
+            mode="edit"
+            onClose={() => setIsEditDialogOpen(false)}
+          />
         </DialogContent>
       </Dialog>
 

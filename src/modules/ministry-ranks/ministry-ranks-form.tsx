@@ -20,7 +20,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-import { useSubmitMinistryRank } from "./ministry-ranks-service";
+import type { MinistryRank } from "./ministry-ranks-schema";
+import {
+  useCreateMinistryRank,
+  useUpdateMinistryRank,
+} from "./ministry-ranks-service";
 import { ministryRanksSchema } from "./ministry-ranks-validation";
 
 const MAX_CHARS = 500;
@@ -28,19 +32,28 @@ const MAX_CHARS = 500;
 interface MinistryRanksFormProps {
   onClose?: () => void;
   isDialog?: boolean;
+  mode?: "create" | "edit";
+  initialData?: MinistryRank;
+  onSuccess?: () => void;
 }
 
 export default function MinistryRanksForm({
   onClose,
   isDialog = false,
+  mode = "create",
+  initialData,
+  onSuccess,
 }: MinistryRanksFormProps) {
   const router = useRouter();
-  const submitMinistryRank = useSubmitMinistryRank();
+  const createMinistryRank = useCreateMinistryRank();
+  const updateMinistryRank = useUpdateMinistryRank();
+
+  const isEdit = mode === "edit" && initialData;
 
   const form = useForm<z.infer<typeof ministryRanksSchema>>({
     defaultValues: {
-      name: "",
-      description: "",
+      name: initialData?.name || "",
+      description: initialData?.description || "",
     },
     resolver: zodResolver(ministryRanksSchema),
   });
@@ -48,19 +61,59 @@ export default function MinistryRanksForm({
   const descriptionValue = form.watch("description");
 
   async function onSubmit(values: z.infer<typeof ministryRanksSchema>) {
-    submitMinistryRank.mutate(values, {
-      onSuccess: () => {
-        form.reset();
-        if (isDialog && onClose) {
-          onClose();
-        } else {
-          setTimeout(() => {
-            router.push("/admin/ministry-ranks");
-          }, 1500);
+    if (isEdit) {
+      updateMinistryRank.mutate(
+        {
+          id: initialData.id,
+          data: values,
+        },
+        {
+          onSuccess: () => {
+            form.reset();
+            if (onSuccess) {
+              onSuccess();
+            } else if (isDialog && onClose) {
+              onClose();
+            } else {
+              setTimeout(() => {
+                router.push("/admin/ministry-ranks");
+              }, 1500);
+            }
+          },
         }
-      },
-    });
+      );
+    } else {
+      createMinistryRank.mutate(values, {
+        onSuccess: () => {
+          form.reset();
+          if (onSuccess) {
+            onSuccess();
+          } else if (isDialog && onClose) {
+            onClose();
+          } else {
+            setTimeout(() => {
+              router.push("/admin/ministry-ranks");
+            }, 1500);
+          }
+        },
+      });
+    }
   }
+
+  const isPending = isEdit
+    ? updateMinistryRank.isPending
+    : createMinistryRank.isPending;
+  const buttonText = isEdit
+    ? isPending
+      ? "Updating..."
+      : "Update Rank"
+    : isPending
+      ? "Adding..."
+      : "Add Rank";
+  const formTitle = isEdit ? "Edit Ministry Rank" : "Add Ministry Rank";
+  const formDescription = isEdit
+    ? "Update this ministry rank's information."
+    : "Add a new ministry rank to help organize leadership hierarchy and ministry positions within the church.";
 
   const FormContent = () => (
     <Form {...form}>
@@ -119,8 +172,8 @@ export default function MinistryRanksForm({
           >
             Cancel
           </Button>
-          <Button disabled={submitMinistryRank.isPending} type="submit">
-            {submitMinistryRank.isPending ? "Adding..." : "Add Rank"}
+          <Button disabled={isPending} type="submit">
+            {buttonText}
           </Button>
         </div>
       </form>
@@ -131,11 +184,8 @@ export default function MinistryRanksForm({
     return (
       <div className="space-y-6">
         <div>
-          <h2 className="mb-2 text-xl font-bold">Add Ministry Rank</h2>
-          <p className="text-muted-foreground text-sm">
-            Add a new ministry rank to help organize leadership hierarchy and
-            ministry positions within the church.
-          </p>
+          <h2 className="mb-2 text-xl font-bold">{formTitle}</h2>
+          <p className="text-muted-foreground text-sm">{formDescription}</p>
         </div>
         <FormContent />
       </div>
@@ -145,11 +195,8 @@ export default function MinistryRanksForm({
   return (
     <Card className="mx-auto max-w-2xl px-6 py-10">
       <div className="mb-6">
-        <h2 className="mb-2 text-2xl font-bold">Add Ministry Rank</h2>
-        <p className="text-muted-foreground">
-          Add a new ministry rank to help organize leadership hierarchy and
-          ministry positions within the church.
-        </p>
+        <h2 className="mb-2 text-2xl font-bold">{formTitle}</h2>
+        <p className="text-muted-foreground">{formDescription}</p>
       </div>
       <FormContent />
     </Card>

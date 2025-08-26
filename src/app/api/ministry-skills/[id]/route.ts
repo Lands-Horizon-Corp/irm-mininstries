@@ -8,16 +8,14 @@ import { db } from "@/db/drizzle";
 import { ministrySkills } from "@/modules/ministry-skills/ministry-skills-schema";
 import { ministrySkillsSchema } from "@/modules/ministry-skills/ministry-skills-validation";
 
-interface RouteParams {
-  params: {
-    id: string;
-  };
-}
-
 // GET - Get ministry skill by ID
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const id = parseInt(params.id);
+    const { id: idString } = await params;
+    const id = parseInt(idString);
 
     if (isNaN(id)) {
       return NextResponse.json(
@@ -65,9 +63,13 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 }
 
 // PUT - Update ministry skill by ID
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const id = parseInt(params.id);
+    const { id: idString } = await params;
+    const id = parseInt(idString);
 
     if (isNaN(id)) {
       return NextResponse.json(
@@ -162,9 +164,13 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 }
 
 // DELETE - Delete ministry skill by ID
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const id = parseInt(params.id);
+    const { id: idString } = await params;
+    const id = parseInt(idString);
 
     if (isNaN(id)) {
       return NextResponse.json(

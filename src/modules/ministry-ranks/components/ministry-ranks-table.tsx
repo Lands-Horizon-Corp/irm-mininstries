@@ -56,6 +56,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import MinistryRanksForm from "../ministry-ranks-form";
 import type { MinistryRank } from "../ministry-ranks-schema";
 import {
   useDeleteMinistryRank,
@@ -69,6 +70,7 @@ interface MinistryRankActionsProps {
 
 const MinistryRankActions = ({ ministryRank }: MinistryRankActionsProps) => {
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const deleteMinistryRankMutation = useDeleteMinistryRank();
 
@@ -79,6 +81,10 @@ const MinistryRankActions = ({ ministryRank }: MinistryRankActionsProps) => {
     } catch (error) {
       console.error("Failed to delete ministry rank:", error);
     }
+  };
+
+  const handleEditSuccess = () => {
+    setIsEditDialogOpen(false);
   };
 
   return (
@@ -97,7 +103,7 @@ const MinistryRankActions = ({ ministryRank }: MinistryRankActionsProps) => {
             <Eye className="mr-2 h-4 w-4" />
             View
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
             <Edit className="mr-2 h-4 w-4" />
             Edit
           </DropdownMenuItem>
@@ -182,6 +188,22 @@ const MinistryRankActions = ({ ministryRank }: MinistryRankActionsProps) => {
               </div>
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="sr-only">Edit Ministry Rank</DialogTitle>
+          </DialogHeader>
+          <MinistryRanksForm
+            initialData={ministryRank}
+            isDialog={true}
+            mode="edit"
+            onClose={() => setIsEditDialogOpen(false)}
+            onSuccess={handleEditSuccess}
+          />
         </DialogContent>
       </Dialog>
 

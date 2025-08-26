@@ -20,7 +20,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-import { useSubmitMinistrySkill } from "./ministry-skills-service";
+import type { MinistrySkill } from "./ministry-skills-schema";
+import {
+  useSubmitMinistrySkill,
+  useUpdateMinistrySkill,
+} from "./ministry-skills-service";
 import { ministrySkillsSchema } from "./ministry-skills-validation";
 
 const MAX_CHARS = 500;
@@ -28,38 +32,60 @@ const MAX_CHARS = 500;
 interface MinistrySkillsFormProps {
   onClose?: () => void;
   isDialog?: boolean;
+  initialData?: MinistrySkill | null;
+  mode?: "create" | "edit";
 }
 
 export default function MinistrySkillsForm({
   onClose,
   isDialog = false,
+  initialData = null,
+  mode = "create",
 }: MinistrySkillsFormProps) {
   const router = useRouter();
   const submitMinistrySkill = useSubmitMinistrySkill();
+  const updateMinistrySkill = useUpdateMinistrySkill();
+
+  const isEditMode = mode === "edit" && initialData;
 
   const form = useForm<z.infer<typeof ministrySkillsSchema>>({
     defaultValues: {
-      name: "",
-      description: "",
+      name: initialData?.name || "",
+      description: initialData?.description || "",
     },
     resolver: zodResolver(ministrySkillsSchema),
   });
 
-  const descriptionValue = form.watch("description");
-
   async function onSubmit(values: z.infer<typeof ministrySkillsSchema>) {
-    submitMinistrySkill.mutate(values, {
-      onSuccess: () => {
-        form.reset();
-        if (isDialog && onClose) {
-          onClose();
-        } else {
-          setTimeout(() => {
-            router.push("/admin/ministry-skills");
-          }, 1500);
+    if (isEditMode) {
+      updateMinistrySkill.mutate(
+        { id: initialData.id, data: values },
+        {
+          onSuccess: () => {
+            if (isDialog && onClose) {
+              onClose();
+            } else {
+              setTimeout(() => {
+                router.push("/admin/ministry-skills");
+              }, 1500);
+            }
+          },
         }
-      },
-    });
+      );
+    } else {
+      submitMinistrySkill.mutate(values, {
+        onSuccess: () => {
+          form.reset();
+          if (isDialog && onClose) {
+            onClose();
+          } else {
+            setTimeout(() => {
+              router.push("/admin/ministry-skills");
+            }, 1500);
+          }
+        },
+      });
+    }
   }
 
   const FormContent = () => (
@@ -102,7 +128,7 @@ export default function MinistrySkillsForm({
                 />
               </FormControl>
               <div className="text-muted-foreground absolute right-2 bottom-2 text-xs">
-                {descriptionValue.length}/{MAX_CHARS}
+                {field.value.length}/{MAX_CHARS}
               </div>
               <FormMessage />
             </FormItem>
@@ -119,8 +145,21 @@ export default function MinistrySkillsForm({
           >
             Cancel
           </Button>
-          <Button disabled={submitMinistrySkill.isPending} type="submit">
-            {submitMinistrySkill.isPending ? "Adding..." : "Add Skill"}
+          <Button
+            disabled={
+              isEditMode
+                ? updateMinistrySkill.isPending
+                : submitMinistrySkill.isPending
+            }
+            type="submit"
+          >
+            {isEditMode
+              ? updateMinistrySkill.isPending
+                ? "Updating..."
+                : "Update Skill"
+              : submitMinistrySkill.isPending
+                ? "Adding..."
+                : "Add Skill"}
           </Button>
         </div>
       </form>
@@ -131,10 +170,13 @@ export default function MinistrySkillsForm({
     return (
       <div className="space-y-6">
         <div>
-          <h2 className="mb-2 text-xl font-bold">Add Ministry Skill</h2>
+          <h2 className="mb-2 text-xl font-bold">
+            {isEditMode ? "Edit Ministry Skill" : "Add Ministry Skill"}
+          </h2>
           <p className="text-muted-foreground text-sm">
-            Add a new ministry skill to help categorize and organize ministry
-            talents and abilities.
+            {isEditMode
+              ? "Update the ministry skill information below."
+              : "Add a new ministry skill to help categorize and organize ministry talents and abilities."}
           </p>
         </div>
         <FormContent />
@@ -145,10 +187,13 @@ export default function MinistrySkillsForm({
   return (
     <Card className="mx-auto max-w-2xl px-6 py-10">
       <div className="mb-6">
-        <h2 className="mb-2 text-2xl font-bold">Add Ministry Skill</h2>
+        <h2 className="mb-2 text-2xl font-bold">
+          {isEditMode ? "Edit Ministry Skill" : "Add Ministry Skill"}
+        </h2>
         <p className="text-muted-foreground">
-          Add a new ministry skill to help categorize and organize ministry
-          talents and abilities.
+          {isEditMode
+            ? "Update the ministry skill information below."
+            : "Add a new ministry skill to help categorize and organize ministry talents and abilities."}
         </p>
       </div>
       <FormContent />

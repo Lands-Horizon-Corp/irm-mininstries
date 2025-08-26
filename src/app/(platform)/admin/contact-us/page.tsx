@@ -22,7 +22,7 @@ export default function ContactUsPage() {
   return (
     <div className="bg-background min-h-screen p-8">
       <Container>
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-7xl">
           {/* Header */}
           <div className="mb-8 flex items-center justify-between">
             <div className="flex items-center gap-3">

@@ -19,7 +19,6 @@ import {
   ArrowUpDown,
   Calendar,
   ChevronDown,
-  Edit,
   Eye,
   Mail,
   MessageCircle,
@@ -96,10 +95,6 @@ const ContactActions = ({ contact }: ContactActionsProps) => {
           <DropdownMenuItem onClick={() => setIsViewDialogOpen(true)}>
             <Eye className="mr-2 h-4 w-4" />
             View
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Edit className="mr-2 h-4 w-4" />
-            Edit
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
