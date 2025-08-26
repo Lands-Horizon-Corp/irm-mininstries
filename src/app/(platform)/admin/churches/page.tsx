@@ -7,7 +7,12 @@ import { Building2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import ChurchForm from "@/modules/church/church-form";
 import ChurchTable from "@/modules/church/components/church-table";
 
@@ -41,6 +46,7 @@ export default function ChurchesPage() {
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-h-[80vh] max-w-4xl overflow-y-auto">
+                <DialogTitle className="sr-only">Add New Church</DialogTitle>
                 <ChurchForm
                   isDialog={true}
                   onClose={() => setDialogOpen(false)}

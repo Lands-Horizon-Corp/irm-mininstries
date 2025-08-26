@@ -7,7 +7,12 @@ import { MessageCircle, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import ContactTable from "@/modules/contact-us/components/contact-table";
 import ContactForm from "@/modules/contact-us/contact-us-form";
 
@@ -41,6 +46,7 @@ export default function ContactUsPage() {
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-h-[80vh] max-w-2xl overflow-y-auto">
+                <DialogTitle className="sr-only">Send Message</DialogTitle>
                 <ContactForm
                   isDialog={true}
                   onClose={() => setDialogOpen(false)}

@@ -7,7 +7,12 @@ import { Crown, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import MinistryRanksTable from "@/modules/ministry-ranks/components/ministry-ranks-table";
 import MinistryRanksForm from "@/modules/ministry-ranks/ministry-ranks-form";
 
@@ -41,6 +46,7 @@ export default function MinistryRanksPage() {
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-2xl">
+                <DialogTitle className="sr-only">Add Ministry Rank</DialogTitle>
                 <MinistryRanksForm
                   isDialog={true}
                   onClose={() => setDialogOpen(false)}
