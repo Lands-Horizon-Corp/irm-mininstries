@@ -73,7 +73,6 @@ export default function LoginPage() {
           description: "Welcome to the admin panel.",
         });
 
-        // Redirect to admin dashboard
         window.location.href = "/admin";
       }
     } catch {
@@ -85,7 +84,6 @@ export default function LoginPage() {
     }
   }
 
-  // Show loading spinner while checking authentication
   if (status === "loading") {
     return (
       <div className="flex min-h-screen items-center justify-center">

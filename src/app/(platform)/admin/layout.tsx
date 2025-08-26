@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { AdminSidebar } from "@/components/admin/sidebar";
+
 export const metadata: Metadata = {
   description:
     "IRM Ministries admin dashboard for managing ministry content and operations.",
@@ -11,5 +13,10 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <div className="bg-background flex h-screen">
+      <AdminSidebar />
+      <main className="flex-1 overflow-auto">{children}</main>
+    </div>
+  );
 }
