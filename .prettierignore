@@ -1,0 +1,17 @@
+node_modules
+.next
+out
+build
+dist
+coverage
+.git
+*.log
+package-lock.json
+yarn.lock
+bun.lock
+next-env.d.ts
+**/*.d.ts
+public
+.env*
+.DS_Store
+eslint.config.mjs
