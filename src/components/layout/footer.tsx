@@ -75,14 +75,6 @@ export function Footer() {
                   Terms of Service
                 </a>
               </li>
-              <li>
-                <a
-                  className="text-muted-foreground hover:text-foreground text-sm transition-colors sm:text-base"
-                  href="/about"
-                >
-                  About
-                </a>
-              </li>
             </ul>
           </div>
 

@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function TermsAndConditions() {
   return (
-    <div className="bg-white">
+    <div className="">
       <Container>
         <div className="py-[30px] md:py-24">
           <Heading

@@ -42,15 +42,6 @@ export function Navbar() {
             >
               Contact
             </Link>
-            <Link
-              className={cn(
-                buttonVariants({ variant: "link" }),
-                "text-current"
-              )}
-              href="/about"
-            >
-              About
-            </Link>
             <Link className={cn(buttonVariants(), "ml-4")} href="/join">
               <UserIcon className="mr-2 inline h-4 w-4" /> Join Ministry
             </Link>
@@ -96,13 +87,7 @@ export function Navbar() {
             >
               Contact
             </Link>
-            <Link
-              className={cn("block font-medium")}
-              href="/about"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              About
-            </Link>
+
             <Link
               className={cn(
                 buttonVariants({ variant: "default" }),
