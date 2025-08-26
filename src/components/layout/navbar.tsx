@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
-import { Menu, X } from "lucide-react";
+import { Menu, UserIcon, X } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
 
@@ -52,7 +52,7 @@ export function Navbar() {
               About
             </Link>
             <Link className={cn(buttonVariants(), "ml-4")} href="/join">
-              Join Waitlist
+              <UserIcon className="mr-2 inline h-4 w-4" /> Join Ministry
             </Link>
           </div>
 
@@ -111,7 +111,7 @@ export function Navbar() {
               href="/join"
               onClick={() => setIsMenuOpen(false)}
             >
-              Join Waitlist
+              Join Ministry
             </Link>
           </div>
         </div>
