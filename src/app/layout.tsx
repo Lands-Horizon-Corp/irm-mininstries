@@ -22,8 +22,9 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   description:
-    "Cooperatives embody the power of community, where shared ownership and mutual aid transform economic challenges into opportunities for progress and empowerment.",
-  title: "Empowering Communities Through Cooperative Ownership",
+    "IRM Ministries is a church rooted in God's Word, united in prayer, and commissioned to redeem lives through intentional discipleship. We embody servant leadership while nurturing relationships with God and people, impacting our community and the world through faithful worship and humble service.",
+  title:
+    "IRM Ministries - Intentional Redeeming Ministries | Faith, Community & Servant Leadership",
 };
 
 export default function RootLayout({

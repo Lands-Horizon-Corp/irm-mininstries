@@ -17,7 +17,7 @@ const Logo = () => {
   if (!mounted) {
     // Return a placeholder or the default logo during SSR
     return (
-      <Link className="w-14" href="/">
+      <Link className="w-10" href="/">
         <Image
           priority
           alt="E-Coop Logo"
@@ -31,7 +31,7 @@ const Logo = () => {
   }
 
   return (
-    <Link className="w-14" href="/">
+    <Link className="w-10" href="/">
       <Image
         priority
         alt="E-Coop Logo"
