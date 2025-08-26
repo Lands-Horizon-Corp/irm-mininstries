@@ -3,6 +3,7 @@ import { Crown, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
+import MinistryRanksTable from "@/modules/ministry-ranks/components/ministry-ranks-table";
 
 export default function MinistryRanksPage() {
   return (
@@ -30,22 +31,9 @@ export default function MinistryRanksPage() {
             </Button>
           </div>
 
-          {/* Content */}
-          <Card className="p-8">
-            <div className="text-center">
-              <Crown className="text-muted-foreground/50 mx-auto h-16 w-16" />
-              <h3 className="text-foreground mt-4 text-lg font-semibold">
-                No ministry ranks defined
-              </h3>
-              <p className="text-muted-foreground mt-2">
-                Create a hierarchy system by defining different ministry ranks
-                and their responsibilities.
-              </p>
-              <Button className="mt-4" variant="outline">
-                <Plus className="mr-2 h-4 w-4" />
-                Create First Rank
-              </Button>
-            </div>
+          {/* Ministry Ranks Table */}
+          <Card className="p-6">
+            <MinistryRanksTable />
           </Card>
         </div>
       </Container>

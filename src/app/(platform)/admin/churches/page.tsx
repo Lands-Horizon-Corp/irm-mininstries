@@ -3,6 +3,7 @@ import { Building2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
+import ChurchTable from "@/modules/church/components/church-table";
 
 export default function ChurchesPage() {
   return (
@@ -30,22 +31,9 @@ export default function ChurchesPage() {
             </Button>
           </div>
 
-          {/* Content */}
-          <Card className="p-8">
-            <div className="text-center">
-              <Building2 className="text-muted-foreground/50 mx-auto h-16 w-16" />
-              <h3 className="text-foreground mt-4 text-lg font-semibold">
-                No churches found
-              </h3>
-              <p className="text-muted-foreground mt-2">
-                Start by adding your first church to manage their information
-                and details.
-              </p>
-              <Button className="mt-4" variant="outline">
-                <Plus className="mr-2 h-4 w-4" />
-                Add Your First Church
-              </Button>
-            </div>
+          {/* Church Table */}
+          <Card className="p-6">
+            <ChurchTable />
           </Card>
         </div>
       </Container>

@@ -1,8 +1,9 @@
-import { Filter, MessageCircle } from "lucide-react";
+import { MessageCircle, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
+import ContactTable from "@/modules/contact-us/components/contact-table";
 
 export default function ContactUsPage() {
   return (
@@ -24,24 +25,15 @@ export default function ContactUsPage() {
                 </p>
               </div>
             </div>
-            <Button variant="outline">
-              <Filter className="mr-2 h-4 w-4" />
-              Filter Messages
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Export Messages
             </Button>
           </div>
 
-          {/* Content */}
-          <Card className="p-8">
-            <div className="text-center">
-              <MessageCircle className="text-muted-foreground/50 mx-auto h-16 w-16" />
-              <h3 className="text-foreground mt-4 text-lg font-semibold">
-                No contact messages
-              </h3>
-              <p className="text-muted-foreground mt-2">
-                Contact form submissions from visitors will appear here for
-                review and response.
-              </p>
-            </div>
+          {/* Contact Table */}
+          <Card className="p-6">
+            <ContactTable />
           </Card>
         </div>
       </Container>

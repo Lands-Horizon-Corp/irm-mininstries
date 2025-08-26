@@ -3,6 +3,7 @@ import { Award, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
+import MinistrySkillsTable from "@/modules/ministry-skills/components/ministry-skills-table";
 
 export default function MinistrySkillsPage() {
   return (
@@ -30,22 +31,9 @@ export default function MinistrySkillsPage() {
             </Button>
           </div>
 
-          {/* Content */}
-          <Card className="p-8">
-            <div className="text-center">
-              <Award className="text-muted-foreground/50 mx-auto h-16 w-16" />
-              <h3 className="text-foreground mt-4 text-lg font-semibold">
-                No ministry skills defined
-              </h3>
-              <p className="text-muted-foreground mt-2">
-                Define skills and competencies that ministers can possess for
-                different roles and responsibilities.
-              </p>
-              <Button className="mt-4" variant="outline">
-                <Plus className="mr-2 h-4 w-4" />
-                Define First Skill
-              </Button>
-            </div>
+          {/* Ministry Skills Table */}
+          <Card className="p-6">
+            <MinistrySkillsTable />
           </Card>
         </div>
       </Container>

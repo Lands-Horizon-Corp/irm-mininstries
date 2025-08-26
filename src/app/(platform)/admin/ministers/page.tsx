@@ -1,8 +1,9 @@
-import { Plus, Search, Users } from "lucide-react";
+import { Plus, Users } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
+import MinisterTable from "@/modules/ministry/components/minister-table";
 
 export default function MinistersPage() {
   return (
@@ -24,34 +25,15 @@ export default function MinistersPage() {
                 </p>
               </div>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline">
-                <Search className="mr-2 h-4 w-4" />
-                Search
-              </Button>
-              <Button>
-                <Plus className="mr-2 h-4 w-4" />
-                Add Minister
-              </Button>
-            </div>
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Minister
+            </Button>
           </div>
 
-          {/* Content */}
-          <Card className="p-8">
-            <div className="text-center">
-              <Users className="text-muted-foreground/50 mx-auto h-16 w-16" />
-              <h3 className="text-foreground mt-4 text-lg font-semibold">
-                No ministers registered
-              </h3>
-              <p className="text-muted-foreground mt-2">
-                Start building your ministry team by adding minister profiles
-                with their roles and information.
-              </p>
-              <Button className="mt-4" variant="outline">
-                <Plus className="mr-2 h-4 w-4" />
-                Add First Minister
-              </Button>
-            </div>
+          {/* Ministers Table */}
+          <Card className="p-6">
+            <MinisterTable />
           </Card>
         </div>
       </Container>
