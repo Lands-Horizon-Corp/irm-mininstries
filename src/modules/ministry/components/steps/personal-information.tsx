@@ -1,0 +1,438 @@
+"use client";
+
+import { useForm } from "react-hook-form";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { z } from "zod";
+
+import { Base64ImageUpload } from "@/components/ui/base64-image-upload";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+import type { Minister } from "../../ministry-validation";
+
+interface StepProps {
+  formData: Minister;
+  updateMinisterData: (
+    field: keyof Minister,
+    value: string | boolean | Date | string[] | File | null
+  ) => void;
+  onNext: () => void;
+  onBack: () => void;
+}
+
+const personalInformationSchema = z.object({
+  firstName: z.string().min(1, { message: "First name is required" }),
+  lastName: z.string().min(1, { message: "Last name is required" }),
+  middleName: z.string().optional(),
+  suffix: z.string().optional(),
+  nickname: z.string().optional(),
+  dateOfBirth: z.date(),
+  placeOfBirth: z.string().min(1, { message: "Place of birth is required" }),
+  gender: z.enum(["male", "female"]),
+  heightFeet: z.string().min(1, { message: "Height is required" }),
+  weightKg: z.string().min(1, { message: "Weight is required" }),
+  civilStatus: z.enum([
+    "single",
+    "married",
+    "widowed",
+    "separated",
+    "divorced",
+  ]),
+  imageUrl: z.string().optional(),
+});
+
+type FormValues = z.infer<typeof personalInformationSchema>;
+
+export function PersonalInformation({
+  formData,
+  updateMinisterData,
+  onNext,
+  onBack,
+}: StepProps) {
+  const form = useForm<FormValues>({
+    resolver: zodResolver(personalInformationSchema),
+    defaultValues: {
+      firstName: formData.firstName || "",
+      lastName: formData.lastName || "",
+      middleName: formData.middleName || "",
+      suffix: formData.suffix || "",
+      nickname: formData.nickname || "",
+      dateOfBirth: formData.dateOfBirth || new Date(),
+      placeOfBirth: formData.placeOfBirth || "",
+      gender: formData.gender || "male",
+      heightFeet: formData.heightFeet || "",
+      weightKg: formData.weightKg || "",
+      civilStatus: formData.civilStatus || "single",
+      imageUrl: formData.imageUrl || "",
+    },
+    mode: "onBlur",
+  });
+
+  const onSubmit = async (values: FormValues) => {
+    const valid = await form.trigger();
+    if (!valid) {
+      // Scroll to first error field
+      const firstErrorField = document.querySelector(
+        '[aria-invalid="true"], [data-invalid]'
+      );
+      if (firstErrorField) {
+        firstErrorField.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+      return;
+    }
+
+    // Update form data with personal information
+    Object.keys(values).forEach((key) => {
+      const value = values[key as keyof FormValues];
+      if (value !== undefined) {
+        updateMinisterData(key as keyof FormValues, value);
+      }
+    });
+
+    // Scroll to top of page after successful form submission
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // Continue to next step
+    onNext();
+  };
+
+  return (
+    <div className="mx-auto w-full max-w-4xl space-y-4 p-3 sm:space-y-8 sm:p-6">
+      <Form {...form}>
+        <form
+          className="space-y-4 sm:space-y-8"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
+          {/* Personal Information Section */}
+          <Card className="relative overflow-hidden">
+            <CardHeader className="px-3 pt-2 pb-2 sm:px-6 sm:pt-6 sm:pb-4">
+              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                <span className="leading-tight">Personal Information</span>
+              </CardTitle>
+            </CardHeader>
+
+            <CardContent className="space-y-3 px-3 pb-3 sm:space-y-6 sm:px-6 sm:pb-6">
+              <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium sm:text-base">
+                        First Name
+                        <span className="text-destructive ml-1">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="h-10 text-sm sm:h-11 sm:text-base"
+                          placeholder="Enter first name"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium sm:text-base">
+                        Last Name
+                        <span className="text-destructive ml-1">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="h-10 text-sm sm:h-11 sm:text-base"
+                          placeholder="Enter last name"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="middleName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium sm:text-base">
+                        Middle Name
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="h-10 text-sm sm:h-11 sm:text-base"
+                          placeholder="Enter middle name (optional)"
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="suffix"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium sm:text-base">
+                        Suffix
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="h-10 text-sm sm:h-11 sm:text-base"
+                          placeholder="Enter suffix (optional)"
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="nickname"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium sm:text-base">
+                        Nickname
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="h-10 text-sm sm:h-11 sm:text-base"
+                          placeholder="Enter nickname (optional)"
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="dateOfBirth"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel className="text-sm font-medium sm:text-base">
+                        Date of Birth
+                        <span className="text-destructive ml-1">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              className="h-10 w-full justify-start bg-transparent text-sm font-normal sm:h-11 sm:text-base"
+                              variant="outline"
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4 flex-shrink-0" />
+                              <span className="truncate">
+                                {field.value
+                                  ? format(new Date(field.value), "dd/MM/yyyy")
+                                  : "Select date of birth"}
+                              </span>
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent align="start" className="w-auto p-0">
+                            <Calendar
+                              captionLayout="dropdown"
+                              mode="single"
+                              selected={
+                                field.value ? new Date(field.value) : undefined
+                              }
+                              onSelect={(date: Date | undefined) => {
+                                if (date) {
+                                  const day = new Date(
+                                    format(date, "yyyy-MM-dd")
+                                  );
+                                  field.onChange(day);
+                                }
+                              }}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="placeOfBirth"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium sm:text-base">
+                        Place of Birth
+                        <span className="text-destructive ml-1">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="h-10 text-sm sm:h-11 sm:text-base"
+                          placeholder="Enter place of birth"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="gender"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium sm:text-base">
+                        Gender
+                        <span className="text-destructive ml-1">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <select
+                          {...field}
+                          className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:text-base"
+                        >
+                          <option value="male">Male</option>
+                          <option value="female">Female</option>
+                        </select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="heightFeet"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium sm:text-base">
+                        Height (feet)
+                        <span className="text-destructive ml-1">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="h-10 text-sm sm:h-11 sm:text-base"
+                          placeholder="Enter height in feet"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="weightKg"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium sm:text-base">
+                        Weight (kg)
+                        <span className="text-destructive ml-1">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="h-10 text-sm sm:h-11 sm:text-base"
+                          placeholder="Enter weight in kg"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="civilStatus"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium sm:text-base">
+                        Civil Status
+                        <span className="text-destructive ml-1">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <select
+                          {...field}
+                          className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:text-base"
+                        >
+                          <option value="single">Single</option>
+                          <option value="married">Married</option>
+                          <option value="widowed">Widowed</option>
+                          <option value="separated">Separated</option>
+                          <option value="divorced">Divorced</option>
+                        </select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem className="md:col-span-2">
+                      <FormLabel className="text-sm font-medium sm:text-base">
+                        Profile Picture
+                      </FormLabel>
+                      <FormControl>
+                        <Base64ImageUpload
+                          placeholder="Upload Profile Picture"
+                          value={field.value}
+                          onChange={(base64) => field.onChange(base64)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Navigation Buttons */}
+          <div className="flex flex-col gap-3 border-t px-3 pt-4 sm:flex-row sm:justify-between sm:gap-4 sm:px-0 sm:pt-6">
+            <Button type="button" variant="outline" onClick={onBack}>
+              Back
+            </Button>
+            <Button className="" type="submit">
+              Continue
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
+  );
+}

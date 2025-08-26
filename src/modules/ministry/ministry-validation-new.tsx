@@ -23,19 +23,20 @@ export const ministerSchema = z.object({
   ]),
   imageUrl: z.string().optional().nullable(),
 
-  // ==================== STEP 2: CONTACT INFORMATION & Government IDs ====================
+  // ==================== STEP 2: CONTACT INFORMATION ====================
   email: z.string().email().optional().nullable(),
   telephone: z.string().optional().nullable(),
   address: z.string(),
   presentAddress: z.string(),
   permanentAddress: z.string().optional().nullable(),
 
+  // ==================== STEP 3: GOVERNMENT & IDENTIFICATION ====================
   passportNumber: z.string().optional().nullable(),
   sssNumber: z.string().optional().nullable(),
   philhealth: z.string().optional().nullable(),
   tin: z.string().optional().nullable(),
 
-  // ==================== STEP 3: FAMILY & SPOUSE INFORMATION (INCLUDING CHILDREN) ====================
+  // ==================== STEP 4: FAMILY & SPOUSE INFORMATION (INCLUDING CHILDREN) ====================
   // Family Information
   fatherName: z.string(),
   fatherProvince: z.string(),
@@ -68,7 +69,7 @@ export const ministerSchema = z.object({
     )
     .optional(),
 
-  // ==================== STEP 4: EMERGENCY CONTACTS & SKILLS/INTERESTS ====================
+  // ==================== STEP 5: EMERGENCY CONTACTS & SKILLS/INTERESTS ====================
   // Emergency Contacts
   emergencyContacts: z
     .array(
@@ -90,7 +91,7 @@ export const ministerSchema = z.object({
   sports: z.string().optional().nullable(),
   otherReligiousSecularTraining: z.string().optional().nullable(),
 
-  // ==================== STEP 5: EDUCATION & EMPLOYMENT BACKGROUND ====================
+  // ==================== STEP 6: EDUCATION & EMPLOYMENT BACKGROUND ====================
   // Education Background
   educationBackgrounds: z
     .array(
@@ -122,7 +123,7 @@ export const ministerSchema = z.object({
     )
     .optional(),
 
-  // ==================== STEP 6: MINISTRY EXPERIENCE & SKILLS ====================
+  // ==================== STEP 7: MINISTRY EXPERIENCE & SKILLS ====================
   // Ministry Experience
   ministryExperiences: z
     .array(
@@ -150,7 +151,7 @@ export const ministerSchema = z.object({
     )
     .optional(),
 
-  // ==================== STEP 7: MINISTRY RECORDS & AWARDS/RECOGNITIONS ====================
+  // ==================== STEP 8: MINISTRY RECORDS & AWARDS/RECOGNITIONS ====================
   // Ministry Records
   ministryRecords: z
     .array(
@@ -179,7 +180,7 @@ export const ministerSchema = z.object({
     )
     .optional(),
 
-  // ==================== STEP 8: SEMINARS & CONFERENCES ====================
+  // ==================== STEP 9: SEMINARS & CONFERENCES ====================
   seminarsConferences: z
     .array(
       z.object({
@@ -195,7 +196,7 @@ export const ministerSchema = z.object({
     )
     .optional(),
 
-  // ==================== STEP 9: CERTIFICATION & SIGNATURES ====================
+  // ==================== STEP 10: CERTIFICATION & SIGNATURES ====================
   certifiedBy: z.string().optional().nullable(),
   signatureImageUrl: z.string().optional().nullable(),
   signatureByCertifiedImageUrl: z.string().optional().nullable(),
