@@ -28,20 +28,21 @@ const HeroHome = () => {
             <div className="space-y-4">
               <div className="bg-primary/10 text-primary inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium">
                 <Shield className="h-4 w-4" />
-                E-COOPERATIVES SUITE
+                IRM MINISTRIES
               </div>
 
               <h1 className="text-foreground text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-                Empowering Communities Through{" "}
+                Intentional Redeeming{" "}
                 <span className="bg-gradient-hero text-primary bg-clip-text">
-                  Cooperative Ownership
+                  Ministries
                 </span>
               </h1>
 
               <p className="text-muted-foreground max-w-2xl text-lg leading-relaxed">
-                Cooperatives embody the power of community, where shared
-                ownership and mutual aid transform economic challenges into
-                opportunities for progress and empowerment.
+                A church rooted in God&apos;s Word, united in prayer, and
+                commissioned to redeem lives through intentional discipleship.
+                We embody servant leadership while nurturing relationships with
+                God and people.
               </p>
             </div>
             {/* Action Buttons */}
@@ -99,13 +100,32 @@ const HeroHome = () => {
           {/* Image Section */}
           <div className="animate-slide-up relative">
             <div className="shadow-card relative overflow-hidden rounded-2xl">
+              <div className="animate-float to-background/0 via-background/0 from-primary/50 absolute top-0 right-0 -z-10 h-full w-full bg-radial-[ellipse_at_50%_50%] to-100%" />
+
               <Image
+                alt="IRM Ministries - Faith Community"
+                className="animate-float h-[300px] w-full object-cover"
+                height={1000}
+                src="/images/book.png"
+                width={1000}
+              />
+
+              <Image
+                alt="IRM Ministries - Faith Community"
+                className="animate-float absolute top-0 right-0 h-[300px] w-[300px] object-cover opacity-90 transition delay-700 duration-300"
+                height={1000}
+                src="/images/cross.png"
+                width={1000}
+              />
+              <div className="animate-float to-background/0 via-background/0 from-primary/50 absolute top-0 right-0 -z-10 h-full w-full bg-radial-[ellipse_at_50%_50%] to-100%" />
+
+              {/* <Image
                 alt="Cooperative community working together"
                 className="h-[500px] w-full object-cover"
                 height={1000}
                 src="/images/poster.png"
                 width={1000}
-              />
+              /> */}
               <div className="absolute inset-0 bg-gradient-to-t" />
             </div>
 
