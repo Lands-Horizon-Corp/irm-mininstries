@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import MouseTrailEffect from "@/components/ui/mouse-trail-effect";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/ui/theme-provider";
+
 import { Footer } from "../components/layout/footer";
 import { Navbar } from "../components/layout/navbar";
 
