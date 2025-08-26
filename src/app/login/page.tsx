@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
@@ -34,8 +35,16 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  // Redirect to admin if already logged in
+  useEffect(() => {
+    if (status === "authenticated" && session?.user?.role === "admin") {
+      router.push("/admin");
+    }
+  }, [session, status, router]);
 
   const form = useForm<LoginFormData>({
     defaultValues: {
@@ -49,27 +58,52 @@ export default function LoginPage() {
     try {
       setIsLoading(true);
 
-      // Simulate login process (replace with actual authentication)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // For demo purposes - you would typically call your authentication API here
-      console.log("Login attempt:", values);
-
-      toast.success("Login successful!", {
-        description: "Welcome to the admin panel.",
+      const result = await signIn("credentials", {
+        email: values.email,
+        password: values.password,
+        redirect: false,
       });
 
-      // Redirect to admin dashboard (replace with actual route)
-      setTimeout(() => {
-        router.push("/admin");
-      }, 1000);
+      if (result?.error) {
+        toast.error("Login failed", {
+          description: "Please check your credentials and try again.",
+        });
+      } else if (result?.ok) {
+        toast.success("Login successful!", {
+          description: "Welcome to the admin panel.",
+        });
+
+        // Redirect to admin dashboard
+        window.location.href = "/admin";
+      }
     } catch {
       toast.error("Login failed", {
-        description: "Please check your credentials and try again.",
+        description: "An unexpected error occurred. Please try again.",
       });
     } finally {
       setIsLoading(false);
     }
+  }
+
+  // Show loading spinner while checking authentication
+  if (status === "loading") {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="to-background/0 via-background/0 from-primary/50 absolute right-0 -z-10 h-screen w-full bg-radial-[ellipse_at_10%_100%] to-100%" />
+        <Container>
+          <div className="mx-auto max-w-md">
+            <Card className="p-8">
+              <div className="text-center">
+                <div className="border-primary mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-t-transparent"></div>
+                <p className="text-muted-foreground">
+                  Checking authentication...
+                </p>
+              </div>
+            </Card>
+          </div>
+        </Container>
+      </div>
+    );
   }
 
   return (

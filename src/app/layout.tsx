@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
+import { SessionProvider } from "@/components/providers/session-provider";
 import MouseTrailEffect from "@/components/ui/mouse-trail-effect";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/ui/theme-provider";
@@ -37,24 +38,26 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
-          disableTransitionOnChange
-          enableSystem
-          attribute="class"
-          defaultTheme="system"
-        >
-          <MouseTrailEffect
-            color="primary"
-            effect="dots"
-            maxPoints={1000}
-            size={10}
-          />
-          <Navbar />
+        <SessionProvider>
+          <ThemeProvider
+            disableTransitionOnChange
+            enableSystem
+            attribute="class"
+            defaultTheme="system"
+          >
+            <MouseTrailEffect
+              color="primary"
+              effect="dots"
+              maxPoints={1000}
+              size={10}
+            />
+            <Navbar />
 
-          {children}
-          <Footer />
-          <Toaster />
-        </ThemeProvider>
+            {children}
+            <Footer />
+            <Toaster />
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );
