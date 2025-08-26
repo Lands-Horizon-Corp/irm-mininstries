@@ -1,296 +1,196 @@
-import { relations } from "drizzle-orm";
-import {
-  date,
-  integer,
-  pgTable,
-  serial,
-  text,
-  timestamp,
-  varchar,
-} from "drizzle-orm/pg-core";
+import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
-// Main Ministers Table (matching actual database structure)
+import { churches } from "../church/church-schema";
+import { ministrySkills } from "../ministry-skills/ministry-skills-schema";
+
+export const genderEnum = text("gender", { enum: ["male", "female"] });
+export const civilStatusEnum = text("civil_status", {
+  enum: ["single", "married", "widowed", "separated", "divorced"],
+});
+
 export const ministers = pgTable("ministers", {
   id: serial("id").primaryKey(),
-  firstName: varchar("first_name", { length: 255 }).notNull(),
-  middleName: varchar("middle_name", { length: 255 }),
-  lastName: varchar("last_name", { length: 255 }).notNull(),
-  dateOfBirth: date("date_of_birth").notNull(),
-  placeOfBirth: varchar("place_of_birth", { length: 255 }).notNull(),
-  gender: varchar("gender", { length: 10 }).notNull(),
-  contactNumber: varchar("contact_number", { length: 50 }).notNull(),
-  email: varchar("email", { length: 255 }).notNull(),
-  address: varchar("address", { length: 500 }).notNull(),
-  nationality: varchar("nationality", { length: 100 }).notNull(),
-  civilStatus: varchar("civil_status", { length: 50 }).notNull(),
-  citizenship: varchar("citizenship", { length: 100 }).notNull(),
-  fatherName: varchar("father_name", { length: 255 }),
-  fatherOccupation: varchar("father_occupation", { length: 255 }),
-  motherName: varchar("mother_name", { length: 255 }),
-  motherOccupation: varchar("mother_occupation", { length: 255 }),
-  spouseName: varchar("spouse_name", { length: 255 }),
-  spouseOccupation: varchar("spouse_occupation", { length: 255 }),
-  spouseDateOfBirth: date("spouse_date_of_birth"),
-  spousePlaceOfBirth: varchar("spouse_place_of_birth", { length: 255 }),
-  spouseNationality: varchar("spouse_nationality", { length: 100 }),
-  spouseCitizenship: varchar("spouse_citizenship", { length: 100 }),
-  spouseContactNumber: varchar("spouse_contact_number", { length: 50 }),
-  spouseEmail: varchar("spouse_email", { length: 255 }),
-  ministryStatus: varchar("ministry_status", { length: 100 }).notNull(),
-  roleInChurch: varchar("role_in_church", { length: 255 }),
-  currentChurch: varchar("current_church", { length: 255 }),
-  homeChurch: varchar("home_church", { length: 255 }),
-  conversionDate: date("conversion_date"),
-  waterBaptismDate: date("water_baptism_date"),
-  holyGhostBaptismDate: date("holy_ghost_baptism_date"),
-  occupation: varchar("occupation", { length: 255 }),
-  companyName: varchar("company_name", { length: 255 }),
-  yearStarted: varchar("year_started", { length: 10 }),
-  imageUrl: varchar("image_url", { length: 500 }),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+  middleName: text("middle_name"),
+  suffix: text("suffix"),
+  nickname: text("nickname"),
+  dateOfBirth: timestamp("date_of_birth").notNull(),
+  placeOfBirth: text("place_of_birth").notNull(),
+  address: text("address").notNull(),
+  gender: genderEnum.notNull(),
+  heightFeet: text("height_feet").notNull(),
+  weightKg: text("weight_kg").notNull(),
+  civilStatus: civilStatusEnum.notNull(),
+  email: text("email"),
+  telephone: text("telephone"),
+  passportNumber: text("passport_number"),
+  sssNumber: text("sss_number"),
+  philhealth: text("philhealth"),
+  tin: text("tin"),
+  presentAddress: text("present_address").notNull(),
+  permanentAddress: text("permanent_address"),
+
+  // Family info
+  fatherName: text("father_name").notNull(),
+  fatherProvince: text("father_province").notNull(),
+  fatherBirthday: timestamp("father_birthday").notNull(),
+  fatherOccupation: text("father_occupation").notNull(),
+  motherName: text("mother_name").notNull(),
+  motherProvince: text("mother_province").notNull(),
+  motherBirthday: timestamp("mother_birthday").notNull(),
+  motherOccupation: text("mother_occupation").notNull(),
+  spouseName: text("spouse_name"),
+  spouseProvince: text("spouse_province"),
+  spouseBirthday: timestamp("spouse_birthday"),
+  spouseOccupation: text("spouse_occupation"),
+  weddingDate: timestamp("wedding_date"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-}); // Children Table
+
+  // Additional fields
+  skills: text("skills"),
+  hobbies: text("hobbies"),
+  sports: text("sports"),
+  otherReligiousSecularTraining: text("other_religious_secular_training"),
+  certifiedBy: text("certified_by"),
+  signatureImageUrl: text("signature_image_url"),
+  signatureByCertifiedImageUrl: text("signature_by_certified_image_url"),
+  imageUrl: text("image_url"),
+});
+
 export const ministerChildren = pgTable("minister_children", {
   id: serial("id").primaryKey(),
-  ministerId: integer("minister_id")
-    .references(() => ministers.id)
-    .notNull(),
-  name: varchar("name", { length: 255 }).notNull(),
-  placeOfBirth: varchar("place_of_birth", { length: 255 }).notNull(),
-  dateOfBirth: date("date_of_birth").notNull(),
-  gender: varchar("gender", { length: 10 }).notNull(), // 'male' or 'female'
+  ministerId: serial("minister_id")
+    .notNull()
+    .references(() => ministers.id),
+  name: text("name").notNull(),
+  placeOfBirth: text("place_of_birth").notNull(),
+  dateOfBirth: timestamp("date_of_birth").notNull(),
+  gender: genderEnum.notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// Emergency Contacts Table
 export const ministerEmergencyContacts = pgTable(
   "minister_emergency_contacts",
   {
     id: serial("id").primaryKey(),
-    ministerId: integer("minister_id")
-      .references(() => ministers.id)
-      .notNull(),
-    name: varchar("name", { length: 255 }).notNull(),
-    relationship: varchar("relationship", { length: 100 }).notNull(),
-    address: varchar("address", { length: 500 }).notNull(),
-    contactNumber: varchar("contact_number", { length: 50 }).notNull(),
+    ministerId: serial("minister_id")
+      .notNull()
+      .references(() => ministers.id),
+    name: text("name").notNull(),
+    relationship: text("relationship").notNull(),
+    address: text("address").notNull(),
+    contactNumber: text("contact_number").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   }
 );
 
-// Education Backgrounds Table
 export const ministerEducationBackgrounds = pgTable(
   "minister_education_backgrounds",
   {
     id: serial("id").primaryKey(),
-    ministerId: integer("minister_id")
-      .references(() => ministers.id)
-      .notNull(),
-    schoolName: varchar("school_name", { length: 255 }).notNull(),
-    educationalAttainment: varchar("educational_attainment", {
-      length: 255,
-    }).notNull(),
-    dateGraduated: date("date_graduated"),
+    ministerId: serial("minister_id")
+      .notNull()
+      .references(() => ministers.id),
+    schoolName: text("school_name").notNull(),
+    educationalAttainment: text("educational_attainment").notNull(),
+    dateGraduated: timestamp("date_graduated"),
     description: text("description"),
-    course: varchar("course", { length: 255 }),
+    course: text("course"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   }
 );
 
-// Ministry Experiences Table
 export const ministerMinistryExperiences = pgTable(
   "minister_ministry_experiences",
   {
     id: serial("id").primaryKey(),
-    ministerId: integer("minister_id")
-      .references(() => ministers.id)
-      .notNull(),
-    title: varchar("title", { length: 255 }).notNull(),
+    ministerId: serial("minister_id")
+      .notNull()
+      .references(() => ministers.id),
+    title: text("title").notNull(),
     description: text("description"),
-    fromYear: varchar("from_year", { length: 10 }).notNull(),
-    toYear: varchar("to_year", { length: 10 }),
+    fromYear: text("from_year").notNull(),
+    toYear: text("to_year"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   }
 );
 
-// Minister  Skills Junction Table
 export const ministerMinistrySkills = pgTable("minister_ministry_skills", {
   id: serial("id").primaryKey(),
-  ministerId: integer("minister_id")
-    .references(() => ministers.id)
-    .notNull(),
-  ministrySkillId: integer("ministry_skill_id").notNull(), // References ministrySkills table
+  ministerId: serial("minister_id")
+    .notNull()
+    .references(() => ministers.id),
+  ministrySkillId: serial("ministry_skill_id")
+    .notNull()
+    .references(() => ministrySkills.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// Ministry Records Table
 export const ministerMinistryRecords = pgTable("minister_ministry_records", {
   id: serial("id").primaryKey(),
-  ministerId: integer("minister_id")
-    .references(() => ministers.id)
-    .notNull(),
-  churchLocationId: integer("church_location_id").notNull(), // References churches table
-  fromYear: varchar("from_year", { length: 10 }).notNull(),
-  toYear: varchar("to_year", { length: 10 }),
+  ministerId: serial("minister_id")
+    .notNull()
+    .references(() => ministers.id),
+  churchLocationId: serial("church_location_id")
+    .notNull()
+    .references(() => churches.id),
+  fromYear: text("from_year").notNull(),
+  toYear: text("to_year"),
   contribution: text("contribution"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// Awards and Recognitions Table
 export const ministerAwardsRecognitions = pgTable(
   "minister_awards_recognitions",
   {
     id: serial("id").primaryKey(),
-    ministerId: integer("minister_id")
-      .references(() => ministers.id)
-      .notNull(),
-    year: varchar("year", { length: 10 }).notNull(),
+    ministerId: serial("minister_id")
+      .notNull()
+      .references(() => ministers.id),
+    year: text("year").notNull(),
     description: text("description").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   }
 );
 
-// Employment Records Table
 export const ministerEmploymentRecords = pgTable(
   "minister_employment_records",
   {
     id: serial("id").primaryKey(),
-    ministerId: integer("minister_id")
-      .references(() => ministers.id)
-      .notNull(),
-    companyName: varchar("company_name", { length: 255 }).notNull(),
-    fromYear: varchar("from_year", { length: 10 }).notNull(),
-    toYear: varchar("to_year", { length: 10 }).notNull(),
-    position: varchar("position", { length: 255 }).notNull(),
+    ministerId: serial("minister_id")
+      .notNull()
+      .references(() => ministers.id),
+    companyName: text("company_name").notNull(),
+    fromYear: text("from_year").notNull(),
+    toYear: text("to_year"),
+    position: text("position").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   }
 );
 
-// Seminars and Conferences Table
 export const ministerSeminarsConferences = pgTable(
   "minister_seminars_conferences",
   {
     id: serial("id").primaryKey(),
-    ministerId: integer("minister_id")
-      .references(() => ministers.id)
-      .notNull(),
-    title: varchar("title", { length: 255 }).notNull(),
+    ministerId: serial("minister_id")
+      .notNull()
+      .references(() => ministers.id),
+    title: text("title").notNull(),
     description: text("description"),
-    place: varchar("place", { length: 255 }),
-    year: varchar("year", { length: 10 }).notNull(),
-    numberOfHours: integer("number_of_hours").notNull(),
+    place: text("place"),
+    year: text("year").notNull(),
+    numberOfHours: serial("number_of_hours").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   }
-);
-
-// Relations
-export const ministersRelations = relations(ministers, ({ many }) => ({
-  children: many(ministerChildren),
-  emergencyContacts: many(ministerEmergencyContacts),
-  educationBackgrounds: many(ministerEducationBackgrounds),
-  ministryExperiences: many(ministerMinistryExperiences),
-  ministrySkills: many(ministerMinistrySkills),
-  ministryRecords: many(ministerMinistryRecords),
-  awardsRecognitions: many(ministerAwardsRecognitions),
-  employmentRecords: many(ministerEmploymentRecords),
-  seminarsConferences: many(ministerSeminarsConferences),
-}));
-
-export const ministerChildrenRelations = relations(
-  ministerChildren,
-  ({ one }) => ({
-    minister: one(ministers, {
-      fields: [ministerChildren.ministerId],
-      references: [ministers.id],
-    }),
-  })
-);
-
-export const ministerEmergencyContactsRelations = relations(
-  ministerEmergencyContacts,
-  ({ one }) => ({
-    minister: one(ministers, {
-      fields: [ministerEmergencyContacts.ministerId],
-      references: [ministers.id],
-    }),
-  })
-);
-
-export const ministerEducationBackgroundsRelations = relations(
-  ministerEducationBackgrounds,
-  ({ one }) => ({
-    minister: one(ministers, {
-      fields: [ministerEducationBackgrounds.ministerId],
-      references: [ministers.id],
-    }),
-  })
-);
-
-export const ministerMinistryExperiencesRelations = relations(
-  ministerMinistryExperiences,
-  ({ one }) => ({
-    minister: one(ministers, {
-      fields: [ministerMinistryExperiences.ministerId],
-      references: [ministers.id],
-    }),
-  })
-);
-
-export const ministerMinistrySkillsRelations = relations(
-  ministerMinistrySkills,
-  ({ one }) => ({
-    minister: one(ministers, {
-      fields: [ministerMinistrySkills.ministerId],
-      references: [ministers.id],
-    }),
-  })
-);
-
-export const ministerMinistryRecordsRelations = relations(
-  ministerMinistryRecords,
-  ({ one }) => ({
-    minister: one(ministers, {
-      fields: [ministerMinistryRecords.ministerId],
-      references: [ministers.id],
-    }),
-  })
-);
-
-export const ministerAwardsRecognitionsRelations = relations(
-  ministerAwardsRecognitions,
-  ({ one }) => ({
-    minister: one(ministers, {
-      fields: [ministerAwardsRecognitions.ministerId],
-      references: [ministers.id],
-    }),
-  })
-);
-
-export const ministerEmploymentRecordsRelations = relations(
-  ministerEmploymentRecords,
-  ({ one }) => ({
-    minister: one(ministers, {
-      fields: [ministerEmploymentRecords.ministerId],
-      references: [ministers.id],
-    }),
-  })
-);
-
-export const ministerSeminarsConferencesRelations = relations(
-  ministerSeminarsConferences,
-  ({ one }) => ({
-    minister: one(ministers, {
-      fields: [ministerSeminarsConferences.ministerId],
-      references: [ministers.id],
-    }),
-  })
 );
