@@ -50,6 +50,14 @@ export function Footer() {
                   Join Us
                 </Link>
               </li>
+              <li>
+                <Link
+                  className="text-muted-foreground hover:text-foreground text-sm transition-colors sm:text-base"
+                  href="/login"
+                >
+                  For Admin
+                </Link>
+              </li>
             </ul>
           </div>
 
