@@ -25,7 +25,15 @@ import { ministryRanksSchema } from "./ministry-ranks-validation";
 
 const MAX_CHARS = 500;
 
-export default function MinistryRanksForm() {
+interface MinistryRanksFormProps {
+  onClose?: () => void;
+  isDialog?: boolean;
+}
+
+export default function MinistryRanksForm({
+  onClose,
+  isDialog = false,
+}: MinistryRanksFormProps) {
   const router = useRouter();
   const submitMinistryRank = useSubmitMinistryRank();
 
@@ -43,11 +51,95 @@ export default function MinistryRanksForm() {
     submitMinistryRank.mutate(values, {
       onSuccess: () => {
         form.reset();
-        setTimeout(() => {
-          router.push("/admin/ministry-ranks");
-        }, 1500);
+        if (isDialog && onClose) {
+          onClose();
+        } else {
+          setTimeout(() => {
+            router.push("/admin/ministry-ranks");
+          }, 1500);
+        }
       },
     });
+  }
+
+  const FormContent = () => (
+    <Form {...form}>
+      <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-sm md:text-base">
+                Rank Name<span className="text-destructive">*</span>
+              </FormLabel>
+              <FormControl>
+                <Input
+                  className="bg-background"
+                  placeholder="e.g., Pastor, Elder, Deacon, Ministry Leader"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem className="relative">
+              <FormLabel className="text-sm md:text-base">
+                Description<span className="text-destructive">*</span>
+              </FormLabel>
+              <FormControl>
+                <Textarea
+                  className="bg-background"
+                  placeholder="Describe this ministry rank, its responsibilities, and role within the church hierarchy..."
+                  rows={4}
+                  {...field}
+                />
+              </FormControl>
+              <div className="text-muted-foreground absolute right-2 bottom-2 text-xs">
+                {descriptionValue.length}/{MAX_CHARS}
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {!isDialog && <Divider />}
+
+        <div className="flex justify-end space-x-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={isDialog ? onClose : () => router.back()}
+          >
+            Cancel
+          </Button>
+          <Button disabled={submitMinistryRank.isPending} type="submit">
+            {submitMinistryRank.isPending ? "Adding..." : "Add Rank"}
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+
+  if (isDialog) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h2 className="mb-2 text-xl font-bold">Add Ministry Rank</h2>
+          <p className="text-muted-foreground text-sm">
+            Add a new ministry rank to help organize leadership hierarchy and
+            ministry positions within the church.
+          </p>
+        </div>
+        <FormContent />
+      </div>
+    );
   }
 
   return (
@@ -59,69 +151,7 @@ export default function MinistryRanksForm() {
           ministry positions within the church.
         </p>
       </div>
-
-      <Form {...form}>
-        <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm md:text-base">
-                  Rank Name<span className="text-destructive">*</span>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    className="bg-background"
-                    placeholder="e.g., Pastor, Elder, Deacon, Ministry Leader"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem className="relative">
-                <FormLabel className="text-sm md:text-base">
-                  Description<span className="text-destructive">*</span>
-                </FormLabel>
-                <FormControl>
-                  <Textarea
-                    className="bg-background"
-                    placeholder="Describe this ministry rank, its responsibilities, and role within the church hierarchy..."
-                    rows={4}
-                    {...field}
-                  />
-                </FormControl>
-                <div className="text-muted-foreground absolute right-2 bottom-2 text-xs">
-                  {descriptionValue.length}/{MAX_CHARS}
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Divider />
-
-          <div className="flex justify-end space-x-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => router.back()}
-            >
-              Cancel
-            </Button>
-            <Button disabled={submitMinistryRank.isPending} type="submit">
-              {submitMinistryRank.isPending ? "Adding..." : "Add Rank"}
-            </Button>
-          </div>
-        </form>
-      </Form>
+      <FormContent />
     </Card>
   );
 }

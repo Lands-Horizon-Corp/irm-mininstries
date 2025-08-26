@@ -1,11 +1,19 @@
+"use client";
+
+import React from "react";
+
 import { Crown, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import MinistryRanksTable from "@/modules/ministry-ranks/components/ministry-ranks-table";
+import MinistryRanksForm from "@/modules/ministry-ranks/ministry-ranks-form";
 
 export default function MinistryRanksPage() {
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+
   return (
     <div className="bg-background min-h-screen p-8">
       <Container>
@@ -25,10 +33,20 @@ export default function MinistryRanksPage() {
                 </p>
               </div>
             </div>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Rank
-            </Button>
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Rank
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <MinistryRanksForm
+                  isDialog={true}
+                  onClose={() => setDialogOpen(false)}
+                />
+              </DialogContent>
+            </Dialog>
           </div>
 
           {/* Ministry Ranks Table */}

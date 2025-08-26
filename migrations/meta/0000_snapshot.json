@@ -1,5 +1,5 @@
 {
-  "id": "ecb7fb2b-f944-4c75-b39a-c6b180a599f6",
+  "id": "55a13970-c88d-4d58-9d04-25878a20676b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -182,7 +182,7 @@
         },
         "year": {
           "name": "year",
-          "type": "varchar(10)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -213,8 +213,12 @@
           "name": "minister_awards_recognitions_minister_id_ministers_id_fk",
           "tableFrom": "minister_awards_recognitions",
           "tableTo": "ministers",
-          "columnsFrom": ["minister_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -243,25 +247,25 @@
         },
         "name": {
           "name": "name",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "place_of_birth": {
           "name": "place_of_birth",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "date_of_birth": {
           "name": "date_of_birth",
-          "type": "date",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
         "gender": {
           "name": "gender",
-          "type": "varchar(10)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -286,8 +290,12 @@
           "name": "minister_children_minister_id_ministers_id_fk",
           "tableFrom": "minister_children",
           "tableTo": "ministers",
-          "columnsFrom": ["minister_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -316,19 +324,19 @@
         },
         "school_name": {
           "name": "school_name",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "educational_attainment": {
           "name": "educational_attainment",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "date_graduated": {
           "name": "date_graduated",
-          "type": "date",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         },
@@ -340,7 +348,7 @@
         },
         "course": {
           "name": "course",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
@@ -365,8 +373,12 @@
           "name": "minister_education_backgrounds_minister_id_ministers_id_fk",
           "tableFrom": "minister_education_backgrounds",
           "tableTo": "ministers",
-          "columnsFrom": ["minister_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -395,25 +407,25 @@
         },
         "name": {
           "name": "name",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "relationship": {
           "name": "relationship",
-          "type": "varchar(100)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "address": {
           "name": "address",
-          "type": "varchar(500)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "contact_number": {
           "name": "contact_number",
-          "type": "varchar(50)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -438,8 +450,12 @@
           "name": "minister_emergency_contacts_minister_id_ministers_id_fk",
           "tableFrom": "minister_emergency_contacts",
           "tableTo": "ministers",
-          "columnsFrom": ["minister_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -468,25 +484,25 @@
         },
         "company_name": {
           "name": "company_name",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "from_year": {
           "name": "from_year",
-          "type": "varchar(10)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "to_year": {
           "name": "to_year",
-          "type": "varchar(10)",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "position": {
           "name": "position",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -511,8 +527,12 @@
           "name": "minister_employment_records_minister_id_ministers_id_fk",
           "tableFrom": "minister_employment_records",
           "tableTo": "ministers",
-          "columnsFrom": ["minister_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -541,7 +561,7 @@
         },
         "title": {
           "name": "title",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -553,13 +573,13 @@
         },
         "from_year": {
           "name": "from_year",
-          "type": "varchar(10)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "to_year": {
           "name": "to_year",
-          "type": "varchar(10)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
@@ -584,8 +604,12 @@
           "name": "minister_ministry_experiences_minister_id_ministers_id_fk",
           "tableFrom": "minister_ministry_experiences",
           "tableTo": "ministers",
-          "columnsFrom": ["minister_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -620,13 +644,13 @@
         },
         "from_year": {
           "name": "from_year",
-          "type": "varchar(10)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "to_year": {
           "name": "to_year",
-          "type": "varchar(10)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
@@ -657,8 +681,25 @@
           "name": "minister_ministry_records_minister_id_ministers_id_fk",
           "tableFrom": "minister_ministry_records",
           "tableTo": "ministers",
-          "columnsFrom": ["minister_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "minister_ministry_records_church_location_id_churches_id_fk": {
+          "name": "minister_ministry_records_church_location_id_churches_id_fk",
+          "tableFrom": "minister_ministry_records",
+          "tableTo": "churches",
+          "columnsFrom": [
+            "church_location_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -712,8 +753,25 @@
           "name": "minister_ministry_skills_minister_id_ministers_id_fk",
           "tableFrom": "minister_ministry_skills",
           "tableTo": "ministers",
-          "columnsFrom": ["minister_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "minister_ministry_skills_ministry_skill_id_ministry_skills_id_fk": {
+          "name": "minister_ministry_skills_ministry_skill_id_ministry_skills_id_fk",
+          "tableFrom": "minister_ministry_skills",
+          "tableTo": "ministry_skills",
+          "columnsFrom": [
+            "ministry_skill_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -736,13 +794,13 @@
         },
         "minister_id": {
           "name": "minister_id",
-          "type": "integer",
+          "type": "serial",
           "primaryKey": false,
           "notNull": true
         },
         "title": {
           "name": "title",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -754,19 +812,19 @@
         },
         "place": {
           "name": "place",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
         "year": {
           "name": "year",
-          "type": "varchar(10)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "number_of_hours": {
           "name": "number_of_hours",
-          "type": "integer",
+          "type": "serial",
           "primaryKey": false,
           "notNull": true
         },
@@ -791,8 +849,12 @@
           "name": "minister_seminars_conferences_minister_id_ministers_id_fk",
           "tableFrom": "minister_seminars_conferences",
           "tableTo": "ministers",
-          "columnsFrom": ["minister_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -815,211 +877,199 @@
         },
         "first_name": {
           "name": "first_name",
-          "type": "varchar(255)",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "last_name": {
+          "name": "last_name",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "middle_name": {
           "name": "middle_name",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "last_name": {
-          "name": "last_name",
-          "type": "varchar(255)",
+        "suffix": {
+          "name": "suffix",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "nickname": {
+          "name": "nickname",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "date_of_birth": {
           "name": "date_of_birth",
-          "type": "date",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true
         },
         "place_of_birth": {
           "name": "place_of_birth",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "gender": {
-          "name": "gender",
-          "type": "varchar(10)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "contact_number": {
-          "name": "contact_number",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "email": {
-          "name": "email",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "address": {
           "name": "address",
-          "type": "varchar(500)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "nationality": {
-          "name": "nationality",
-          "type": "varchar(100)",
+        "gender": {
+          "name": "gender",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "height_feet": {
+          "name": "height_feet",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "weight_kg": {
+          "name": "weight_kg",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "civil_status": {
           "name": "civil_status",
-          "type": "varchar(50)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "citizenship": {
-          "name": "citizenship",
-          "type": "varchar(100)",
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "telephone": {
+          "name": "telephone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "passport_number": {
+          "name": "passport_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sss_number": {
+          "name": "sss_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "philhealth": {
+          "name": "philhealth",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tin": {
+          "name": "tin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "present_address": {
+          "name": "present_address",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "permanent_address": {
+          "name": "permanent_address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "father_name": {
           "name": "father_name",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "father_province": {
+          "name": "father_province",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "father_birthday": {
+          "name": "father_birthday",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
         },
         "father_occupation": {
           "name": "father_occupation",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "mother_name": {
           "name": "mother_name",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "mother_province": {
+          "name": "mother_province",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mother_birthday": {
+          "name": "mother_birthday",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
         },
         "mother_occupation": {
           "name": "mother_occupation",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "spouse_name": {
           "name": "spouse_name",
-          "type": "varchar(255)",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "spouse_province": {
+          "name": "spouse_province",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "spouse_birthday": {
+          "name": "spouse_birthday",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         },
         "spouse_occupation": {
           "name": "spouse_occupation",
-          "type": "varchar(255)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "spouse_date_of_birth": {
-          "name": "spouse_date_of_birth",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "spouse_place_of_birth": {
-          "name": "spouse_place_of_birth",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "spouse_nationality": {
-          "name": "spouse_nationality",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "spouse_citizenship": {
-          "name": "spouse_citizenship",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "spouse_contact_number": {
-          "name": "spouse_contact_number",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "spouse_email": {
-          "name": "spouse_email",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "ministry_status": {
-          "name": "ministry_status",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "role_in_church": {
-          "name": "role_in_church",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "current_church": {
-          "name": "current_church",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "home_church": {
-          "name": "home_church",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "conversion_date": {
-          "name": "conversion_date",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "water_baptism_date": {
-          "name": "water_baptism_date",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "holy_ghost_baptism_date": {
-          "name": "holy_ghost_baptism_date",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "occupation": {
-          "name": "occupation",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "company_name": {
-          "name": "company_name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "year_started": {
-          "name": "year_started",
-          "type": "varchar(10)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "image_url": {
-          "name": "image_url",
-          "type": "varchar(500)",
+        "wedding_date": {
+          "name": "wedding_date",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         },
@@ -1036,6 +1086,54 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "skills": {
+          "name": "skills",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hobbies": {
+          "name": "hobbies",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sports": {
+          "name": "sports",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "other_religious_secular_training": {
+          "name": "other_religious_secular_training",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "certified_by": {
+          "name": "certified_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "signature_image_url": {
+          "name": "signature_image_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "signature_by_certified_image_url": {
+          "name": "signature_by_certified_image_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "image_url": {
+          "name": "image_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},

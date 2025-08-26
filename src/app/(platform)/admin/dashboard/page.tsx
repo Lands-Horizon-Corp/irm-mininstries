@@ -1,191 +1,119 @@
-"use client";
+import Link from "next/link";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
+import {
+  Award,
+  Building2,
+  Crown,
+  LayoutDashboard,
+  MessageCircle,
+  Users,
+} from "lucide-react";
 
-import { LogOut, Shield, User } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 
+const quickLinks = [
+  {
+    title: "Ministers",
+    subtitle: "Manage ministers and staff members",
+    icon: Users,
+    href: "/admin/ministers",
+    color: "text-blue-600",
+    bgColor: "bg-blue-50",
+  },
+  {
+    title: "Ministry Ranks",
+    subtitle: "Manage leadership hierarchy and positions",
+    icon: Crown,
+    href: "/admin/ministry-ranks",
+    color: "text-purple-600",
+    bgColor: "bg-purple-50",
+  },
+  {
+    title: "Ministry Skills",
+    subtitle: "Manage skills and competencies",
+    icon: Award,
+    href: "/admin/ministry-skills",
+    color: "text-green-600",
+    bgColor: "bg-green-50",
+  },
+  {
+    title: "Churches",
+    subtitle: "Manage church locations and information",
+    icon: Building2,
+    href: "/admin/churches",
+    color: "text-orange-600",
+    bgColor: "bg-orange-50",
+  },
+  {
+    title: "Contact Messages",
+    subtitle: "View and manage contact submissions",
+    icon: MessageCircle,
+    href: "/admin/contact-us",
+    color: "text-red-600",
+    bgColor: "bg-red-50",
+  },
+];
+
 export default function DashboardPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login");
-    }
-  }, [status, router]);
-
-  if (status === "loading") {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="border-primary mb-4 h-8 w-8 animate-spin rounded-full border-4 border-t-transparent"></div>
-          <p className="text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!session) {
-    return null;
-  }
-
-  const handleSignOut = async () => {
-    await signOut({ callbackUrl: "/" });
-  };
-
   return (
-    <div className="bg-background min-h-screen py-12">
+    <div className="bg-background min-h-screen p-8">
       <Container>
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-6xl">
           {/* Header */}
-          <div className="mb-8 flex items-center justify-between">
-            <div>
-              <h1 className="text-foreground text-3xl font-bold">
-                Admin Dashboard
-              </h1>
-              <p className="text-muted-foreground">
-                Welcome to the IRM Ministries administration panel
-              </p>
-            </div>
-            <Button variant="outline" onClick={handleSignOut}>
-              <LogOut className="mr-2 h-4 w-4" />
-              Sign Out
-            </Button>
-          </div>
-
-          {/* User Info Card */}
-          <Card className="mb-8 p-6">
-            <div className="flex items-center space-x-4">
-              <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-full">
-                <User className="text-primary h-6 w-6" />
+          <div className="mb-8">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-lg">
+                <LayoutDashboard className="text-primary h-6 w-6" />
               </div>
               <div>
-                <h2 className="text-foreground text-xl font-semibold">
-                  {session.user?.name || "Admin User"}
-                </h2>
-                <p className="text-muted-foreground">{session.user?.email}</p>
-                <div className="mt-1 flex items-center space-x-2">
-                  <Shield className="h-4 w-4 text-green-600" />
-                  <span className="text-sm font-medium text-green-600">
-                    Administrator
-                  </span>
-                </div>
+                <h1 className="text-foreground text-3xl font-bold">
+                  Admin Dashboard
+                </h1>
+                <p className="text-muted-foreground">
+                  Welcome to the IRM Ministries administration panel
+                </p>
               </div>
             </div>
-          </Card>
-
-          {/* Dashboard Content */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <Card className="p-6">
-              <h3 className="text-foreground mb-2 text-lg font-semibold">
-                Ministry Management
-              </h3>
-              <p className="text-muted-foreground mb-4 text-sm">
-                Manage ministry content, events, and announcements
-              </p>
-              <Button className="w-full" variant="outline">
-                Manage Content
-              </Button>
-            </Card>
-
-            <Card className="p-6">
-              <h3 className="text-foreground mb-2 text-lg font-semibold">
-                Minister Management
-              </h3>
-              <p className="text-muted-foreground mb-4 text-sm">
-                View and manage ministers and contacts
-              </p>
-              <Button className="w-full" variant="outline">
-                View Ministers
-              </Button>
-            </Card>
-
-            <Card className="p-6">
-              <h3 className="text-foreground mb-2 text-lg font-semibold">
-                Prayer Requests
-              </h3>
-              <p className="text-muted-foreground mb-4 text-sm">
-                Review and manage prayer requests from the community
-              </p>
-              <Button className="w-full" variant="outline">
-                View Requests
-              </Button>
-            </Card>
-
-            <Card className="p-6">
-              <h3 className="text-foreground mb-2 text-lg font-semibold">
-                Contact Messages
-              </h3>
-              <p className="text-muted-foreground mb-4 text-sm">
-                Review messages and inquiries from visitors
-              </p>
-              <Button className="w-full" variant="outline">
-                View Messages
-              </Button>
-            </Card>
-
-            <Card className="p-6">
-              <h3 className="text-foreground mb-2 text-lg font-semibold">
-                Site Analytics
-              </h3>
-              <p className="text-muted-foreground mb-4 text-sm">
-                View website traffic and engagement statistics
-              </p>
-              <Button className="w-full" variant="outline">
-                View Analytics
-              </Button>
-            </Card>
-
-            <Card className="p-6">
-              <h3 className="text-foreground mb-2 text-lg font-semibold">
-                Settings
-              </h3>
-              <p className="text-muted-foreground mb-4 text-sm">
-                Configure site settings and preferences
-              </p>
-              <Button className="w-full" variant="outline">
-                Manage Settings
-              </Button>
-            </Card>
           </div>
 
-          {/* Quick Stats */}
-          <Card className="mt-8 p-6">
-            <h3 className="text-foreground mb-4 text-lg font-semibold">
-              Quick Statistics
+          {/* Quick Links Grid */}
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {quickLinks.map((link) => {
+              const IconComponent = link.icon;
+              return (
+                <Link href={link.href} key={link.href}>
+                  <Card className="group cursor-pointer p-6 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg">
+                    <div className="flex items-start space-x-4">
+                      <div
+                        className={`${link.bgColor} flex h-12 w-12 items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-110`}
+                      >
+                        <IconComponent className={`h-6 w-6 ${link.color}`} />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-foreground group-hover:text-primary mb-2 text-lg font-semibold transition-colors duration-200">
+                          {link.title}
+                        </h3>
+                        <p className="text-muted-foreground text-sm">
+                          {link.subtitle}
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Welcome Message */}
+          <Card className="mt-8 p-6 text-center">
+            <h3 className="text-foreground mb-2 text-xl font-semibold">
+              Ministry Administration
             </h3>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="text-center">
-                <div className="text-primary text-2xl font-bold">0</div>
-                <div className="text-muted-foreground text-sm">
-                  Active Ministers
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="text-primary text-2xl font-bold">0</div>
-                <div className="text-muted-foreground text-sm">
-                  Prayer Requests
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="text-primary text-2xl font-bold">0</div>
-                <div className="text-muted-foreground text-sm">
-                  New Messages
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="text-primary text-2xl font-bold">0</div>
-                <div className="text-muted-foreground text-sm">
-                  Monthly Visitors
-                </div>
-              </div>
-            </div>
+            <p className="text-muted-foreground">
+              Use the links above to manage different aspects of the ministry.
+              Click on any card to navigate to that section.
+            </p>
           </Card>
         </div>
       </Container>

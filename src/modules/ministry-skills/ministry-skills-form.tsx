@@ -25,7 +25,15 @@ import { ministrySkillsSchema } from "./ministry-skills-validation";
 
 const MAX_CHARS = 500;
 
-export default function MinistrySkillsForm() {
+interface MinistrySkillsFormProps {
+  onClose?: () => void;
+  isDialog?: boolean;
+}
+
+export default function MinistrySkillsForm({
+  onClose,
+  isDialog = false,
+}: MinistrySkillsFormProps) {
   const router = useRouter();
   const submitMinistrySkill = useSubmitMinistrySkill();
 
@@ -43,11 +51,95 @@ export default function MinistrySkillsForm() {
     submitMinistrySkill.mutate(values, {
       onSuccess: () => {
         form.reset();
-        setTimeout(() => {
-          router.push("/admin/ministry-skills");
-        }, 1500);
+        if (isDialog && onClose) {
+          onClose();
+        } else {
+          setTimeout(() => {
+            router.push("/admin/ministry-skills");
+          }, 1500);
+        }
       },
     });
+  }
+
+  const FormContent = () => (
+    <Form {...form}>
+      <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-sm md:text-base">
+                Skill Name<span className="text-destructive">*</span>
+              </FormLabel>
+              <FormControl>
+                <Input
+                  className="bg-background"
+                  placeholder="e.g., Youth Ministry, Music Leadership, Teaching"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem className="relative">
+              <FormLabel className="text-sm md:text-base">
+                Description<span className="text-destructive">*</span>
+              </FormLabel>
+              <FormControl>
+                <Textarea
+                  className="bg-background"
+                  placeholder="Describe this ministry skill and its purpose in ministry work..."
+                  rows={4}
+                  {...field}
+                />
+              </FormControl>
+              <div className="text-muted-foreground absolute right-2 bottom-2 text-xs">
+                {descriptionValue.length}/{MAX_CHARS}
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {!isDialog && <Divider />}
+
+        <div className="flex justify-end space-x-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={isDialog ? onClose : () => router.back()}
+          >
+            Cancel
+          </Button>
+          <Button disabled={submitMinistrySkill.isPending} type="submit">
+            {submitMinistrySkill.isPending ? "Adding..." : "Add Skill"}
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+
+  if (isDialog) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h2 className="mb-2 text-xl font-bold">Add Ministry Skill</h2>
+          <p className="text-muted-foreground text-sm">
+            Add a new ministry skill to help categorize and organize ministry
+            talents and abilities.
+          </p>
+        </div>
+        <FormContent />
+      </div>
+    );
   }
 
   return (
@@ -59,69 +151,7 @@ export default function MinistrySkillsForm() {
           talents and abilities.
         </p>
       </div>
-
-      <Form {...form}>
-        <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm md:text-base">
-                  Skill Name<span className="text-destructive">*</span>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    className="bg-background"
-                    placeholder="e.g., Youth Ministry, Music Leadership, Teaching"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem className="relative">
-                <FormLabel className="text-sm md:text-base">
-                  Description<span className="text-destructive">*</span>
-                </FormLabel>
-                <FormControl>
-                  <Textarea
-                    className="bg-background"
-                    placeholder="Describe this ministry skill and its purpose in ministry work..."
-                    rows={4}
-                    {...field}
-                  />
-                </FormControl>
-                <div className="text-muted-foreground absolute right-2 bottom-2 text-xs">
-                  {descriptionValue.length}/{MAX_CHARS}
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Divider />
-
-          <div className="flex justify-end space-x-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => router.back()}
-            >
-              Cancel
-            </Button>
-            <Button disabled={submitMinistrySkill.isPending} type="submit">
-              {submitMinistrySkill.isPending ? "Adding..." : "Add Skill"}
-            </Button>
-          </div>
-        </form>
-      </Form>
+      <FormContent />
     </Card>
   );
 }

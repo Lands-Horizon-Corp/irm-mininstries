@@ -1,4 +1,4 @@
-import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 import { churches } from "../church/church-schema";
 import { ministrySkills } from "../ministry-skills/ministry-skills-schema";
@@ -61,7 +61,7 @@ export const ministers = pgTable("ministers", {
 
 export const ministerChildren = pgTable("minister_children", {
   id: serial("id").primaryKey(),
-  ministerId: serial("minister_id")
+  ministerId: integer("minister_id")
     .notNull()
     .references(() => ministers.id),
   name: text("name").notNull(),
@@ -76,7 +76,7 @@ export const ministerEmergencyContacts = pgTable(
   "minister_emergency_contacts",
   {
     id: serial("id").primaryKey(),
-    ministerId: serial("minister_id")
+    ministerId: integer("minister_id")
       .notNull()
       .references(() => ministers.id),
     name: text("name").notNull(),
@@ -92,7 +92,7 @@ export const ministerEducationBackgrounds = pgTable(
   "minister_education_backgrounds",
   {
     id: serial("id").primaryKey(),
-    ministerId: serial("minister_id")
+    ministerId: integer("minister_id")
       .notNull()
       .references(() => ministers.id),
     schoolName: text("school_name").notNull(),
@@ -109,7 +109,7 @@ export const ministerMinistryExperiences = pgTable(
   "minister_ministry_experiences",
   {
     id: serial("id").primaryKey(),
-    ministerId: serial("minister_id")
+    ministerId: integer("minister_id")
       .notNull()
       .references(() => ministers.id),
     title: text("title").notNull(),
@@ -123,10 +123,10 @@ export const ministerMinistryExperiences = pgTable(
 
 export const ministerMinistrySkills = pgTable("minister_ministry_skills", {
   id: serial("id").primaryKey(),
-  ministerId: serial("minister_id")
+  ministerId: integer("minister_id")
     .notNull()
     .references(() => ministers.id),
-  ministrySkillId: serial("ministry_skill_id")
+  ministrySkillId: integer("ministry_skill_id")
     .notNull()
     .references(() => ministrySkills.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -135,10 +135,10 @@ export const ministerMinistrySkills = pgTable("minister_ministry_skills", {
 
 export const ministerMinistryRecords = pgTable("minister_ministry_records", {
   id: serial("id").primaryKey(),
-  ministerId: serial("minister_id")
+  ministerId: integer("minister_id")
     .notNull()
     .references(() => ministers.id),
-  churchLocationId: serial("church_location_id")
+  churchLocationId: integer("church_location_id")
     .notNull()
     .references(() => churches.id),
   fromYear: text("from_year").notNull(),
@@ -152,7 +152,7 @@ export const ministerAwardsRecognitions = pgTable(
   "minister_awards_recognitions",
   {
     id: serial("id").primaryKey(),
-    ministerId: serial("minister_id")
+    ministerId: integer("minister_id")
       .notNull()
       .references(() => ministers.id),
     year: text("year").notNull(),
@@ -166,7 +166,7 @@ export const ministerEmploymentRecords = pgTable(
   "minister_employment_records",
   {
     id: serial("id").primaryKey(),
-    ministerId: serial("minister_id")
+    ministerId: integer("minister_id")
       .notNull()
       .references(() => ministers.id),
     companyName: text("company_name").notNull(),

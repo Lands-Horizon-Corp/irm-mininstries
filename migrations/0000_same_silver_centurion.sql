@@ -25,7 +25,7 @@ CREATE TABLE "contact_submissions" (
 CREATE TABLE "minister_awards_recognitions" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"minister_id" integer NOT NULL,
-	"year" varchar(10) NOT NULL,
+	"year" text NOT NULL,
 	"description" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
@@ -34,10 +34,10 @@ CREATE TABLE "minister_awards_recognitions" (
 CREATE TABLE "minister_children" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"minister_id" integer NOT NULL,
-	"name" varchar(255) NOT NULL,
-	"place_of_birth" varchar(255) NOT NULL,
-	"date_of_birth" date NOT NULL,
-	"gender" varchar(10) NOT NULL,
+	"name" text NOT NULL,
+	"place_of_birth" text NOT NULL,
+	"date_of_birth" timestamp NOT NULL,
+	"gender" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -45,11 +45,11 @@ CREATE TABLE "minister_children" (
 CREATE TABLE "minister_education_backgrounds" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"minister_id" integer NOT NULL,
-	"school_name" varchar(255) NOT NULL,
-	"educational_attainment" varchar(255) NOT NULL,
-	"date_graduated" date,
+	"school_name" text NOT NULL,
+	"educational_attainment" text NOT NULL,
+	"date_graduated" timestamp,
 	"description" text,
-	"course" varchar(255),
+	"course" text,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -57,10 +57,10 @@ CREATE TABLE "minister_education_backgrounds" (
 CREATE TABLE "minister_emergency_contacts" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"minister_id" integer NOT NULL,
-	"name" varchar(255) NOT NULL,
-	"relationship" varchar(100) NOT NULL,
-	"address" varchar(500) NOT NULL,
-	"contact_number" varchar(50) NOT NULL,
+	"name" text NOT NULL,
+	"relationship" text NOT NULL,
+	"address" text NOT NULL,
+	"contact_number" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -68,10 +68,10 @@ CREATE TABLE "minister_emergency_contacts" (
 CREATE TABLE "minister_employment_records" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"minister_id" integer NOT NULL,
-	"company_name" varchar(255) NOT NULL,
-	"from_year" varchar(10) NOT NULL,
-	"to_year" varchar(10) NOT NULL,
-	"position" varchar(255) NOT NULL,
+	"company_name" text NOT NULL,
+	"from_year" text NOT NULL,
+	"to_year" text,
+	"position" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -79,10 +79,10 @@ CREATE TABLE "minister_employment_records" (
 CREATE TABLE "minister_ministry_experiences" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"minister_id" integer NOT NULL,
-	"title" varchar(255) NOT NULL,
+	"title" text NOT NULL,
 	"description" text,
-	"from_year" varchar(10) NOT NULL,
-	"to_year" varchar(10),
+	"from_year" text NOT NULL,
+	"to_year" text,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -91,8 +91,8 @@ CREATE TABLE "minister_ministry_records" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"minister_id" integer NOT NULL,
 	"church_location_id" integer NOT NULL,
-	"from_year" varchar(10) NOT NULL,
-	"to_year" varchar(10),
+	"from_year" text NOT NULL,
+	"to_year" text,
 	"contribution" text,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
@@ -108,55 +108,61 @@ CREATE TABLE "minister_ministry_skills" (
 --> statement-breakpoint
 CREATE TABLE "minister_seminars_conferences" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"minister_id" integer NOT NULL,
-	"title" varchar(255) NOT NULL,
+	"minister_id" serial NOT NULL,
+	"title" text NOT NULL,
 	"description" text,
-	"place" varchar(255),
-	"year" varchar(10) NOT NULL,
-	"number_of_hours" integer NOT NULL,
+	"place" text,
+	"year" text NOT NULL,
+	"number_of_hours" serial NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "ministers" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"first_name" varchar(255) NOT NULL,
-	"middle_name" varchar(255),
-	"last_name" varchar(255) NOT NULL,
-	"date_of_birth" date NOT NULL,
-	"place_of_birth" varchar(255) NOT NULL,
-	"gender" varchar(10) NOT NULL,
-	"contact_number" varchar(50) NOT NULL,
-	"email" varchar(255) NOT NULL,
-	"address" varchar(500) NOT NULL,
-	"nationality" varchar(100) NOT NULL,
-	"civil_status" varchar(50) NOT NULL,
-	"citizenship" varchar(100) NOT NULL,
-	"father_name" varchar(255),
-	"father_occupation" varchar(255),
-	"mother_name" varchar(255),
-	"mother_occupation" varchar(255),
-	"spouse_name" varchar(255),
-	"spouse_occupation" varchar(255),
-	"spouse_date_of_birth" date,
-	"spouse_place_of_birth" varchar(255),
-	"spouse_nationality" varchar(100),
-	"spouse_citizenship" varchar(100),
-	"spouse_contact_number" varchar(50),
-	"spouse_email" varchar(255),
-	"ministry_status" varchar(100) NOT NULL,
-	"role_in_church" varchar(255),
-	"current_church" varchar(255),
-	"home_church" varchar(255),
-	"conversion_date" date,
-	"water_baptism_date" date,
-	"holy_ghost_baptism_date" date,
-	"occupation" varchar(255),
-	"company_name" varchar(255),
-	"year_started" varchar(10),
-	"image_url" varchar(500),
+	"first_name" text NOT NULL,
+	"last_name" text NOT NULL,
+	"middle_name" text,
+	"suffix" text,
+	"nickname" text,
+	"date_of_birth" timestamp NOT NULL,
+	"place_of_birth" text NOT NULL,
+	"address" text NOT NULL,
+	"gender" text NOT NULL,
+	"height_feet" text NOT NULL,
+	"weight_kg" text NOT NULL,
+	"civil_status" text NOT NULL,
+	"email" text,
+	"telephone" text,
+	"passport_number" text,
+	"sss_number" text,
+	"philhealth" text,
+	"tin" text,
+	"present_address" text NOT NULL,
+	"permanent_address" text,
+	"father_name" text NOT NULL,
+	"father_province" text NOT NULL,
+	"father_birthday" timestamp NOT NULL,
+	"father_occupation" text NOT NULL,
+	"mother_name" text NOT NULL,
+	"mother_province" text NOT NULL,
+	"mother_birthday" timestamp NOT NULL,
+	"mother_occupation" text NOT NULL,
+	"spouse_name" text,
+	"spouse_province" text,
+	"spouse_birthday" timestamp,
+	"spouse_occupation" text,
+	"wedding_date" timestamp,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"skills" text,
+	"hobbies" text,
+	"sports" text,
+	"other_religious_secular_training" text,
+	"certified_by" text,
+	"signature_image_url" text,
+	"signature_by_certified_image_url" text,
+	"image_url" text
 );
 --> statement-breakpoint
 CREATE TABLE "ministry_ranks" (
@@ -182,5 +188,7 @@ ALTER TABLE "minister_emergency_contacts" ADD CONSTRAINT "minister_emergency_con
 ALTER TABLE "minister_employment_records" ADD CONSTRAINT "minister_employment_records_minister_id_ministers_id_fk" FOREIGN KEY ("minister_id") REFERENCES "public"."ministers"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "minister_ministry_experiences" ADD CONSTRAINT "minister_ministry_experiences_minister_id_ministers_id_fk" FOREIGN KEY ("minister_id") REFERENCES "public"."ministers"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "minister_ministry_records" ADD CONSTRAINT "minister_ministry_records_minister_id_ministers_id_fk" FOREIGN KEY ("minister_id") REFERENCES "public"."ministers"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "minister_ministry_records" ADD CONSTRAINT "minister_ministry_records_church_location_id_churches_id_fk" FOREIGN KEY ("church_location_id") REFERENCES "public"."churches"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "minister_ministry_skills" ADD CONSTRAINT "minister_ministry_skills_minister_id_ministers_id_fk" FOREIGN KEY ("minister_id") REFERENCES "public"."ministers"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "minister_ministry_skills" ADD CONSTRAINT "minister_ministry_skills_ministry_skill_id_ministry_skills_id_fk" FOREIGN KEY ("ministry_skill_id") REFERENCES "public"."ministry_skills"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "minister_seminars_conferences" ADD CONSTRAINT "minister_seminars_conferences_minister_id_ministers_id_fk" FOREIGN KEY ("minister_id") REFERENCES "public"."ministers"("id") ON DELETE no action ON UPDATE no action;

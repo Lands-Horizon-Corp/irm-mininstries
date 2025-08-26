@@ -1,11 +1,19 @@
+"use client";
+
+import React from "react";
+
 import { Award, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import MinistrySkillsTable from "@/modules/ministry-skills/components/ministry-skills-table";
+import MinistrySkillsForm from "@/modules/ministry-skills/ministry-skills-form";
 
 export default function MinistrySkillsPage() {
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+
   return (
     <div className="bg-background min-h-screen p-8">
       <Container>
@@ -25,10 +33,20 @@ export default function MinistrySkillsPage() {
                 </p>
               </div>
             </div>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Skill
-            </Button>
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Skill
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <MinistrySkillsForm
+                  isDialog={true}
+                  onClose={() => setDialogOpen(false)}
+                />
+              </DialogContent>
+            </Dialog>
           </div>
 
           {/* Ministry Skills Table */}
