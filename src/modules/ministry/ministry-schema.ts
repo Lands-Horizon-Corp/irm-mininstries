@@ -117,7 +117,7 @@ export const ministerMinistryExperiences = pgTable(
   }
 );
 
-// Minister Ministry Skills Junction Table
+// Minister  Skills Junction Table
 export const ministerMinistrySkills = pgTable("minister_ministry_skills", {
   id: serial("id").primaryKey(),
   ministerId: integer("minister_id")

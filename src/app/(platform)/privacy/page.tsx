@@ -45,7 +45,7 @@ export default function PrivacyPolicy() {
             </h3>
             <p className="mb-8 text-gray-600">We use your information to:</p>
             <ul className="mb-8 list-disc space-y-2 pl-5">
-              <li>Process your ministry ministry and participation.</li>
+              <li>Process your ministry and participation.</li>
               <li>
                 Communicate with you about worship services, events, and
                 ministry activities.

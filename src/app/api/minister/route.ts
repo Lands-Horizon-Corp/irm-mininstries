@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     // Return success response
     return NextResponse.json({
       success: true,
-      message: "Ministry minister added successfully",
+      message: "Ministry added successfully",
       data: {
         id: Math.random().toString(36).substring(7), // Generate a fake ID
         name: `${validatedData.firstName} ${validatedData.lastName}`,
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Ministry minister submission error:", error);
+    console.error("Ministry submission error:", error);
 
     // Handle Zod validation errors
     if (error instanceof z.ZodError) {
