@@ -95,9 +95,6 @@ export default function LoginPage() {
             <Card className="p-8">
               <div className="text-center">
                 <div className="border-primary mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-t-transparent"></div>
-                <p className="text-muted-foreground">
-                  Checking authentication...
-                </p>
               </div>
             </Card>
           </div>
