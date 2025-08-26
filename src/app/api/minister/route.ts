@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+import { asc, count, desc, ilike, or } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "@/db/drizzle";
@@ -18,6 +19,113 @@ import {
 } from "@/modules/ministry/ministry-schema";
 import { ministerSchema } from "@/modules/ministry/ministry-validation";
 
+// GET - Get all ministers with pagination and search
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+
+    // Extract query parameters
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
+    const limit = Math.min(
+      100,
+      Math.max(1, parseInt(searchParams.get("limit") || "10"))
+    );
+    const search = searchParams.get("search")?.trim() || "";
+    const sortBy = searchParams.get("sortBy") || "createdAt";
+    const sortOrder = searchParams.get("sortOrder") || "desc";
+
+    const offset = (page - 1) * limit;
+
+    // Build where clause for search
+    const whereClause = search
+      ? or(
+          ilike(ministers.firstName, `%${search}%`),
+          ilike(ministers.lastName, `%${search}%`),
+          ilike(ministers.middleName, `%${search}%`),
+          ilike(ministers.email, `%${search}%`),
+          ilike(ministers.address, `%${search}%`),
+          ilike(ministers.presentAddress, `%${search}%`),
+          ilike(ministers.telephone, `%${search}%`)
+        )
+      : undefined;
+
+    // Build order clause
+    const orderClause =
+      sortOrder === "asc"
+        ? asc(
+            ministers[sortBy as keyof typeof ministers._.columns] ||
+              ministers.createdAt
+          )
+        : desc(
+            ministers[sortBy as keyof typeof ministers._.columns] ||
+              ministers.createdAt
+          );
+
+    // Get total count for pagination
+    const [totalResult] = await db
+      .select({ count: count() })
+      .from(ministers)
+      .where(whereClause);
+
+    const total = totalResult.count;
+
+    // Get paginated results (basic info only for performance)
+    const results = await db
+      .select({
+        id: ministers.id,
+        firstName: ministers.firstName,
+        lastName: ministers.lastName,
+        middleName: ministers.middleName,
+        email: ministers.email,
+        telephone: ministers.telephone,
+        gender: ministers.gender,
+        civilStatus: ministers.civilStatus,
+        address: ministers.address,
+        presentAddress: ministers.presentAddress,
+        imageUrl: ministers.imageUrl,
+        createdAt: ministers.createdAt,
+        updatedAt: ministers.updatedAt,
+      })
+      .from(ministers)
+      .where(whereClause)
+      .orderBy(orderClause)
+      .limit(limit)
+      .offset(offset);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return NextResponse.json({
+      success: true,
+      data: results,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1,
+      },
+      search: search || null,
+      sort: {
+        by: sortBy,
+        order: sortOrder,
+      },
+    });
+  } catch (error) {
+    console.error("Get ministers error:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Internal server error",
+        message: "Failed to fetch ministers",
+      },
+      { status: 500 }
+    );
+  }
+}
+
+// POST - Create new minister
 export async function POST(request: NextRequest) {
   try {
     // Parse the JSON body
@@ -226,12 +334,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: "Ministry added successfully",
-      data: {
-        id: result.id.toString(),
-        name: `${result.firstName} ${result.lastName}`,
-        email: result.email,
-        timestamp: result.createdAt.toISOString(),
-      },
+      data: result,
     });
   } catch (error) {
     console.error("Ministry submission error:", error);
@@ -273,38 +376,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-// Handle unsupported methods
-export async function GET() {
-  return NextResponse.json(
-    {
-      success: false,
-      error: "Method not allowed",
-      message: "GET method is not supported for this endpoint",
-    },
-    { status: 405 }
-  );
-}
-
-export async function PUT() {
-  return NextResponse.json(
-    {
-      success: false,
-      error: "Method not allowed",
-      message: "PUT method is not supported for this endpoint",
-    },
-    { status: 405 }
-  );
-}
-
-export async function DELETE() {
-  return NextResponse.json(
-    {
-      success: false,
-      error: "Method not allowed",
-      message: "DELETE method is not supported for this endpoint",
-    },
-    { status: 405 }
-  );
 }

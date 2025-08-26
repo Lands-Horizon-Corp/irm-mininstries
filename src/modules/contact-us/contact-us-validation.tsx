@@ -26,4 +26,18 @@ export const contactUsFormSchema = z
     }
   });
 
+export const updateContactUsFormSchema = contactUsFormSchema.partial().omit({
+  repeatEmail: true,
+});
+
+export const contactUsQuerySchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().positive().max(100).default(10),
+  search: z.string().optional(),
+  sortBy: z.string().default("createdAt"),
+  sortOrder: z.enum(["asc", "desc"]).default("desc"),
+});
+
 export type ContactFormData = z.infer<typeof contactUsFormSchema>;
+export type UpdateContactFormData = z.infer<typeof updateContactUsFormSchema>;
+export type ContactQueryParams = z.infer<typeof contactUsQuerySchema>;

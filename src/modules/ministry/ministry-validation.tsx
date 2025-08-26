@@ -168,4 +168,16 @@ export const ministerSchema = z.object({
     .optional(),
 });
 
+export const updateMinisterSchema = ministerSchema.partial();
+
+export const ministerQuerySchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().positive().max(100).default(10),
+  search: z.string().optional(),
+  sortBy: z.string().default("createdAt"),
+  sortOrder: z.enum(["asc", "desc"]).default("desc"),
+});
+
 export type Minister = z.infer<typeof ministerSchema>;
+export type UpdateMinister = z.infer<typeof updateMinisterSchema>;
+export type MinisterQueryParams = z.infer<typeof ministerQuerySchema>;
