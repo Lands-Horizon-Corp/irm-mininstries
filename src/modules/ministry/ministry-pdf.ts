@@ -128,6 +128,7 @@ interface MinisterPDFData {
 interface Church {
   id: number;
   name: string;
+  address?: string;
 }
 
 interface MinistryRank {
@@ -300,10 +301,13 @@ export async function generateMinisterPDF(
   };
 
   const _getChurchName = (id: number) => {
-    return (
-      lookupData.churches?.find((church) => church.id === id)?.name ||
-      "Unknown Church"
-    );
+    const church = lookupData.churches?.find((church) => church.id === id);
+    if (church) {
+      return church.address
+        ? `${church.name} - ${church.address}`
+        : church.name;
+    }
+    return "Unknown Church";
   };
 
   const _getMinistryRankName = (id: number) => {
@@ -550,22 +554,371 @@ export async function generateMinisterPDF(
       });
     }
 
-    // Add remaining sections (Emergency Contacts, Skills, etc.) if they exist
+    // Emergency Contacts
     if (
       ministerData.emergencyContacts &&
       ministerData.emergencyContacts.length > 0
     ) {
       addSectionHeader("EMERGENCY CONTACTS");
-      // Add emergency contacts logic...
+
+      ministerData.emergencyContacts.forEach((contact, index) => {
+        checkPageBreak(40);
+        pdf.setFontSize(10);
+        pdf.setFont("helvetica", "bold");
+        pdf.setTextColor(80, 80, 80);
+        pdf.text(`Contact ${index + 1}:`, margin + 10, yPosition);
+        yPosition += 6;
+
+        const contactStartY = yPosition;
+        addField("Name", contact.name, true, contactStartY);
+        addField("Relationship", contact.relationship, false, contactStartY);
+        addField("Address", contact.address, true, contactStartY + 12);
+        addField(
+          "Contact Number",
+          contact.contactNumber,
+          false,
+          contactStartY + 12
+        );
+        yPosition = contactStartY + 28;
+      });
     }
 
-    if (ministerData.skills || ministerData.hobbies || ministerData.sports) {
+    // Skills & Interests
+    if (
+      ministerData.skills ||
+      ministerData.hobbies ||
+      ministerData.sports ||
+      ministerData.otherReligiousSecularTraining
+    ) {
       addSectionHeader("SKILLS & INTERESTS");
       const skillsStartY = yPosition;
       addField("Skills", ministerData.skills, true, skillsStartY);
       addField("Hobbies", ministerData.hobbies, false, skillsStartY);
       addField("Sports", ministerData.sports, true, skillsStartY + 12);
+      addField(
+        "Other Religious/Secular Training",
+        ministerData.otherReligiousSecularTraining,
+        false,
+        skillsStartY + 12
+      );
       yPosition = skillsStartY + 24;
+    }
+
+    // Educational Background
+    if (
+      ministerData.educationBackgrounds &&
+      ministerData.educationBackgrounds.length > 0
+    ) {
+      addSectionHeader("EDUCATIONAL BACKGROUND");
+
+      ministerData.educationBackgrounds.forEach((education, index) => {
+        checkPageBreak(50);
+        pdf.setFontSize(10);
+        pdf.setFont("helvetica", "bold");
+        pdf.setTextColor(80, 80, 80);
+        pdf.text(`Education ${index + 1}:`, margin + 10, yPosition);
+        yPosition += 6;
+
+        const eduStartY = yPosition;
+        addField("School Name", education.schoolName, true, eduStartY);
+        addField(
+          "Educational Attainment",
+          education.educationalAttainment,
+          false,
+          eduStartY
+        );
+        addField("Course", education.course, true, eduStartY + 12);
+        addField(
+          "Date Graduated",
+          formatDate(education.dateGraduated),
+          false,
+          eduStartY + 12
+        );
+        if (education.description) {
+          addField("Description", education.description, true, eduStartY + 24);
+          yPosition = eduStartY + 36;
+        } else {
+          yPosition = eduStartY + 24;
+        }
+      });
+    }
+
+    // Employment Records
+    if (
+      ministerData.employmentRecords &&
+      ministerData.employmentRecords.length > 0
+    ) {
+      addSectionHeader("EMPLOYMENT HISTORY");
+
+      ministerData.employmentRecords.forEach((employment, index) => {
+        checkPageBreak(40);
+        pdf.setFontSize(10);
+        pdf.setFont("helvetica", "bold");
+        pdf.setTextColor(80, 80, 80);
+        pdf.text(`Employment ${index + 1}:`, margin + 10, yPosition);
+        yPosition += 6;
+
+        const empStartY = yPosition;
+        addField("Company Name", employment.companyName, true, empStartY);
+        addField("Position", employment.position, false, empStartY);
+        addField("From Year", employment.fromYear, true, empStartY + 12);
+        addField(
+          "To Year",
+          employment.toYear || "Present",
+          false,
+          empStartY + 12
+        );
+        yPosition = empStartY + 28;
+      });
+    }
+
+    // Ministry Experience
+    if (
+      ministerData.ministryExperiences &&
+      ministerData.ministryExperiences.length > 0
+    ) {
+      addSectionHeader("MINISTRY EXPERIENCE");
+
+      ministerData.ministryExperiences.forEach((experience, index) => {
+        checkPageBreak(50);
+        pdf.setFontSize(10);
+        pdf.setFont("helvetica", "bold");
+        pdf.setTextColor(80, 80, 80);
+        pdf.text(`Ministry Experience ${index + 1}:`, margin + 10, yPosition);
+        yPosition += 6;
+
+        const expStartY = yPosition;
+        addField(
+          "Ministry Rank",
+          _getMinistryRankName(experience.ministryRankId),
+          true,
+          expStartY
+        );
+        addField("From Year", experience.fromYear, false, expStartY);
+        addField(
+          "To Year",
+          experience.toYear || "Present",
+          true,
+          expStartY + 12
+        );
+        if (experience.description) {
+          addField(
+            "Description",
+            experience.description,
+            false,
+            expStartY + 12
+          );
+          yPosition = expStartY + 36;
+        } else {
+          yPosition = expStartY + 24;
+        }
+      });
+    }
+
+    // Ministry Skills
+    if (ministerData.ministrySkills && ministerData.ministrySkills.length > 0) {
+      addSectionHeader("MINISTRY SKILLS");
+
+      const skillsPerRow = 2;
+      let currentRow = 0;
+      const skillsStartY = yPosition;
+
+      ministerData.ministrySkills.forEach((skill, index) => {
+        const isLeftColumn = index % skillsPerRow === 0;
+        const rowY = skillsStartY + Math.floor(index / skillsPerRow) * 12;
+
+        if (isLeftColumn) {
+          checkPageBreak(15);
+        }
+
+        addField(
+          `Skill ${index + 1}`,
+          _getMinistrySkillName(skill.ministrySkillId),
+          isLeftColumn,
+          rowY
+        );
+        currentRow = Math.floor(index / skillsPerRow);
+      });
+
+      yPosition = skillsStartY + (currentRow + 1) * 12 + 10;
+    }
+
+    // Ministry Records
+    if (
+      ministerData.ministryRecords &&
+      ministerData.ministryRecords.length > 0
+    ) {
+      addSectionHeader("MINISTRY RECORDS");
+
+      ministerData.ministryRecords.forEach((record, index) => {
+        checkPageBreak(50);
+        pdf.setFontSize(10);
+        pdf.setFont("helvetica", "bold");
+        pdf.setTextColor(80, 80, 80);
+        pdf.text(`Ministry Record ${index + 1}:`, margin + 10, yPosition);
+        yPosition += 6;
+
+        const recordStartY = yPosition;
+        addField(
+          "Church Location",
+          _getChurchName(record.churchLocationId),
+          true,
+          recordStartY
+        );
+        addField("From Year", record.fromYear, false, recordStartY);
+        addField(
+          "To Year",
+          record.toYear || "Present",
+          true,
+          recordStartY + 12
+        );
+        if (record.contribution) {
+          addField(
+            "Contribution",
+            record.contribution,
+            false,
+            recordStartY + 12
+          );
+          yPosition = recordStartY + 36;
+        } else {
+          yPosition = recordStartY + 24;
+        }
+      });
+    }
+
+    // Awards & Recognitions
+    if (
+      ministerData.awardsRecognitions &&
+      ministerData.awardsRecognitions.length > 0
+    ) {
+      addSectionHeader("AWARDS & RECOGNITIONS");
+
+      ministerData.awardsRecognitions.forEach((award, index) => {
+        checkPageBreak(30);
+        pdf.setFontSize(10);
+        pdf.setFont("helvetica", "bold");
+        pdf.setTextColor(80, 80, 80);
+        pdf.text(`Award ${index + 1}:`, margin + 10, yPosition);
+        yPosition += 6;
+
+        const awardStartY = yPosition;
+        addField("Year", award.year || "Not specified", true, awardStartY);
+        addField("Description", award.description, false, awardStartY);
+        yPosition = awardStartY + 16;
+      });
+    }
+
+    // Seminars & Conferences
+    if (
+      ministerData.seminarsConferences &&
+      ministerData.seminarsConferences.length > 0
+    ) {
+      addSectionHeader("SEMINARS & CONFERENCES");
+
+      ministerData.seminarsConferences.forEach((seminar, index) => {
+        checkPageBreak(60);
+        pdf.setFontSize(10);
+        pdf.setFont("helvetica", "bold");
+        pdf.setTextColor(80, 80, 80);
+        pdf.text(`Seminar/Conference ${index + 1}:`, margin + 10, yPosition);
+        yPosition += 6;
+
+        const seminarStartY = yPosition;
+        addField("Title", seminar.title, true, seminarStartY);
+        addField("Year", seminar.year || "Not specified", false, seminarStartY);
+        addField(
+          "Number of Hours",
+          seminar.numberOfHours
+            ? `${seminar.numberOfHours} hours`
+            : "Not specified",
+          true,
+          seminarStartY + 12
+        );
+        addField(
+          "Place",
+          seminar.place || "Not specified",
+          false,
+          seminarStartY + 12
+        );
+        if (seminar.description) {
+          addField(
+            "Description",
+            seminar.description,
+            true,
+            seminarStartY + 24
+          );
+          yPosition = seminarStartY + 36;
+        } else {
+          yPosition = seminarStartY + 24;
+        }
+      });
+    }
+
+    // Certification Section
+    if (
+      ministerData.certifiedBy ||
+      ministerData.signatureImageUrl ||
+      ministerData.signatureByCertifiedImageUrl
+    ) {
+      addSectionHeader("CERTIFICATION");
+
+      if (ministerData.certifiedBy) {
+        addField("Certified By", ministerData.certifiedBy, true);
+      }
+
+      yPosition += 10;
+
+      // Add signature images if available
+      if (
+        ministerData.signatureImageUrl ||
+        ministerData.signatureByCertifiedImageUrl
+      ) {
+        checkPageBreak(80);
+
+        pdf.setFontSize(11);
+        pdf.setFont("helvetica", "bold");
+        pdf.setTextColor(60, 60, 60);
+        pdf.text("Signatures:", margin + 10, yPosition);
+        yPosition += 15;
+
+        const signaturesStartY = yPosition;
+
+        if (ministerData.signatureImageUrl) {
+          pdf.setFontSize(10);
+          pdf.setFont("helvetica", "normal");
+          pdf.setTextColor(80, 80, 80);
+          pdf.text("Applicant Signature:", margin + 15, signaturesStartY);
+
+          await addImage(
+            ministerData.signatureImageUrl,
+            "Applicant Signature",
+            50,
+            25
+          );
+        }
+
+        if (ministerData.signatureByCertifiedImageUrl) {
+          const certifierY = ministerData.signatureImageUrl
+            ? yPosition
+            : signaturesStartY;
+
+          pdf.setFontSize(10);
+          pdf.setFont("helvetica", "normal");
+          pdf.setTextColor(80, 80, 80);
+          pdf.text("Certifier Signature:", margin + 15, certifierY);
+
+          if (!ministerData.signatureImageUrl) {
+            yPosition = certifierY + 5;
+          }
+
+          await addImage(
+            ministerData.signatureByCertifiedImageUrl,
+            "Certifier Signature",
+            50,
+            25
+          );
+        }
+      }
     }
 
     // Add footer to each page
