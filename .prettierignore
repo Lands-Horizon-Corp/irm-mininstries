@@ -1,29 +1,17 @@
-# Dependencies
-node_modules/
-.pnp
-.pnp.*
-
-# Production builds
-.next/
-out/
-dist/
-build/
-coverage/
-
-# Environment variables
-.env*
-
-# Logs
+node_modules
+.next
+out
+build
+dist
+coverage
+.git
 *.log
-
-# Lock files
 package-lock.json
 yarn.lock
-pnpm-lock.yaml
 bun.lock
-
-# IDE and OS files
-.vscode/
-.idea/
+next-env.d.ts
+**/*.d.ts
+public
+.env*
 .DS_Store
-Thumbs.db
+eslint.config.mjs

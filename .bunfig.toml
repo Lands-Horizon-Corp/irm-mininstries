@@ -1,0 +1,11 @@
+[install]
+# Enforce using Bun for package management
+registry = "https://registry.npmjs.org/"
+
+# Optional: Lock file settings
+lockfile = true
+exact = true
+
+[run]
+# Run scripts with Bun
+shell = "bun"
