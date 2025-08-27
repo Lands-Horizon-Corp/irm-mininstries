@@ -21,17 +21,7 @@ import { MinistryRankSelect } from "@/components/ui/ministry-rank-select";
 import { MinistrySkillSelect } from "@/components/ui/ministry-skill-select";
 import { Textarea } from "@/components/ui/textarea";
 
-import type { Minister } from "../../ministry-validation";
-
-interface StepProps {
-  formData: Minister;
-  updateMinisterData: (
-    field: keyof Minister,
-    value: string | boolean | Date | string[] | File | null
-  ) => void;
-  onNext: () => void;
-  onBack: () => void;
-}
+import type { Minister, StepProps } from "../../ministry-validation";
 
 const ministryExperienceSchema = z.object({
   id: z.number().int().optional(),

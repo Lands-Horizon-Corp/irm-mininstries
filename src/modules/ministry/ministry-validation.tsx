@@ -218,7 +218,7 @@ export type UpdateMinister = z.infer<typeof updateMinisterSchema>;
 export type MinisterQueryParams = z.infer<typeof ministerQuerySchema>;
 
 export interface StepProps {
-  formData: FormData;
+  formData: Minister;
   updateFormData: (
     field: keyof FormData,
     value: string | Date | boolean | Minister

@@ -25,17 +25,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import type { Minister } from "../../ministry-validation";
-
-interface StepProps {
-  formData: Minister;
-  updateMinisterData: (
-    field: keyof Minister,
-    value: string | boolean | Date | string[] | File | null
-  ) => void;
-  onNext: () => void;
-  onBack: () => void;
-}
+import type { Minister, StepProps } from "../../ministry-validation";
 
 const childSchema = z.object({
   id: z.number().int().optional(),

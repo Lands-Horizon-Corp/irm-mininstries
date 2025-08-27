@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import type { Minister } from "../ministry-validation";
+import type { Minister, StepProps } from "../ministry-validation";
 
 import { CertificationSignatures } from "./steps/certification-signatures";
 import { ContactGovernmentInfo } from "./steps/contact-government-info";
@@ -12,6 +12,7 @@ import { EmergencyContactsSkills } from "./steps/emergency-contacts-skills";
 import { FamilySpouseInformation } from "./steps/family-spouse-information";
 import { MinistryExperienceSkills } from "./steps/ministry-experience-skills";
 import { MinistryRecordsAwards } from "./steps/ministry-records-awards";
+import { Overview } from "./steps/overview";
 import { PersonalInformation } from "./steps/personal-information";
 import { SeminarsConferences } from "./steps/seminars-conferences";
 import { StepIndicator } from "./step-indicator";
@@ -26,6 +27,7 @@ enum FormStep {
   MINISTRY_RECORDS_AWARDS = "MINISTRY_RECORDS_AWARDS",
   SEMINARS_CONFERENCES = "SEMINARS_CONFERENCES",
   CERTIFICATION_SIGNATURES = "CERTIFICATION_SIGNATURES",
+  OVERVIEW = "OVERVIEW",
 }
 
 const formSteps = [
@@ -53,18 +55,20 @@ const formSteps = [
   },
   { key: FormStep.SEMINARS_CONFERENCES, label: "Seminars & Conferences" },
   { key: FormStep.CERTIFICATION_SIGNATURES, label: "Certification" },
+  { key: FormStep.OVERVIEW, label: "Review & Submit" },
 ] as const;
 
 type FormStepComponents = {
-  [FormStep.PERSONAL_INFORMATION]: React.ComponentType<StepComponentProps>;
-  [FormStep.CONTACT_GOVERNMENT_INFO]: React.ComponentType<StepComponentProps>;
-  [FormStep.FAMILY_SPOUSE_INFORMATION]: React.ComponentType<StepComponentProps>;
-  [FormStep.EMERGENCY_CONTACTS_SKILLS]: React.ComponentType<StepComponentProps>;
-  [FormStep.EDUCATION_EMPLOYMENT]: React.ComponentType<StepComponentProps>;
-  [FormStep.MINISTRY_EXPERIENCE_SKILLS]: React.ComponentType<StepComponentProps>;
-  [FormStep.MINISTRY_RECORDS_AWARDS]: React.ComponentType<StepComponentProps>;
-  [FormStep.SEMINARS_CONFERENCES]: React.ComponentType<StepComponentProps>;
-  [FormStep.CERTIFICATION_SIGNATURES]: React.ComponentType<StepComponentProps>;
+  [FormStep.PERSONAL_INFORMATION]: React.ComponentType<StepProps>;
+  [FormStep.CONTACT_GOVERNMENT_INFO]: React.ComponentType<StepProps>;
+  [FormStep.FAMILY_SPOUSE_INFORMATION]: React.ComponentType<StepProps>;
+  [FormStep.EMERGENCY_CONTACTS_SKILLS]: React.ComponentType<StepProps>;
+  [FormStep.EDUCATION_EMPLOYMENT]: React.ComponentType<StepProps>;
+  [FormStep.MINISTRY_EXPERIENCE_SKILLS]: React.ComponentType<StepProps>;
+  [FormStep.MINISTRY_RECORDS_AWARDS]: React.ComponentType<StepProps>;
+  [FormStep.SEMINARS_CONFERENCES]: React.ComponentType<StepProps>;
+  [FormStep.CERTIFICATION_SIGNATURES]: React.ComponentType<StepProps>;
+  [FormStep.OVERVIEW]: React.ComponentType<StepProps>;
 };
 
 // Note: Component imports would need to be added when components are created
@@ -78,27 +82,7 @@ const formComponents: Partial<FormStepComponents> = {
   [FormStep.MINISTRY_RECORDS_AWARDS]: MinistryRecordsAwards,
   [FormStep.SEMINARS_CONFERENCES]: SeminarsConferences,
   [FormStep.CERTIFICATION_SIGNATURES]: CertificationSignatures,
-};
-
-type StepComponentProps = {
-  formData: Minister;
-  updateMinister: (
-    field: keyof Minister,
-    value?: string | Date | boolean | Minister
-  ) => void;
-  updateMinisterData: (
-    field: keyof Minister,
-    value: string | boolean | Date | string[] | File | null
-  ) => void;
-  onNext: (
-    updatedMinister?: Minister,
-    confirmation?: boolean
-  ) => void | Promise<void>;
-  onBack: () => void;
-  onCancel: () => void;
-
-  isSubmitting?: boolean;
-  error?: string | null;
+  [FormStep.OVERVIEW]: Overview,
 };
 
 export function MinisterForm() {
@@ -260,6 +244,7 @@ export function MinisterForm() {
         formData,
         updateMinister,
         updateMinisterData,
+        updateFormData: updateMinisterData,
         onNext: handleNext,
         onBack: () => {
           router.push("/form");
@@ -272,6 +257,7 @@ export function MinisterForm() {
         formData,
         updateMinister,
         updateMinisterData,
+        updateFormData: updateMinisterData,
         onNext: handleNext,
         onBack: handleBack,
         onCancel: handleCancel,
@@ -282,6 +268,7 @@ export function MinisterForm() {
         formData,
         updateMinister,
         updateMinisterData,
+        updateFormData: updateMinisterData,
         onNext: handleNext,
         onBack: handleBack,
         onCancel: handleCancel,
@@ -292,6 +279,7 @@ export function MinisterForm() {
         formData,
         updateMinister,
         updateMinisterData,
+        updateFormData: updateMinisterData,
         onNext: handleNext,
         onBack: handleBack,
         onCancel: handleCancel,
@@ -302,6 +290,7 @@ export function MinisterForm() {
         formData,
         updateMinister,
         updateMinisterData,
+        updateFormData: updateMinisterData,
         onNext: handleNext,
         onBack: handleBack,
         onCancel: handleCancel,
@@ -312,6 +301,7 @@ export function MinisterForm() {
         formData,
         updateMinister,
         updateMinisterData,
+        updateFormData: updateMinisterData,
         onNext: handleNext,
         onBack: handleBack,
         onCancel: handleCancel,
@@ -322,6 +312,7 @@ export function MinisterForm() {
         formData,
         updateMinister,
         updateMinisterData,
+        updateFormData: updateMinisterData,
         onNext: handleNext,
         onBack: handleBack,
         onCancel: handleCancel,
@@ -332,6 +323,7 @@ export function MinisterForm() {
         formData,
         updateMinister,
         updateMinisterData,
+        updateFormData: updateMinisterData,
         onNext: handleNext,
         onBack: handleBack,
         onCancel: handleCancel,
@@ -342,6 +334,18 @@ export function MinisterForm() {
         formData,
         updateMinister,
         updateMinisterData,
+        updateFormData: updateMinisterData,
+        onNext: handleNext,
+        onBack: handleBack,
+        onCancel: handleCancel,
+        error: submissionError,
+        isSubmitting,
+      },
+      [FormStep.OVERVIEW]: {
+        formData,
+        updateMinister,
+        updateMinisterData,
+        updateFormData: updateMinisterData,
         onNext: handleSubmit,
         onBack: handleBack,
         onCancel: handleCancel,
@@ -350,7 +354,7 @@ export function MinisterForm() {
       },
     }[currentStep];
 
-    return <StepComponent {...(props as StepComponentProps)} />;
+    return <StepComponent {...(props as unknown as StepProps)} />;
   };
 
   return (
