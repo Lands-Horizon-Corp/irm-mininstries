@@ -12,6 +12,15 @@ bun run db:seed
 
 ## What gets seeded?
 
+### Churches (6 entries)
+
+- IRM Main Church - Manila
+- IRM Branch - Quezon City
+- IRM Branch - Cebu
+- IRM Branch - Davao
+- IRM Mission Station - Baguio
+- IRM Branch - Iloilo
+
 ### Ministry Ranks (4 entries)
 
 - Volunteer Worker / M.T./ GNMB
@@ -45,6 +54,7 @@ The seeder uses `onConflictDoNothing()` to prevent duplicate entries, so you can
 src/db/seed/
 ├── index.ts              # Main seeder file
 ├── data/
+│   ├── churches.ts       # Churches seed data
 │   ├── ministry-ranks.ts # Ministry ranks seed data
 │   └── ministry-skills.ts # Ministry skills seed data
 └── README.md            # This file

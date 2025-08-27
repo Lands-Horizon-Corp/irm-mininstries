@@ -1,9 +1,29 @@
 import { db } from "@/db/drizzle";
+import { churches } from "@/modules/church/church-schema";
 import { ministryRanks } from "@/modules/ministry-ranks/ministry-ranks-schema";
 import { ministrySkills } from "@/modules/ministry-skills/ministry-skills-schema";
 
+import { churchesSeedData } from "./data/churches";
 import { ministryRanksSeedData } from "./data/ministry-ranks";
 import { ministrySkillsSeedData } from "./data/ministry-skills";
+
+async function seedChurches() {
+  console.log("🌱 Seeding churches...");
+
+  try {
+    for (const church of churchesSeedData) {
+      await db
+        .insert(churches)
+        .values(church)
+        .onConflictDoNothing({ target: churches.name });
+    }
+
+    console.log(`✅ Successfully seeded ${churchesSeedData.length} churches`);
+  } catch (error) {
+    console.error("❌ Error seeding churches:", error);
+    throw error;
+  }
+}
 
 async function seedMinistryRanks() {
   console.log("🌱 Seeding ministry ranks...");
@@ -49,6 +69,7 @@ async function main() {
   console.log("🚀 Starting database seeding...");
 
   try {
+    await seedChurches();
     await seedMinistryRanks();
     await seedMinistrySkills();
 

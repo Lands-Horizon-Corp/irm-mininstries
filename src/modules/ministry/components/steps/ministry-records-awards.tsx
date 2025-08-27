@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
+import { useChurches } from "../../../church/church-service";
 import type { Minister } from "../../ministry-validation";
 
 interface StepProps {
@@ -36,7 +37,7 @@ const ministryRecordSchema = z.object({
   churchLocationId: z
     .number()
     .int()
-    .min(1, { message: "Church location is required" }),
+    .min(1, { message: "Please select a church location" }),
   fromYear: z.string().min(1, { message: "From year is required" }),
   toYear: z.string().optional().nullable(),
   contribution: z.string().optional().nullable(),
@@ -65,6 +66,8 @@ export function MinistryRecordsAwards({
   onNext,
   onBack,
 }: StepProps) {
+  const { data: churchesResponse } = useChurches({ page: 1, limit: 100 });
+  const churches = churchesResponse?.data || [];
   const form = useForm<FormValues>({
     resolver: zodResolver(ministryRecordsAwardsSchema),
     defaultValues: {
@@ -80,10 +83,11 @@ export function MinistryRecordsAwards({
 
   const addMinistryRecord = () => {
     const currentRecords = form.getValues("ministryRecords") || [];
+    const defaultChurchId = churches.length > 0 ? churches[0].id : 0;
     form.setValue("ministryRecords", [
       ...currentRecords,
       {
-        churchLocationId: 1, // Default to first church ID
+        churchLocationId: defaultChurchId,
         fromYear: "",
         toYear: "",
         contribution: "",
@@ -226,21 +230,16 @@ export function MinistryRecordsAwards({
                                     field.onChange(Number(e.target.value))
                                   }
                                 >
-                                  <option value={1}>
-                                    Main Church - Manila
-                                  </option>
-                                  <option value={2}>
-                                    Branch Church - Quezon City
-                                  </option>
-                                  <option value={3}>
-                                    Branch Church - Cebu
-                                  </option>
-                                  <option value={4}>
-                                    Branch Church - Davao
-                                  </option>
-                                  <option value={5}>
-                                    Mission Station - Baguio
-                                  </option>
+                                  <option value="">Select a church</option>
+                                  {churches.map((church) => (
+                                    <option key={church.id} value={church.id}>
+                                      {church.name}
+                                      <span className="t text-sm text-blue-400">
+                                        {church.address &&
+                                          ` - ${church.address}`}
+                                      </span>
+                                    </option>
+                                  ))}
                                 </select>
                               </FormControl>
                               <FormMessage />

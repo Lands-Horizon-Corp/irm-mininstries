@@ -134,7 +134,11 @@ export function SeminarsConferences({
           <Card className="relative overflow-hidden">
             <CardHeader className="px-3 pt-2 pb-2 sm:px-6 sm:pt-6 sm:pb-4">
               <CardTitle className="flex items-center justify-between text-base sm:text-lg">
-                <span className="leading-tight">Seminars & Conferences</span>
+                <span className="leading-tight">
+                  Seminars & Conferences
+                  <br />
+                  <span className="text-xs">(LOCAL OR ABROAD)</span>
+                </span>
                 <Button
                   className="flex items-center gap-2"
                   size="sm"

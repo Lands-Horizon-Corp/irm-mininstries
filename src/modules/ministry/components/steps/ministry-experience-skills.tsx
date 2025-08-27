@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 import { useMinistryRanks } from "../../../ministry-ranks/ministry-ranks-service";
+import { useMinistrySkills } from "../../../ministry-skills/ministry-skills-service";
 import type { Minister } from "../../ministry-validation";
 
 interface StepProps {
@@ -37,7 +38,7 @@ const ministryExperienceSchema = z.object({
   ministryRankId: z
     .number()
     .int()
-    .min(1, { message: "Ministry rank is required" }),
+    .min(1, { message: "Please select a ministry rank" }),
   description: z.string().optional().nullable(),
   fromYear: z.string().min(1, { message: "From year is required" }),
   toYear: z.string().optional().nullable(),
@@ -50,7 +51,7 @@ const ministrySkillSchema = z.object({
   ministrySkillId: z
     .number()
     .int()
-    .min(1, { message: "Ministry skill is required" }),
+    .min(1, { message: "Please select a ministry skill" }),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
@@ -73,6 +74,12 @@ export function MinistryExperienceSkills({
     limit: 100,
   });
   const ministryRanks = ministryRanksResponse?.data || [];
+
+  const { data: ministrySkillsResponse } = useMinistrySkills({
+    page: 1,
+    limit: 200, // Get more skills since we have 161 skills
+  });
+  const ministrySkillsData = ministrySkillsResponse?.data || [];
   const form = useForm<FormValues>({
     resolver: zodResolver(ministryExperienceSkillsSchema),
     defaultValues: {
@@ -88,10 +95,11 @@ export function MinistryExperienceSkills({
 
   const addMinistryExperience = () => {
     const currentExperiences = form.getValues("ministryExperiences") || [];
+    const defaultRankId = ministryRanks.length > 0 ? ministryRanks[0].id : 0;
     form.setValue("ministryExperiences", [
       ...currentExperiences,
       {
-        ministryRankId: 1, // Default to first ministry rank ID
+        ministryRankId: defaultRankId,
         description: "",
         fromYear: "",
         toYear: "",
@@ -109,10 +117,12 @@ export function MinistryExperienceSkills({
 
   const addMinistrySkill = () => {
     const currentSkills = form.getValues("ministrySkills") || [];
+    const defaultSkillId =
+      ministrySkillsData.length > 0 ? ministrySkillsData[0].id : 0;
     form.setValue("ministrySkills", [
       ...currentSkills,
       {
-        ministrySkillId: 1, // Default to first skill ID
+        ministrySkillId: defaultSkillId,
       },
     ]);
   };
@@ -233,6 +243,9 @@ export function MinistryExperienceSkills({
                                     field.onChange(Number(e.target.value))
                                   }
                                 >
+                                  <option value="">
+                                    Select a ministry rank
+                                  </option>
                                   {ministryRanks.map(
                                     (rank: { id: number; name: string }) => (
                                       <option key={rank.id} value={rank.id}>
@@ -387,18 +400,20 @@ export function MinistryExperienceSkills({
                                     field.onChange(Number(e.target.value))
                                   }
                                 >
-                                  <option value={1}>Preaching</option>
-                                  <option value={2}>Teaching</option>
-                                  <option value={3}>Pastoral Care</option>
-                                  <option value={4}>Evangelism</option>
-                                  <option value={5}>Music Ministry</option>
-                                  <option value={6}>Youth Ministry</option>
-                                  <option value={7}>
-                                    Children&apos;s Ministry
+                                  <option value="">
+                                    Select a ministry skill
                                   </option>
-                                  <option value={8}>Administration</option>
-                                  <option value={9}>Counseling</option>
-                                  <option value={10}>Prayer Ministry</option>
+                                  {ministrySkillsData.map(
+                                    (skill: {
+                                      id: number;
+                                      name: string;
+                                      description: string;
+                                    }) => (
+                                      <option key={skill.id} value={skill.id}>
+                                        {skill.name}
+                                      </option>
+                                    )
+                                  )}
                                 </select>
                               </FormControl>
                               <FormMessage />
