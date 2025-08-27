@@ -19,6 +19,7 @@ interface SuccessDialogProps {
   onClose: () => void;
   ministerName: string;
   ministerId: number | null;
+  mode?: "create" | "edit";
 }
 
 export function SuccessDialog({
@@ -26,6 +27,7 @@ export function SuccessDialog({
   onClose,
   ministerName,
   ministerId,
+  mode = "create",
 }: SuccessDialogProps) {
   const router = useRouter();
 
@@ -55,11 +57,13 @@ export function SuccessDialog({
             <CheckCircle className="h-6 w-6 text-green-600" />
           </div>
           <DialogTitle className="text-xl font-semibold text-gray-900">
-            Minister Application Submitted Successfully!
+            Minister Application {mode === "edit" ? "Updated" : "Submitted"}{" "}
+            Successfully!
           </DialogTitle>
           <DialogDescription className="mt-2 text-gray-500">
             The application for <strong>{ministerName}</strong> has been
-            successfully submitted and saved to the ministry database.
+            successfully {mode === "edit" ? "updated" : "submitted"} and saved
+            to the ministry database.
           </DialogDescription>
         </DialogHeader>
 
@@ -76,7 +80,9 @@ export function SuccessDialog({
             variant="outline"
             onClick={handleCreateAnother}
           >
-            Create Another Application
+            {mode === "edit"
+              ? "Edit Another Minister"
+              : "Create Another Application"}
           </Button>
           <Button
             className="w-full sm:w-auto"

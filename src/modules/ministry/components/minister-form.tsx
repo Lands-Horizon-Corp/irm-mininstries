@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { useCreateMinister } from "../ministry-service";
+import { useCreateMinister, useUpdateMinister } from "../ministry-service";
 import type { Minister, StepProps } from "../ministry-validation";
 
 import { CertificationSignatures } from "./steps/certification-signatures";
@@ -72,6 +72,14 @@ type FormStepComponents = {
   [FormStep.OVERVIEW]: React.ComponentType<StepProps>;
 };
 
+interface MinisterFormProps {
+  onClose?: () => void;
+  isDialog?: boolean;
+  mode?: "create" | "edit";
+  initialData?: Minister;
+  onSuccess?: () => void;
+}
+
 // Note: Component imports would need to be added when components are created
 const formComponents: Partial<FormStepComponents> = {
   [FormStep.PERSONAL_INFORMATION]: PersonalInformation,
@@ -86,80 +94,95 @@ const formComponents: Partial<FormStepComponents> = {
   [FormStep.OVERVIEW]: Overview,
 };
 
-export function MinisterForm() {
+export function MinisterForm({
+  onClose,
+  isDialog = false,
+  mode = "create",
+  initialData,
+  onSuccess,
+}: MinisterFormProps) {
   const router = useRouter();
   const cardRef = useRef<HTMLDivElement>(null);
   const createMinister = useCreateMinister();
+  const updateMinisterMutation = useUpdateMinister();
+
+  const isEdit = mode === "edit" && initialData;
 
   const [currentStep, setCurrentStep] = useState<FormStep>(
     FormStep.PERSONAL_INFORMATION
   );
-  const [formData, setMinister] = useState<Minister>({
-    // Personal Information
-    firstName: "",
-    lastName: "",
-    middleName: "",
-    suffix: "",
-    nickname: "",
-    dateOfBirth: new Date(),
-    placeOfBirth: "",
-    gender: "male",
-    heightFeet: "",
-    weightKg: "",
-    civilStatus: "single",
-    imageUrl: "",
+  const [formData, setMinister] = useState<Minister>(() => {
+    if (isEdit && initialData) {
+      return { ...initialData };
+    }
 
-    // Contact Information
-    email: "",
-    telephone: "",
-    address: "",
-    presentAddress: "",
-    permanentAddress: "",
+    return {
+      // Personal Information
+      firstName: "",
+      lastName: "",
+      middleName: "",
+      suffix: "",
+      nickname: "",
+      dateOfBirth: new Date(),
+      placeOfBirth: "",
+      gender: "male",
+      heightFeet: "",
+      weightKg: "",
+      civilStatus: "single",
+      imageUrl: "",
 
-    // Government & Identification
-    passportNumber: "",
-    sssNumber: "",
-    philhealth: "",
-    tin: "",
+      // Contact Information
+      email: "",
+      telephone: "",
+      address: "",
+      presentAddress: "",
+      permanentAddress: "",
 
-    // Family Information
-    fatherName: "",
-    fatherProvince: "",
-    fatherBirthday: new Date(),
-    fatherOccupation: "",
-    motherName: "",
-    motherProvince: "",
-    motherBirthday: new Date(),
-    motherOccupation: "",
+      // Government & Identification
+      passportNumber: "",
+      sssNumber: "",
+      philhealth: "",
+      tin: "",
 
-    // Spouse Information
-    spouseName: "",
-    spouseProvince: "",
-    spouseBirthday: undefined,
-    spouseOccupation: "",
-    weddingDate: undefined,
+      // Family Information
+      fatherName: "",
+      fatherProvince: "",
+      fatherBirthday: new Date(),
+      fatherOccupation: "",
+      motherName: "",
+      motherProvince: "",
+      motherBirthday: new Date(),
+      motherOccupation: "",
 
-    // Skills & Interests
-    skills: "",
-    hobbies: "",
-    sports: "",
-    otherReligiousSecularTraining: "",
+      // Spouse Information
+      spouseName: "",
+      spouseProvince: "",
+      spouseBirthday: undefined,
+      spouseOccupation: "",
+      weddingDate: undefined,
 
-    // Certification & Signatures
-    certifiedBy: "",
-    signatureImageUrl: "",
-    signatureByCertifiedImageUrl: "",
+      // Skills & Interests
+      skills: "",
+      hobbies: "",
+      sports: "",
+      otherReligiousSecularTraining: "",
 
-    // Relations (initially empty arrays)
-    children: [],
-    emergencyContacts: [],
-    educationBackgrounds: [],
-    ministryExperiences: [],
-    ministrySkills: [],
-    ministryRecords: [],
-    awardsRecognitions: [],
-    employmentRecords: [],
-    seminarsConferences: [],
+      // Certification & Signatures
+      certifiedBy: "",
+      signatureImageUrl: "",
+      signatureByCertifiedImageUrl: "",
+
+      // Relations (initially empty arrays)
+      children: [],
+      emergencyContacts: [],
+      educationBackgrounds: [],
+      ministryExperiences: [],
+      ministrySkills: [],
+      ministryRecords: [],
+      awardsRecognitions: [],
+      employmentRecords: [],
+      seminarsConferences: [],
+    };
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
@@ -170,7 +193,11 @@ export function MinisterForm() {
 
   // Handle cancel button click
   const handleCancel = async () => {
-    router.push("/");
+    if (isDialog && onClose) {
+      onClose();
+    } else {
+      router.push("/");
+    }
   };
 
   const scrollToCard = () => {
@@ -231,18 +258,44 @@ export function MinisterForm() {
     setSubmissionError(null);
 
     try {
-      const result = await createMinister.mutateAsync(formData);
+      if (isEdit && initialData?.id) {
+        // Update existing minister
+        const result = await updateMinisterMutation.mutateAsync({
+          id: initialData.id,
+          data: formData,
+        });
 
-      if (result.success && result.data) {
-        setCreatedMinisterId(result.data.id || null);
-        setShowSuccessDialog(true);
+        if (result.success) {
+          if (onSuccess) {
+            onSuccess();
+          } else if (isDialog && onClose) {
+            onClose();
+          } else {
+            setCreatedMinisterId(initialData.id);
+            setShowSuccessDialog(true);
+          }
+        }
+      } else {
+        // Create new minister
+        const result = await createMinister.mutateAsync(formData);
+
+        if (result.success && result.data) {
+          if (onSuccess) {
+            onSuccess();
+          } else if (isDialog && onClose) {
+            onClose();
+          } else {
+            setCreatedMinisterId(result.data.id || null);
+            setShowSuccessDialog(true);
+          }
+        }
       }
     } catch (error) {
       console.error("Error submitting form:", error);
       setSubmissionError(
         error instanceof Error
           ? error.message
-          : "An error occurred while submitting the form. Please try again."
+          : `An error occurred while ${isEdit ? "updating" : "submitting"} the form. Please try again.`
       );
     } finally {
       setIsSubmitting(false);
@@ -263,7 +316,11 @@ export function MinisterForm() {
         updateFormData: updateMinisterData,
         onNext: handleNext,
         onBack: () => {
-          router.push("/form");
+          if (isDialog && onClose) {
+            onClose();
+          } else {
+            router.push("/form");
+          }
         },
         onCancel: handleCancel,
         error: submissionError,
@@ -388,6 +445,7 @@ export function MinisterForm() {
         isOpen={showSuccessDialog}
         ministerId={createdMinisterId}
         ministerName={`${formData.firstName} ${formData.lastName}`}
+        mode={mode}
         onClose={() => setShowSuccessDialog(false)}
       />
     </>

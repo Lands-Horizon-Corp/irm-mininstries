@@ -1,11 +1,26 @@
+"use client";
+import { useState } from "react";
+
 import { Plus, Users } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { MinisterForm } from "@/modules/ministry/components/minister-form";
 import MinisterTable from "@/modules/ministry/components/minister-table";
 
 export default function MinistersPage() {
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+
+  const handleCreateSuccess = () => {
+    setIsCreateDialogOpen(false);
+  };
   return (
     <div className="bg-background min-h-screen p-8">
       <Container>
@@ -25,16 +40,44 @@ export default function MinistersPage() {
                 </p>
               </div>
             </div>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Minister
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={() => setIsCreateDialogOpen(true)}>
+                <Plus className="mr-2 h-4 w-4" />
+                Add Minister
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => window.open("/join", "_blank")}
+              >
+                Full Form
+              </Button>
+            </div>
           </div>
 
           {/* Ministers Table */}
           <Card className="p-6">
             <MinisterTable />
           </Card>
+
+          {/* Create Minister Dialog */}
+          <Dialog
+            open={isCreateDialogOpen}
+            onOpenChange={setIsCreateDialogOpen}
+          >
+            <DialogContent className="max-h-screen min-w-7xl">
+              <DialogHeader>
+                <DialogTitle>Create New Minister</DialogTitle>
+              </DialogHeader>
+              <div className="mt-4">
+                <MinisterForm
+                  isDialog={true}
+                  mode="create"
+                  onClose={() => setIsCreateDialogOpen(false)}
+                  onSuccess={handleCreateSuccess}
+                />
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </Container>
     </div>
