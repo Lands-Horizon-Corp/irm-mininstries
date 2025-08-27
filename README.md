@@ -44,3 +44,27 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 // Church and Church Members
 
 // Case Reports: Desqcription and year
+
+// Add biography worker (text)
+
+// Add member table
+
+- profile picture
+- First name: string
+- Last name: string
+- Middle name: string
+- Gender: male, female
+- Birthdate: date
+- Year joined: number
+- Ministry involvement: description
+- Occupation: string
+  (Highest Educational Attainment)
+- Education attianment
+- School
+- Degree
+- mobile number
+- facebook link
+- x link
+- instagram link
+- email addresss
+- home address
