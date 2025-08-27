@@ -66,6 +66,7 @@ import {
 } from "../ministry-service";
 
 import { EditMinisterDialog } from "./edit-minister-dialog";
+import { ViewMinisterDialog } from "./view-minister-dialog";
 
 // Minister interface based on your requirements
 interface Minister {
@@ -92,6 +93,7 @@ interface MinisterActionsProps {
 const MinisterActions = ({ minister }: MinisterActionsProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
   const deleteMinisterMutation = useDeleteMinister();
 
@@ -141,7 +143,7 @@ const MinisterActions = ({ minister }: MinisterActionsProps) => {
             <FileTextIcon className="mr-2 h-4 w-4" />
             {isDownloadingPDF ? "Downloading..." : "PDF Download"}
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsViewDialogOpen(true)}>
             <Eye className="mr-2 h-4 w-4" />
             View
           </DropdownMenuItem>
@@ -194,6 +196,13 @@ const MinisterActions = ({ minister }: MinisterActionsProps) => {
         isOpen={isEditDialogOpen}
         ministerId={minister.id}
         onClose={() => setIsEditDialogOpen(false)}
+      />
+
+      {/* View Minister Dialog */}
+      <ViewMinisterDialog
+        isOpen={isViewDialogOpen}
+        ministerId={minister.id}
+        onClose={() => setIsViewDialogOpen(false)}
       />
     </>
   );

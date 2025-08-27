@@ -65,6 +65,42 @@ export function EditMinisterDialog({
     );
   }
 
+  // Convert string dates to Date objects for form compatibility
+  const processedData = {
+    ...ministerResponse.data,
+    dateOfBirth: ministerResponse.data.dateOfBirth
+      ? new Date(ministerResponse.data.dateOfBirth)
+      : new Date(),
+    fatherBirthday: ministerResponse.data.fatherBirthday
+      ? new Date(ministerResponse.data.fatherBirthday)
+      : new Date(),
+    motherBirthday: ministerResponse.data.motherBirthday
+      ? new Date(ministerResponse.data.motherBirthday)
+      : new Date(),
+    spouseBirthday: ministerResponse.data.spouseBirthday
+      ? new Date(ministerResponse.data.spouseBirthday)
+      : undefined,
+    weddingDate: ministerResponse.data.weddingDate
+      ? new Date(ministerResponse.data.weddingDate)
+      : undefined,
+    // Process children dates
+    children:
+      ministerResponse.data.children?.map((child) => ({
+        ...child,
+        dateOfBirth: child.dateOfBirth
+          ? new Date(child.dateOfBirth)
+          : new Date(),
+      })) || [],
+    // Process education dates
+    educationBackgrounds:
+      ministerResponse.data.educationBackgrounds?.map((edu) => ({
+        ...edu,
+        dateGraduated: edu.dateGraduated
+          ? new Date(edu.dateGraduated)
+          : undefined,
+      })) || [],
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-h-screen min-w-7xl overflow-auto">
@@ -73,7 +109,7 @@ export function EditMinisterDialog({
         </DialogHeader>
         <div className="mt-4">
           <MinisterForm
-            initialData={ministerResponse.data}
+            initialData={processedData}
             isDialog={true}
             mode="edit"
             onClose={onClose}

@@ -64,7 +64,7 @@ export default function MinistersPage() {
             open={isCreateDialogOpen}
             onOpenChange={setIsCreateDialogOpen}
           >
-            <DialogContent className="max-h-screen min-w-7xl">
+            <DialogContent className="max-h-screen min-w-7xl overflow-auto">
               <DialogHeader>
                 <DialogTitle>Create New Minister</DialogTitle>
               </DialogHeader>
