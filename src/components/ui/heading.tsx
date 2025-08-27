@@ -20,8 +20,8 @@ export function Heading({
       } ${className}`}
     >
       <h1 className="text-3xl font-bold sm:text-4xl">{title}</h1>
-      {description && <p className="text-gray-500">{description}</p>}
-      {subDescription && <p className="text-gray-500">{subDescription}</p>}
+      {description && <p className="ext-current/50">{description}</p>}
+      {subDescription && <p className="ext-current/50">{subDescription}</p>}
     </div>
   );
 }

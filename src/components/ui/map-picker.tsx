@@ -8,6 +8,13 @@ import { Building, Globe, MapPin, Navigation, Search, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -16,7 +23,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export interface LatLng {
   lat: number;
@@ -340,7 +346,7 @@ export const MapPicker: React.FC<MapPickerProps> = ({
     ) {
       return <Globe className="h-4 w-4 text-green-500" />;
     }
-    return <Navigation className="h-4 w-4 text-gray-500" />;
+    return <Navigation className="text-muted-foreground h-4 w-4" />;
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -593,52 +599,53 @@ export const MapPicker: React.FC<MapPickerProps> = ({
 
                       {showSuggestions &&
                         (suggestions.length > 0 || isLoadingSuggestions) && (
-                          <div className="absolute top-full right-0 left-0 z-[9999] mt-1 rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-950">
-                            <ScrollArea className="max-h-60">
-                              {isLoadingSuggestions ? (
-                                <div className="text-muted-foreground p-3 text-center text-sm">
-                                  Searching...
-                                </div>
-                              ) : (
-                                <div className="py-1">
-                                  {suggestions.map((suggestion) => (
-                                    <div
-                                      className="flex w-full cursor-pointer items-start gap-3 border-b px-3 py-2 text-left transition-colors last:border-b-0 hover:bg-gray-100 dark:hover:bg-gray-800"
-                                      key={suggestion.place_id}
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        selectPlace(
-                                          suggestion.place_id,
-                                          suggestion.description
-                                        );
-                                      }}
-                                      onMouseDown={(e) => {
-                                        e.preventDefault();
-                                      }}
-                                    >
-                                      <div className="mt-0.5">
-                                        {getPlaceIcon(suggestion.types)}
-                                      </div>
-                                      <div className="min-w-0 flex-1">
-                                        <div className="truncate text-sm font-medium text-gray-900 dark:text-gray-100">
-                                          {
-                                            suggestion.structured_formatting
-                                              .main_text
-                                          }
+                          <div className="absolute top-full right-0 left-0 z-[9999] mt-1">
+                            <Command className="rounded-md border shadow-md">
+                              <CommandList>
+                                {isLoadingSuggestions ? (
+                                  <CommandEmpty className="py-6 text-center text-sm">
+                                    Searching for places...
+                                  </CommandEmpty>
+                                ) : suggestions.length === 0 ? (
+                                  <CommandEmpty className="py-6 text-center text-sm">
+                                    No places found.
+                                  </CommandEmpty>
+                                ) : (
+                                  <CommandGroup>
+                                    {suggestions.map((suggestion) => (
+                                      <CommandItem
+                                        className="flex cursor-pointer items-start gap-3 p-3"
+                                        key={suggestion.place_id}
+                                        onSelect={() => {
+                                          selectPlace(
+                                            suggestion.place_id,
+                                            suggestion.description
+                                          );
+                                        }}
+                                      >
+                                        <div className="mt-0.5 flex-shrink-0">
+                                          {getPlaceIcon(suggestion.types)}
                                         </div>
-                                        <div className="text-muted-foreground truncate text-xs">
-                                          {
-                                            suggestion.structured_formatting
-                                              .secondary_text
-                                          }
+                                        <div className="min-w-0 flex-1 space-y-1">
+                                          <div className="truncate text-sm font-medium">
+                                            {
+                                              suggestion.structured_formatting
+                                                .main_text
+                                            }
+                                          </div>
+                                          <div className="text-muted-foreground truncate text-xs">
+                                            {
+                                              suggestion.structured_formatting
+                                                .secondary_text
+                                            }
+                                          </div>
                                         </div>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                            </ScrollArea>
+                                      </CommandItem>
+                                    ))}
+                                  </CommandGroup>
+                                )}
+                              </CommandList>
+                            </Command>
                           </div>
                         )}
                     </div>

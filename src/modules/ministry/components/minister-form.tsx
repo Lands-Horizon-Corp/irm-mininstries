@@ -5,8 +5,15 @@ import { useRouter } from "next/navigation";
 
 import type { Minister } from "../ministry-validation";
 
+import { CertificationSignatures } from "./steps/certification-signatures";
 import { ContactGovernmentInfo } from "./steps/contact-government-info";
+import { EducationEmployment } from "./steps/education-employment";
+import { EmergencyContactsSkills } from "./steps/emergency-contacts-skills";
+import { FamilySpouseInformation } from "./steps/family-spouse-information";
+import { MinistryExperienceSkills } from "./steps/ministry-experience-skills";
+import { MinistryRecordsAwards } from "./steps/ministry-records-awards";
 import { PersonalInformation } from "./steps/personal-information";
+import { SeminarsConferences } from "./steps/seminars-conferences";
 import { StepIndicator } from "./step-indicator";
 
 enum FormStep {
@@ -64,6 +71,13 @@ type FormStepComponents = {
 const formComponents: Partial<FormStepComponents> = {
   [FormStep.PERSONAL_INFORMATION]: PersonalInformation,
   [FormStep.CONTACT_GOVERNMENT_INFO]: ContactGovernmentInfo,
+  [FormStep.FAMILY_SPOUSE_INFORMATION]: FamilySpouseInformation,
+  [FormStep.EMERGENCY_CONTACTS_SKILLS]: EmergencyContactsSkills,
+  [FormStep.EDUCATION_EMPLOYMENT]: EducationEmployment,
+  [FormStep.MINISTRY_EXPERIENCE_SKILLS]: MinistryExperienceSkills,
+  [FormStep.MINISTRY_RECORDS_AWARDS]: MinistryRecordsAwards,
+  [FormStep.SEMINARS_CONFERENCES]: SeminarsConferences,
+  [FormStep.CERTIFICATION_SIGNATURES]: CertificationSignatures,
 };
 
 type StepComponentProps = {
