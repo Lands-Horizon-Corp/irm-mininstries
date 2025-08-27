@@ -8,6 +8,7 @@ import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChurchSelect } from "@/components/ui/church-select";
 import {
   Form,
   FormControl,
@@ -19,7 +20,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-import { useChurches } from "../../../church/church-service";
 import type { Minister } from "../../ministry-validation";
 
 interface StepProps {
@@ -66,8 +66,6 @@ export function MinistryRecordsAwards({
   onNext,
   onBack,
 }: StepProps) {
-  const { data: churchesResponse } = useChurches({ page: 1, limit: 100 });
-  const churches = churchesResponse?.data || [];
   const form = useForm<FormValues>({
     resolver: zodResolver(ministryRecordsAwardsSchema),
     defaultValues: {
@@ -83,11 +81,10 @@ export function MinistryRecordsAwards({
 
   const addMinistryRecord = () => {
     const currentRecords = form.getValues("ministryRecords") || [];
-    const defaultChurchId = churches.length > 0 ? churches[0].id : 0;
     form.setValue("ministryRecords", [
       ...currentRecords,
       {
-        churchLocationId: defaultChurchId,
+        churchLocationId: 0, // Start with no selection
         fromYear: "",
         toYear: "",
         contribution: "",
@@ -222,25 +219,15 @@ export function MinistryRecordsAwards({
                                 <span className="text-destructive ml-1">*</span>
                               </FormLabel>
                               <FormControl>
-                                <select
-                                  {...field}
-                                  className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:text-base"
-                                  value={field.value}
-                                  onChange={(e) =>
-                                    field.onChange(Number(e.target.value))
+                                <ChurchSelect
+                                  emptyMessage="No churches found. Please add churches first."
+                                  placeholder="Select a church location..."
+                                  searchPlaceholder="Search churches..."
+                                  value={field.value || null}
+                                  onValueChange={(value) =>
+                                    field.onChange(value)
                                   }
-                                >
-                                  <option value="">Select a church</option>
-                                  {churches.map((church) => (
-                                    <option key={church.id} value={church.id}>
-                                      {church.name}
-                                      <span className="t text-sm text-blue-400">
-                                        {church.address &&
-                                          ` - ${church.address}`}
-                                      </span>
-                                    </option>
-                                  ))}
-                                </select>
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
