@@ -134,15 +134,6 @@ export async function POST(request: NextRequest) {
     // Validate the request data against our schema
     const validatedData = ministerSchema.parse(body);
 
-    // Log the minister submission (for debugging - remove in production)
-    console.log("Ministry submission:", {
-      firstName: validatedData.firstName,
-      lastName: validatedData.lastName,
-      email: validatedData.email || "No email provided",
-      dateOfBirth: validatedData.dateOfBirth,
-      timestamp: new Date().toISOString(),
-    });
-
     // Start a database transaction to ensure data consistency
     const result = await db.transaction(async (tx) => {
       // Insert the main minister record

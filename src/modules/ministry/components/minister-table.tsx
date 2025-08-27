@@ -22,6 +22,7 @@ import {
   ChevronDown,
   Edit,
   Eye,
+  FileTextIcon,
   Mail,
   MapPin,
   MoreHorizontal,
@@ -58,7 +59,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { useDeleteMinister, useMinisters } from "../ministry-service";
+import {
+  downloadMinisterPDF,
+  useDeleteMinister,
+  useMinisters,
+} from "../ministry-service";
 
 // Minister interface based on your requirements
 interface Minister {
@@ -84,6 +89,7 @@ interface MinisterActionsProps {
 
 const MinisterActions = ({ minister }: MinisterActionsProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
   const deleteMinisterMutation = useDeleteMinister();
 
   const handleDelete = async () => {
@@ -92,6 +98,17 @@ const MinisterActions = ({ minister }: MinisterActionsProps) => {
       setIsDeleteDialogOpen(false);
     } catch (error) {
       console.error("Failed to delete minister:", error);
+    }
+  };
+
+  const handlePDFDownload = async () => {
+    setIsDownloadingPDF(true);
+    try {
+      await downloadMinisterPDF(minister.id);
+    } catch (error) {
+      console.error("Failed to download PDF:", error);
+    } finally {
+      setIsDownloadingPDF(false);
     }
   };
 
@@ -114,6 +131,13 @@ const MinisterActions = ({ minister }: MinisterActionsProps) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
+          <DropdownMenuItem
+            disabled={isDownloadingPDF}
+            onClick={handlePDFDownload}
+          >
+            <FileTextIcon className="mr-2 h-4 w-4" />
+            {isDownloadingPDF ? "Downloading..." : "PDF Download"}
+          </DropdownMenuItem>
           <DropdownMenuItem>
             <Eye className="mr-2 h-4 w-4" />
             View
