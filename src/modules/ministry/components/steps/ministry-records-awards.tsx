@@ -220,9 +220,7 @@ export function MinistryRecordsAwards({
                               </FormLabel>
                               <FormControl>
                                 <ChurchSelect
-                                  emptyMessage="No churches found. Please add churches first."
                                   placeholder="Select a church location..."
-                                  searchPlaceholder="Search churches..."
                                   value={field.value || null}
                                   onValueChange={(value) =>
                                     field.onChange(value)

@@ -17,10 +17,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { MinistryRankSelect } from "@/components/ui/ministry-rank-select";
+import { MinistrySkillSelect } from "@/components/ui/ministry-skill-select";
 import { Textarea } from "@/components/ui/textarea";
 
-import { useMinistryRanks } from "../../../ministry-ranks/ministry-ranks-service";
-import { useMinistrySkills } from "../../../ministry-skills/ministry-skills-service";
 import type { Minister } from "../../ministry-validation";
 
 interface StepProps {
@@ -69,17 +69,6 @@ export function MinistryExperienceSkills({
   onNext,
   onBack,
 }: StepProps) {
-  const { data: ministryRanksResponse } = useMinistryRanks({
-    page: 1,
-    limit: 100,
-  });
-  const ministryRanks = ministryRanksResponse?.data || [];
-
-  const { data: ministrySkillsResponse } = useMinistrySkills({
-    page: 1,
-    limit: 200, // Get more skills since we have 161 skills
-  });
-  const ministrySkillsData = ministrySkillsResponse?.data || [];
   const form = useForm<FormValues>({
     resolver: zodResolver(ministryExperienceSkillsSchema),
     defaultValues: {
@@ -95,11 +84,10 @@ export function MinistryExperienceSkills({
 
   const addMinistryExperience = () => {
     const currentExperiences = form.getValues("ministryExperiences") || [];
-    const defaultRankId = ministryRanks.length > 0 ? ministryRanks[0].id : 0;
     form.setValue("ministryExperiences", [
       ...currentExperiences,
       {
-        ministryRankId: defaultRankId,
+        ministryRankId: 0, // Will be set when user selects
         description: "",
         fromYear: "",
         toYear: "",
@@ -117,12 +105,10 @@ export function MinistryExperienceSkills({
 
   const addMinistrySkill = () => {
     const currentSkills = form.getValues("ministrySkills") || [];
-    const defaultSkillId =
-      ministrySkillsData.length > 0 ? ministrySkillsData[0].id : 0;
     form.setValue("ministrySkills", [
       ...currentSkills,
       {
-        ministrySkillId: defaultSkillId,
+        ministrySkillId: 0, // Will be set when user selects
       },
     ]);
   };
@@ -235,25 +221,11 @@ export function MinistryExperienceSkills({
                                 <span className="text-destructive ml-1">*</span>
                               </FormLabel>
                               <FormControl>
-                                <select
-                                  {...field}
-                                  className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:text-base"
+                                <MinistryRankSelect
+                                  placeholder="Select a ministry rank"
                                   value={field.value}
-                                  onChange={(e) =>
-                                    field.onChange(Number(e.target.value))
-                                  }
-                                >
-                                  <option value="">
-                                    Select a ministry rank
-                                  </option>
-                                  {ministryRanks.map(
-                                    (rank: { id: number; name: string }) => (
-                                      <option key={rank.id} value={rank.id}>
-                                        {rank.name}
-                                      </option>
-                                    )
-                                  )}
-                                </select>
+                                  onValueChange={field.onChange}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -392,29 +364,11 @@ export function MinistryExperienceSkills({
                                 <span className="text-destructive ml-1">*</span>
                               </FormLabel>
                               <FormControl>
-                                <select
-                                  {...field}
-                                  className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:text-base"
+                                <MinistrySkillSelect
+                                  placeholder="Select a ministry skill"
                                   value={field.value}
-                                  onChange={(e) =>
-                                    field.onChange(Number(e.target.value))
-                                  }
-                                >
-                                  <option value="">
-                                    Select a ministry skill
-                                  </option>
-                                  {ministrySkillsData.map(
-                                    (skill: {
-                                      id: number;
-                                      name: string;
-                                      description: string;
-                                    }) => (
-                                      <option key={skill.id} value={skill.id}>
-                                        {skill.name}
-                                      </option>
-                                    )
-                                  )}
-                                </select>
+                                  onValueChange={field.onChange}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>

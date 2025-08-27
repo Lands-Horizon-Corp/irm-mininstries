@@ -19,46 +19,46 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { useChurches } from "@/modules/church/church-service";
+import { useMinistrySkills } from "@/modules/ministry-skills/ministry-skills-service";
 
-interface ChurchSelectProps {
+interface MinistrySkillSelectProps {
   value?: number | null;
-  onValueChange?: (value: number | null) => void;
+  onValueChange: (value: number | null) => void;
   placeholder?: string;
   disabled?: boolean;
   className?: string;
 }
 
-export const ChurchSelect: React.FC<ChurchSelectProps> = ({
+export const MinistrySkillSelect: React.FC<MinistrySkillSelectProps> = ({
   value,
   onValueChange,
-  placeholder = "Search churches...",
+  placeholder = "Search ministry skills...",
   disabled = false,
   className,
 }) => {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Fetch churches with search
-  const { data: churchesResponse, isLoading } = useChurches({
+  // Fetch ministry skills with search
+  const { data: ministrySkillsResponse, isLoading } = useMinistrySkills({
     search: searchTerm || undefined,
     page: 1,
-    limit: 100,
+    limit: 200, // Get all skills since we have 161 skills
   });
 
-  // Memoize churches to prevent unnecessary re-renders
-  const churches = useMemo(() => {
-    return churchesResponse?.data || [];
-  }, [churchesResponse?.data]);
+  // Memoize ministry skills to prevent unnecessary re-renders
+  const ministrySkills = useMemo(() => {
+    return ministrySkillsResponse?.data || [];
+  }, [ministrySkillsResponse?.data]);
 
-  // Find selected church
-  const selectedChurch = useMemo(() => {
+  // Find selected ministry skill
+  const selectedMinistrySkill = useMemo(() => {
     if (!value) return null;
-    return churches.find((church) => church.id === value) || null;
-  }, [value, churches]);
+    return ministrySkills.find((skill) => skill.id === value) || null;
+  }, [value, ministrySkills]);
 
   const handleSelect = (selectedValue: number) => {
-    onValueChange?.(selectedValue);
+    onValueChange(selectedValue);
     setOpen(false);
   };
 
@@ -69,7 +69,7 @@ export const ChurchSelect: React.FC<ChurchSelectProps> = ({
           aria-expanded={open}
           className={cn(
             "w-full justify-between font-normal",
-            !selectedChurch && "text-muted-foreground",
+            !selectedMinistrySkill && "text-muted-foreground",
             className
           )}
           disabled={disabled}
@@ -77,7 +77,7 @@ export const ChurchSelect: React.FC<ChurchSelectProps> = ({
           variant="outline"
         >
           <span className="truncate">
-            {selectedChurch?.name || placeholder}
+            {selectedMinistrySkill?.name || placeholder}
           </span>
           <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -87,7 +87,7 @@ export const ChurchSelect: React.FC<ChurchSelectProps> = ({
           <div className="flex items-center border-b px-3">
             <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
             <CommandInput
-              placeholder="Search churches..."
+              placeholder="Search ministry skills..."
               value={searchTerm}
               onValueChange={setSearchTerm}
             />
@@ -97,33 +97,33 @@ export const ChurchSelect: React.FC<ChurchSelectProps> = ({
               <div className="flex items-center justify-center py-6">
                 <div className="border-primary h-4 w-4 animate-spin rounded-full border-2 border-t-transparent" />
                 <span className="text-muted-foreground ml-2 text-sm">
-                  Loading churches...
+                  Loading ministry skills...
                 </span>
               </div>
             ) : (
               <>
-                <CommandEmpty>No churches found.</CommandEmpty>
+                <CommandEmpty>No ministry skills found.</CommandEmpty>
                 <CommandGroup>
-                  {churches.map((church) => (
+                  {ministrySkills.map((skill) => (
                     <CommandItem
-                      key={church.id}
-                      value={`${church.name}-${church.id}`}
-                      onSelect={() => handleSelect(church.id)}
+                      key={skill.id}
+                      value={`${skill.name}-${skill.id}`}
+                      onSelect={() => handleSelect(skill.id)}
                     >
                       <div className="flex w-full items-center">
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            selectedChurch?.id === church.id
+                            selectedMinistrySkill?.id === skill.id
                               ? "opacity-100"
                               : "opacity-0"
                           )}
                         />
                         <div className="flex-1">
-                          <div className="font-medium">{church.name}</div>
-                          {church.address && (
+                          <div className="font-medium">{skill.name}</div>
+                          {skill.description && (
                             <div className="text-muted-foreground text-xs">
-                              {church.address}
+                              {skill.description}
                             </div>
                           )}
                         </div>
