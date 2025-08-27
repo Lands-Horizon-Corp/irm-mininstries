@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { useCreateMinister } from "../ministry-service";
 import type { Minister, StepProps } from "../ministry-validation";
 
 import { CertificationSignatures } from "./steps/certification-signatures";
@@ -16,7 +17,7 @@ import { Overview } from "./steps/overview";
 import { PersonalInformation } from "./steps/personal-information";
 import { SeminarsConferences } from "./steps/seminars-conferences";
 import { StepIndicator } from "./step-indicator";
-
+import { SuccessDialog } from "./success-dialog";
 enum FormStep {
   PERSONAL_INFORMATION = "PERSONAL_INFORMATION",
   CONTACT_GOVERNMENT_INFO = "CONTACT_GOVERNMENT_INFO",
@@ -88,6 +89,8 @@ const formComponents: Partial<FormStepComponents> = {
 export function MinisterForm() {
   const router = useRouter();
   const cardRef = useRef<HTMLDivElement>(null);
+  const createMinister = useCreateMinister();
+
   const [currentStep, setCurrentStep] = useState<FormStep>(
     FormStep.PERSONAL_INFORMATION
   );
@@ -160,6 +163,10 @@ export function MinisterForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [createdMinisterId, setCreatedMinisterId] = useState<number | null>(
+    null
+  );
 
   // Handle cancel button click
   const handleCancel = async () => {
@@ -221,17 +228,26 @@ export function MinisterForm() {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    setSubmissionError(null);
+
     try {
-      setSubmissionError(null);
-    } catch {
+      const result = await createMinister.mutateAsync(formData);
+
+      if (result.success && result.data) {
+        setCreatedMinisterId(result.data.id || null);
+        setShowSuccessDialog(true);
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
       setSubmissionError(
-        "An error occurred while submitting the form. Please try again."
+        error instanceof Error
+          ? error.message
+          : "An error occurred while submitting the form. Please try again."
       );
     } finally {
       setIsSubmitting(false);
     }
   };
-
   const renderCurrentStep = () => {
     const StepComponent = formComponents[currentStep];
 
@@ -367,6 +383,13 @@ export function MinisterForm() {
         steps={formSteps.map((step) => step.label)}
       />
       <div ref={cardRef}>{renderCurrentStep()}</div>
+
+      <SuccessDialog
+        isOpen={showSuccessDialog}
+        ministerId={createdMinisterId}
+        ministerName={`${formData.firstName} ${formData.lastName}`}
+        onClose={() => setShowSuccessDialog(false)}
+      />
     </>
   );
 }
