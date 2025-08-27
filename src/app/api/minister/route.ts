@@ -248,7 +248,7 @@ export async function POST(request: NextRequest) {
         await tx.insert(ministerMinistryExperiences).values(
           validatedData.ministryExperiences.map((experience) => ({
             ministerId,
-            title: experience.title,
+            ministryRankId: experience.ministryRankId,
             description: experience.description,
             fromYear: experience.fromYear,
             toYear: experience.toYear,

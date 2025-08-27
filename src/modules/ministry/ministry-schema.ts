@@ -1,6 +1,7 @@
 import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 import { churches } from "../church/church-schema";
+import { ministryRanks } from "../ministry-ranks/ministry-ranks-schema";
 import { ministrySkills } from "../ministry-skills/ministry-skills-schema";
 
 export const genderEnum = text("gender", { enum: ["male", "female"] });
@@ -112,7 +113,9 @@ export const ministerMinistryExperiences = pgTable(
     ministerId: integer("minister_id")
       .notNull()
       .references(() => ministers.id),
-    title: text("title").notNull(),
+    ministryRankId: integer("ministry_rank_id")
+      .notNull()
+      .references(() => ministryRanks.id),
     description: text("description"),
     fromYear: text("from_year").notNull(),
     toYear: text("to_year"),

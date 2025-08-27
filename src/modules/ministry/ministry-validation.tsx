@@ -128,7 +128,7 @@ export const ministerSchema = z.object({
     .array(
       z.object({
         id: z.number().int().optional(),
-        title: z.string(),
+        ministryRankId: z.number().int(),
         description: z.string().optional().nullable(),
         fromYear: z.string(),
         toYear: z.string().optional().nullable(),

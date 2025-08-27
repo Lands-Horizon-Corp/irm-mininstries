@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
+import { useMinistryRanks } from "../../../ministry-ranks/ministry-ranks-service";
 import type { Minister } from "../../ministry-validation";
 
 interface StepProps {
@@ -33,7 +34,10 @@ interface StepProps {
 
 const ministryExperienceSchema = z.object({
   id: z.number().int().optional(),
-  title: z.string().min(1, { message: "Title is required" }),
+  ministryRankId: z
+    .number()
+    .int()
+    .min(1, { message: "Ministry rank is required" }),
   description: z.string().optional().nullable(),
   fromYear: z.string().min(1, { message: "From year is required" }),
   toYear: z.string().optional().nullable(),
@@ -64,6 +68,11 @@ export function MinistryExperienceSkills({
   onNext,
   onBack,
 }: StepProps) {
+  const { data: ministryRanksResponse } = useMinistryRanks({
+    page: 1,
+    limit: 100,
+  });
+  const ministryRanks = ministryRanksResponse?.data || [];
   const form = useForm<FormValues>({
     resolver: zodResolver(ministryExperienceSkillsSchema),
     defaultValues: {
@@ -82,7 +91,7 @@ export function MinistryExperienceSkills({
     form.setValue("ministryExperiences", [
       ...currentExperiences,
       {
-        title: "",
+        ministryRankId: 1, // Default to first ministry rank ID
         description: "",
         fromYear: "",
         toYear: "",
@@ -208,19 +217,30 @@ export function MinistryExperienceSkills({
                       <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
                         <FormField
                           control={form.control}
-                          name={`ministryExperiences.${index}.title`}
+                          name={`ministryExperiences.${index}.ministryRankId`}
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel className="text-sm font-medium sm:text-base">
-                                Title/Position
+                                Ministry Rank
                                 <span className="text-destructive ml-1">*</span>
                               </FormLabel>
                               <FormControl>
-                                <Input
+                                <select
                                   {...field}
-                                  className="h-10 text-sm sm:h-11 sm:text-base"
-                                  placeholder="e.g., Pastor, Deacon, Youth Leader"
-                                />
+                                  className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:text-base"
+                                  value={field.value}
+                                  onChange={(e) =>
+                                    field.onChange(Number(e.target.value))
+                                  }
+                                >
+                                  {ministryRanks.map(
+                                    (rank: { id: number; name: string }) => (
+                                      <option key={rank.id} value={rank.id}>
+                                        {rank.name}
+                                      </option>
+                                    )
+                                  )}
+                                </select>
                               </FormControl>
                               <FormMessage />
                             </FormItem>
