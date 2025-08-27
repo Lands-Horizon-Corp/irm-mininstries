@@ -13,7 +13,7 @@ export default function JoinPage() {
           align="center"
           className="text-primary p-5"
           description="Complete the application form below to join our community of dedicated ministers serving God's people worldwide."
-          title="Join as Minister"
+          title="Minister Form"
         />
 
         <Suspense fallback={<div>Loading...</div>}>

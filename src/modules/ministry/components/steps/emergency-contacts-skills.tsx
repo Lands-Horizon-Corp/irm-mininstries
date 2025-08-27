@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { RelationshipSelect } from "@/components/ui/relationship-select";
 import { Textarea } from "@/components/ui/textarea";
 
 import type { Minister } from "../../ministry-validation";
@@ -163,7 +164,7 @@ export function EmergencyContactsSkills({
 
             <CardContent className="space-y-3 px-3 pb-3 sm:space-y-6 sm:px-6 sm:pb-6">
               {emergencyContacts.length === 0 ? (
-                <div className="ext-current/50 py-8 text-center">
+                <div className="py-8 text-center text-current/50">
                   <p className="text-sm sm:text-base">
                     No emergency contacts added yet. Click &quot;Add
                     Contact&quot; to add emergency contact information.
@@ -224,10 +225,11 @@ export function EmergencyContactsSkills({
                                 <span className="text-destructive ml-1">*</span>
                               </FormLabel>
                               <FormControl>
-                                <Input
-                                  {...field}
+                                <RelationshipSelect
                                   className="h-10 text-sm sm:h-11 sm:text-base"
-                                  placeholder="e.g., Father, Mother, Sibling, Friend"
+                                  placeholder="Select relationship"
+                                  value={field.value}
+                                  onChange={field.onChange}
                                 />
                               </FormControl>
                               <FormMessage />

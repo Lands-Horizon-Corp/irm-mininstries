@@ -10,6 +10,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EducationalAttainmentSelect } from "@/components/ui/educational-attainment-select";
 import {
   Form,
   FormControl,
@@ -251,10 +252,11 @@ export function EducationEmployment({
                                 <span className="text-destructive ml-1">*</span>
                               </FormLabel>
                               <FormControl>
-                                <Input
-                                  {...field}
+                                <EducationalAttainmentSelect
                                   className="h-10 text-sm sm:h-11 sm:text-base"
-                                  placeholder="e.g., Bachelor's Degree, High School"
+                                  placeholder="Select educational level"
+                                  value={field.value}
+                                  onChange={field.onChange}
                                 />
                               </FormControl>
                               <FormMessage />

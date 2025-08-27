@@ -6,10 +6,10 @@ export const metadata: Metadata = {
   openGraph: {
     description:
       "Become a minister with IRM Ministries. Apply to join our ministry team and help us serve God's people around the world.",
-    title: "Join as Minister – IRM Ministries",
+    title: "Minister FOrm – IRM Ministries",
     url: "https://irmministries.org/join",
   },
-  title: "Join as Minister – IRM Ministries",
+  title: "Minister Form – IRM Ministries",
 };
 
 export default function JoinLayout({
