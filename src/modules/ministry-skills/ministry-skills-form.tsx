@@ -117,7 +117,7 @@ export default function MinistrySkillsForm({
           render={({ field }) => (
             <FormItem className="relative">
               <FormLabel className="text-sm md:text-base">
-                Description<span className="text-destructive">*</span>
+                Description
               </FormLabel>
               <FormControl>
                 <Textarea

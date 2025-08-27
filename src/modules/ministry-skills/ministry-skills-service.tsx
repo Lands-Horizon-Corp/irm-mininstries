@@ -189,9 +189,20 @@ export const useCreateMinistrySkill = () => {
       });
     },
     onError: (error: Error) => {
-      toast.error("Failed to create ministry skill", {
-        description: error.message || "Please try again later",
-      });
+      // Handle unique constraint violation
+      if (
+        error.message.includes("duplicate key") ||
+        error.message.includes("already exists")
+      ) {
+        toast.error("Name already exists", {
+          description:
+            "A ministry skill with this name already exists. Please choose a different name.",
+        });
+      } else {
+        toast.error("Failed to create ministry skill", {
+          description: error.message || "Please try again later",
+        });
+      }
     },
   });
 };
@@ -211,9 +222,20 @@ export const useUpdateMinistrySkill = () => {
       });
     },
     onError: (error: Error) => {
-      toast.error("Failed to update ministry skill", {
-        description: error.message || "Please try again later",
-      });
+      // Handle unique constraint violation
+      if (
+        error.message.includes("duplicate key") ||
+        error.message.includes("already exists")
+      ) {
+        toast.error("Name already exists", {
+          description:
+            "A ministry skill with this name already exists. Please choose a different name.",
+        });
+      } else {
+        toast.error("Failed to update ministry skill", {
+          description: error.message || "Please try again later",
+        });
+      }
     },
   });
 };

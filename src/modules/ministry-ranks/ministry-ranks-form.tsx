@@ -142,7 +142,7 @@ export default function MinistryRanksForm({
           render={({ field }) => (
             <FormItem className="relative">
               <FormLabel className="text-sm md:text-base">
-                Description<span className="text-destructive">*</span>
+                Description
               </FormLabel>
               <FormControl>
                 <Textarea
@@ -153,7 +153,7 @@ export default function MinistryRanksForm({
                 />
               </FormControl>
               <div className="text-muted-foreground absolute right-2 bottom-2 text-xs">
-                {field.value.length}/{MAX_CHARS}
+                {(field.value || "").length}/{MAX_CHARS}
               </div>
               <FormMessage />
             </FormItem>

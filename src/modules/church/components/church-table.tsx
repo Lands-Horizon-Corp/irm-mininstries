@@ -140,10 +140,8 @@ const ChurchActions = ({ church }: ChurchActionsProps) => {
             {/* Church Information */}
             <div className="grid gap-4">
               <div className="space-y-2">
-                <h3 className="text-lg font-semibold">Description</h3>
-                <p className="text-muted-foreground text-sm">
-                  {church.description}
-                </p>
+                <h3 className="text-lg font-semibold">Name</h3>
+                <p className="text-muted-foreground text-sm">{church.name}</p>
               </div>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -258,22 +256,22 @@ const columns: ColumnDef<Church>[] = [
   },
 
   {
-    accessorKey: "description",
+    accessorKey: "name",
     header: ({ column }) => (
       <Button
         className="h-8 px-2"
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Description
+        Name
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
     cell: ({ row }) => {
-      const description = row.getValue("description") as string;
+      const name = row.getValue("name") as string;
       return (
-        <div className="max-w-[300px] truncate" title={description}>
-          {description}
+        <div className="max-w-[300px] truncate" title={name}>
+          {name}
         </div>
       );
     },

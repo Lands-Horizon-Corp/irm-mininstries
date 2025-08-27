@@ -109,11 +109,9 @@ export async function POST(request: NextRequest) {
       .insert(ministryRanks)
       .values({
         name: validatedData.name,
-        description: validatedData.description,
+        description: validatedData.description || null,
       })
       .returning();
-
-    await new Promise((resolve) => setTimeout(resolve, 300));
 
     // Return success response
     return NextResponse.json({
@@ -140,6 +138,18 @@ export async function POST(request: NextRequest) {
           })),
         },
         { status: 400 }
+      );
+    }
+
+    // Handle duplicate key errors (unique constraint violation)
+    if (error instanceof Error && error.message.includes("duplicate key")) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Duplicate entry",
+          message: "A ministry rank with this name already exists",
+        },
+        { status: 409 }
       );
     }
 

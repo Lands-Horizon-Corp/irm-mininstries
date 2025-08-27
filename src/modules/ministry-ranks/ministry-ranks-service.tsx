@@ -189,9 +189,20 @@ export const useCreateMinistryRank = () => {
       });
     },
     onError: (error: Error) => {
-      toast.error("Failed to create ministry rank", {
-        description: error.message || "Please try again later",
-      });
+      // Handle unique constraint violation
+      if (
+        error.message.includes("duplicate key") ||
+        error.message.includes("already exists")
+      ) {
+        toast.error("Name already exists", {
+          description:
+            "A ministry rank with this name already exists. Please choose a different name.",
+        });
+      } else {
+        toast.error("Failed to create ministry rank", {
+          description: error.message || "Please try again later",
+        });
+      }
     },
   });
 };
@@ -211,9 +222,20 @@ export const useUpdateMinistryRank = () => {
       });
     },
     onError: (error: Error) => {
-      toast.error("Failed to update ministry rank", {
-        description: error.message || "Please try again later",
-      });
+      // Handle unique constraint violation
+      if (
+        error.message.includes("duplicate key") ||
+        error.message.includes("already exists")
+      ) {
+        toast.error("Name already exists", {
+          description:
+            "A ministry rank with this name already exists. Please choose a different name.",
+        });
+      } else {
+        toast.error("Failed to update ministry rank", {
+          description: error.message || "Please try again later",
+        });
+      }
     },
   });
 };

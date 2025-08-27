@@ -2,7 +2,7 @@ import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const ministrySkills = pgTable("ministry_skills", {
   id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-  name: text("name").notNull(),
+  name: text("name").unique().notNull(),
   description: text("description").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),

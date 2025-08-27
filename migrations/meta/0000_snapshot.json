@@ -1,5 +1,5 @@
 {
-  "id": "55a13970-c88d-4d58-9d04-25878a20676b",
+  "id": "2747e8b5-bedc-458b-9cca-f0de1dd21137",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -25,41 +25,47 @@
             "cycle": false
           }
         },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "image_url": {
           "name": "image_url",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "longitude": {
           "name": "longitude",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "latitude": {
           "name": "latitude",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "address": {
           "name": "address",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "email": {
           "name": "email",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "description": {
           "name": "description",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -79,7 +85,13 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "churches_name_unique": {
+          "name": "churches_name_unique",
+          "nullsNotDistinct": false,
+          "columns": ["name"]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -1131,7 +1143,7 @@
           "name": "description",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -1151,7 +1163,13 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "ministry_ranks_name_unique": {
+          "name": "ministry_ranks_name_unique",
+          "nullsNotDistinct": false,
+          "columns": ["name"]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -1187,7 +1205,7 @@
           "name": "description",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -1207,7 +1225,13 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "ministry_skills_name_unique": {
+          "name": "ministry_skills_name_unique",
+          "nullsNotDistinct": false,
+          "columns": ["name"]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

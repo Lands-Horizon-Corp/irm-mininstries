@@ -115,6 +115,7 @@ export async function POST(request: NextRequest) {
         description: validatedData.description,
         latitude: validatedData.latitude,
         longitude: validatedData.longitude,
+        name: validatedData.name,
       })
       .returning();
 

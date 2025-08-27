@@ -1,11 +1,17 @@
 import { z } from "zod";
 
 export const ministryRanksSchema = z.object({
-  name: z.string().min(1, "Name is required").max(100, "Name too long"),
+  name: z
+    .string()
+    .min(1, "Ministry rank name is required")
+    .max(100, "Name is too long (maximum 100 characters)")
+    .trim()
+    .refine((val) => val.length > 0, "Ministry rank name cannot be empty"),
   description: z
     .string()
-    .min(1, "Description is required")
-    .max(500, "Description too long"),
+    .max(500, "Description is too long (maximum 500 characters)")
+    .optional()
+    .or(z.literal("")),
 });
 
 export const updateMinistryRanksSchema = ministryRanksSchema.partial();

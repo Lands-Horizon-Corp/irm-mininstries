@@ -53,6 +53,7 @@ export default function ChurchForm({
 
   const form = useForm<z.infer<typeof churchSchema>>({
     defaultValues: {
+      name: initialData?.name || "",
       imageUrl: initialData?.imageUrl || "",
       longitude: initialData?.longitude || "",
       latitude: initialData?.latitude || "",
@@ -123,11 +124,31 @@ export default function ChurchForm({
         <div className="grid gap-6 md:grid-cols-2">
           <FormField
             control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-sm md:text-base">
+                  Church Name<span className="text-destructive">*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="bg-background"
+                    placeholder="Enter church name"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-sm md:text-base">
-                  Church Email<span className="text-destructive">*</span>
+                  Church Email
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -141,27 +162,27 @@ export default function ChurchForm({
               </FormItem>
             )}
           />
-
-          <FormField
-            control={form.control}
-            name="imageUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm md:text-base">
-                  Church Image<span className="text-destructive">*</span>
-                </FormLabel>
-                <FormControl>
-                  <Base64ImageUpload
-                    placeholder="Upload Church Image"
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </div>
+
+        <FormField
+          control={form.control}
+          name="imageUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-sm md:text-base">
+                Church Image
+              </FormLabel>
+              <FormControl>
+                <Base64ImageUpload
+                  placeholder="Upload Church Image"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         {/* Location Information */}
         <div className="space-y-4">
@@ -176,7 +197,7 @@ export default function ChurchForm({
             render={({ field }) => (
               <FormItem className="relative">
                 <FormLabel className="text-sm md:text-base">
-                  Church Address<span className="text-destructive">*</span>
+                  Church Address
                 </FormLabel>
                 <FormControl>
                   <Textarea
@@ -187,7 +208,7 @@ export default function ChurchForm({
                   />
                 </FormControl>
                 <div className="text-muted-foreground absolute right-2 bottom-2 text-xs">
-                  {field.value.length}/{MAX_ADDRESS_CHARS}
+                  {(field.value || "").length}/{MAX_ADDRESS_CHARS}
                 </div>
                 <FormMessage />
               </FormItem>
@@ -201,7 +222,7 @@ export default function ChurchForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm md:text-base">
-                    Church Location<span className="text-destructive">*</span>
+                    Church Location
                   </FormLabel>
                   <FormControl>
                     <MapPicker
@@ -211,7 +232,7 @@ export default function ChurchForm({
                         field.value && form.watch("longitude")
                           ? {
                               lat: parseFloat(field.value),
-                              lng: parseFloat(form.watch("longitude")),
+                              lng: parseFloat(form.watch("longitude") || "0"),
                             }
                           : null
                       }
@@ -243,7 +264,7 @@ export default function ChurchForm({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm md:text-base">
-                        Latitude<span className="text-destructive">*</span>
+                        Latitude
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -264,7 +285,7 @@ export default function ChurchForm({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm md:text-base">
-                        Longitude<span className="text-destructive">*</span>
+                        Longitude
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -290,7 +311,7 @@ export default function ChurchForm({
           render={({ field }) => (
             <FormItem className="relative">
               <FormLabel className="text-sm md:text-base">
-                Church Description<span className="text-destructive">*</span>
+                Church Description
               </FormLabel>
               <FormControl>
                 <Textarea
@@ -301,7 +322,7 @@ export default function ChurchForm({
                 />
               </FormControl>
               <div className="text-muted-foreground absolute right-2 bottom-2 text-xs">
-                {field.value.length}/{MAX_DESCRIPTION_CHARS}
+                {(field.value || "").length}/{MAX_DESCRIPTION_CHARS}
               </div>
               <FormMessage />
             </FormItem>

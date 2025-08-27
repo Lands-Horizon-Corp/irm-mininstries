@@ -110,7 +110,7 @@ export async function PUT(
       .update(ministryRanks)
       .set({
         name: validatedData.name,
-        description: validatedData.description,
+        description: validatedData.description || null,
         updatedAt: new Date(),
       })
       .where(eq(ministryRanks.id, id))
