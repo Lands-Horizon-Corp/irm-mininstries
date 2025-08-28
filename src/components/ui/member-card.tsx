@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { format, formatDistanceToNow } from "date-fns";
 import {
   Briefcase,
   Calendar,
@@ -14,6 +15,7 @@ import {
   Phone,
   QrCode,
   Trash2,
+  UserPlus,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -99,6 +101,16 @@ export function MemberCard({
                         <span>Joined {member.yearJoined}</span>
                       </>
                     )}
+                  </div>
+                  <div className="text-muted-foreground mt-1 flex items-center gap-2 text-sm">
+                    <UserPlus className="h-4 w-4" />
+                    <span>
+                      Member since{" "}
+                      {format(new Date(member.createdAt), "MMM dd, yyyy")} •{" "}
+                      {formatDistanceToNow(new Date(member.createdAt), {
+                        addSuffix: true,
+                      })}
+                    </span>
                   </div>
                 </div>
 

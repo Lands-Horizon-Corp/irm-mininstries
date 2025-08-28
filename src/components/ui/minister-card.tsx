@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import {
   Calendar,
   Crown,
@@ -15,6 +15,7 @@ import {
   Phone,
   QrCode,
   Trash2,
+  UserPlus,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -215,6 +216,18 @@ export function MinisterCard({
               </div>
               <span className="text-muted-foreground text-sm">
                 {minister.placeOfBirth}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full">
+                <UserPlus className="text-primary h-4 w-4" />
+              </div>
+              <span className="text-muted-foreground text-sm">
+                Minister since{" "}
+                {format(new Date(minister.createdAt), "MMM dd, yyyy")} •{" "}
+                {formatDistanceToNow(new Date(minister.createdAt), {
+                  addSuffix: true,
+                })}
               </span>
             </div>
           </div>
