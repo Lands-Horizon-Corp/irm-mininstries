@@ -330,7 +330,7 @@ export default function ChurchTable() {
               value={`${sortBy}-${sortOrder}`}
               onValueChange={handleSortChange}
             >
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[230px]">
                 <SelectValue placeholder="Sort by..." />
               </SelectTrigger>
               <SelectContent>

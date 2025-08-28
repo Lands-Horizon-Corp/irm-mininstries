@@ -8,6 +8,7 @@ import {
   Crown,
   LayoutDashboard,
   MessageCircle,
+  User,
   Users,
 } from "lucide-react";
 
@@ -17,44 +18,52 @@ import { DashboardQRScanner } from "@/components/ui/dashboard-qr-scanner";
 
 const quickLinks = [
   {
+    title: "Members",
+    subtitle: "Manage church members and their information",
+    icon: User,
+    href: "/admin/members",
+    color: "text-primary",
+    bgColor: "bg-primary/10",
+  },
+  {
     title: "Ministers",
     subtitle: "Manage ministers and staff members",
     icon: Users,
     href: "/admin/ministers",
-    color: "text-blue-600",
-    bgColor: "bg-blue-50",
+    color: "text-secondary-foreground",
+    bgColor: "bg-secondary/80",
   },
   {
     title: "Ministry Ranks",
     subtitle: "Manage leadership hierarchy and positions",
     icon: Crown,
     href: "/admin/ministry-ranks",
-    color: "text-purple-600",
-    bgColor: "bg-purple-50",
+    color: "text-accent-foreground",
+    bgColor: "bg-accent/60",
   },
   {
     title: "Ministry Skills",
     subtitle: "Manage skills and competencies",
     icon: Award,
     href: "/admin/ministry-skills",
-    color: "text-green-600",
-    bgColor: "bg-green-50",
+    color: "text-primary/80",
+    bgColor: "bg-primary/5",
   },
   {
     title: "Churches",
     subtitle: "Manage church locations and information",
     icon: Building2,
     href: "/admin/churches",
-    color: "text-orange-600",
-    bgColor: "bg-orange-50",
+    color: "text-muted-foreground",
+    bgColor: "bg-muted/60",
   },
   {
     title: "Contact Messages",
     subtitle: "View and manage contact submissions",
     icon: MessageCircle,
     href: "/admin/contact-us",
-    color: "text-red-600",
-    bgColor: "bg-red-50",
+    color: "text-destructive",
+    bgColor: "bg-destructive/10",
   },
 ];
 
