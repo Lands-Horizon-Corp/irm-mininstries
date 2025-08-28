@@ -2,8 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { format, formatDistanceToNow } from "date-fns";
 import jsQR from "jsqr";
 import {
+  Calendar,
   Download,
   Edit,
   Eye,
@@ -12,6 +14,7 @@ import {
   Search,
   Upload,
   User,
+  UserPlus,
   Users,
   X,
 } from "lucide-react";
@@ -1077,8 +1080,8 @@ export function DashboardQRScanner({
                         : "border-purple-200/30 bg-purple-50/20 dark:border-purple-800/20 dark:bg-purple-950/10"
                     }`}
                   >
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      {Array.from({ length: 4 }).map((_, i) => (
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                      {Array.from({ length: 6 }).map((_, i) => (
                         <div className="space-y-2" key={i}>
                           <div
                             className={`h-4 w-16 animate-pulse rounded ${
@@ -1106,7 +1109,7 @@ export function DashboardQRScanner({
                         : "border-purple-200/30 bg-purple-50/20 dark:border-purple-800/20 dark:bg-purple-950/10"
                     }`}
                   >
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                       <div className="space-y-2">
                         <Label
                           className={`text-sm font-medium ${
@@ -1197,6 +1200,62 @@ export function DashboardQRScanner({
                               "Not provided"
                             : (profileData as Minister)?.civilStatus ||
                               "Not provided"}
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label
+                          className={`text-sm font-medium ${
+                            scannedData.type === "member"
+                              ? "text-blue-700 dark:text-blue-300"
+                              : "text-purple-700 dark:text-purple-300"
+                          }`}
+                        >
+                          Joined Date
+                        </Label>
+                        <div
+                          className={`flex h-10 items-center gap-2 rounded-md border px-3 py-2 text-sm ${
+                            scannedData.type === "member"
+                              ? "border-blue-200 bg-blue-50/50 text-blue-900 dark:border-blue-800/50 dark:bg-blue-950/30 dark:text-blue-100"
+                              : "border-purple-200 bg-purple-50/50 text-purple-900 dark:border-purple-800/50 dark:bg-purple-950/30 dark:text-purple-100"
+                          }`}
+                        >
+                          <Calendar className="h-4 w-4" />
+                          <span>
+                            {format(
+                              new Date(
+                                (profileData as Minister | Member)?.createdAt
+                              ),
+                              "MMM dd, yyyy"
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label
+                          className={`text-sm font-medium ${
+                            scannedData.type === "member"
+                              ? "text-blue-700 dark:text-blue-300"
+                              : "text-purple-700 dark:text-purple-300"
+                          }`}
+                        >
+                          Time Since Joined
+                        </Label>
+                        <div
+                          className={`flex h-10 items-center gap-2 rounded-md border px-3 py-2 text-sm ${
+                            scannedData.type === "member"
+                              ? "border-blue-200 bg-blue-50/50 text-blue-900 dark:border-blue-800/50 dark:bg-blue-950/30 dark:text-blue-100"
+                              : "border-purple-200 bg-purple-50/50 text-purple-900 dark:border-purple-800/50 dark:bg-purple-950/30 dark:text-purple-100"
+                          }`}
+                        >
+                          <UserPlus className="h-4 w-4" />
+                          <span>
+                            {formatDistanceToNow(
+                              new Date(
+                                (profileData as Minister | Member)?.createdAt
+                              ),
+                              { addSuffix: true }
+                            )}
+                          </span>
                         </div>
                       </div>
                     </div>
