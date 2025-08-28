@@ -38,7 +38,6 @@ export function QRCodeDialog({
   trigger,
   filename,
   size = 256,
-  className = "",
   isOpen,
   onClose,
 }: QRCodeDialogProps) {
@@ -219,16 +218,9 @@ export function QRCodeDialog({
     }
   };
 
-  const defaultTrigger = (
-    <Button className={className} size="sm" variant="outline">
-      <QrCode className="mr-2 h-4 w-4" />
-      Show QR Code
-    </Button>
-  );
-
   return (
     <Dialog open={dialogIsOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>{trigger || defaultTrigger}</DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
