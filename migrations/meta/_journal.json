@@ -15,6 +15,13 @@
       "when": 1756277376467,
       "tag": "0001_sparkling_reaper",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1756356330419,
+      "tag": "0002_public_wong",
+      "breakpoints": true
     }
   ]
 }

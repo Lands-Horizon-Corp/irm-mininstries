@@ -182,6 +182,7 @@ export function MinisterForm({
       awardsRecognitions: [],
       employmentRecords: [],
       seminarsConferences: [],
+      caseReports: [],
     };
   });
   const [isSubmitting, setIsSubmitting] = useState(false);

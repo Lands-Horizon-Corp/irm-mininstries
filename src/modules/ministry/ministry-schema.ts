@@ -197,3 +197,14 @@ export const ministerSeminarsConferences = pgTable(
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   }
 );
+
+export const ministerCaseReports = pgTable("minister_case_reports", {
+  id: serial("id").primaryKey(),
+  ministerId: integer("minister_id")
+    .notNull()
+    .references(() => ministers.id),
+  description: text("description").notNull(),
+  year: text("year").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});

@@ -37,10 +37,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 // Church and Church Members
 
-// Case Reports: Desqcription and year
-
-// Add biography worker (text)
-
 // Add member table
 
 - profile picture

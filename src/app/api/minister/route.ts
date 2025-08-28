@@ -7,6 +7,7 @@ import { z } from "zod";
 import { db } from "@/db/drizzle";
 import {
   ministerAwardsRecognitions,
+  ministerCaseReports,
   ministerChildren,
   ministerEducationBackgrounds,
   ministerEmergencyContacts,
@@ -313,6 +314,16 @@ export async function POST(request: NextRequest) {
             place: seminar.place,
             year: seminar.year,
             numberOfHours: seminar.numberOfHours,
+          }))
+        );
+      }
+
+      if (validatedData.caseReports && validatedData.caseReports.length > 0) {
+        await db.insert(ministerCaseReports).values(
+          validatedData.caseReports.map((caseReport) => ({
+            ministerId,
+            description: caseReport.description,
+            year: caseReport.year,
           }))
         );
       }

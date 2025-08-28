@@ -7,6 +7,7 @@ import { z } from "zod";
 import { db } from "@/db/drizzle";
 import {
   ministerAwardsRecognitions,
+  ministerCaseReports,
   ministerChildren,
   ministerEducationBackgrounds,
   ministerEmergencyContacts,
@@ -67,6 +68,7 @@ export async function GET(
       awardsRecognitions,
       employmentRecords,
       seminarsConferences,
+      caseReports,
     ] = await Promise.all([
       db
         .select()
@@ -104,6 +106,10 @@ export async function GET(
         .select()
         .from(ministerSeminarsConferences)
         .where(eq(ministerSeminarsConferences.ministerId, id)),
+      db
+        .select()
+        .from(ministerCaseReports)
+        .where(eq(ministerCaseReports.ministerId, id)),
     ]);
 
     // Combine all data
@@ -118,6 +124,7 @@ export async function GET(
       awardsRecognitions,
       employmentRecords,
       seminarsConferences,
+      caseReports,
     };
 
     return NextResponse.json({
@@ -262,6 +269,9 @@ export async function PUT(
         db
           .delete(ministerSeminarsConferences)
           .where(eq(ministerSeminarsConferences.ministerId, id)),
+        db
+          .delete(ministerCaseReports)
+          .where(eq(ministerCaseReports.ministerId, id)),
       ]);
 
       // Insert updated related data if provided
@@ -390,6 +400,16 @@ export async function PUT(
             place: seminar.place,
             year: seminar.year,
             numberOfHours: seminar.numberOfHours,
+          }))
+        );
+      }
+
+      if (validatedData.caseReports && validatedData.caseReports.length > 0) {
+        await db.insert(ministerCaseReports).values(
+          validatedData.caseReports.map((caseReport) => ({
+            ministerId: id,
+            description: caseReport.description,
+            year: caseReport.year,
           }))
         );
       }

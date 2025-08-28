@@ -118,6 +118,12 @@ interface MinisterPDFData {
     description?: string | null;
   }>;
 
+  // Case Reports
+  caseReports?: Array<{
+    description: string;
+    year?: string | null;
+  }>;
+
   // Certification
   certifiedBy?: string | null;
   signatureImageUrl?: string | null;
@@ -851,6 +857,35 @@ export async function generateMinisterPDF(
         } else {
           yPosition = seminarStartY + 24;
         }
+      });
+    }
+
+    // Case Reports
+    if (ministerData.caseReports && ministerData.caseReports.length > 0) {
+      addSectionHeader("CASE REPORTS");
+
+      ministerData.caseReports.forEach((caseReport, index) => {
+        checkPageBreak(40);
+        pdf.setFontSize(10);
+        pdf.setFont("helvetica", "bold");
+        pdf.setTextColor(80, 80, 80);
+        pdf.text(`Case Report ${index + 1}:`, margin + 10, yPosition);
+        yPosition += 6;
+
+        const caseReportStartY = yPosition;
+        addField(
+          "Year",
+          caseReport.year || "Not specified",
+          true,
+          caseReportStartY
+        );
+        addField(
+          "Description",
+          caseReport.description,
+          false,
+          caseReportStartY
+        );
+        yPosition = caseReportStartY + 16;
       });
     }
 
