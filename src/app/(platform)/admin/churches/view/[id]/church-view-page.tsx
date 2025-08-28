@@ -49,6 +49,13 @@ import MemberForm from "@/modules/member/member-form";
 import { generateMemberPDF } from "@/modules/member/member-pdf";
 import { useDeleteMember } from "@/modules/member/member-service";
 import type { Member } from "@/modules/member/member-validation";
+import { MinisterForm } from "@/modules/ministry/components/minister-form";
+import { ViewMinisterDialog } from "@/modules/ministry/components/view-minister-dialog";
+import {
+  downloadMinisterPDF,
+  useDeleteMinister,
+} from "@/modules/ministry/ministry-service";
+import type { Minister } from "@/modules/ministry/ministry-validation";
 
 interface ChurchViewPageProps {
   churchId: number;
@@ -70,6 +77,19 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
   const [isDeleteMemberDialogOpen, setIsDeleteMemberDialogOpen] =
     useState(false);
   const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
+
+  // Minister action states
+  const [selectedMinister, setSelectedMinister] = useState<Minister | null>(
+    null
+  );
+  const [isEditMinisterDialogOpen, setIsEditMinisterDialogOpen] =
+    useState(false);
+  const [isViewMinisterDialogOpen, setIsViewMinisterDialogOpen] =
+    useState(false);
+  const [isDeleteMinisterDialogOpen, setIsDeleteMinisterDialogOpen] =
+    useState(false);
+  const [isDownloadingMinisterPDF, setIsDownloadingMinisterPDF] =
+    useState(false);
 
   const { data: churchResponse, isLoading, error } = useChurch(churchId);
   const { data: statsResponse, isLoading: statsLoading } =
@@ -98,6 +118,7 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
 
   const deleteChurchMutation = useDeleteChurch();
   const deleteMemberMutation = useDeleteMember();
+  const deleteMinisterMutation = useDeleteMinister();
 
   const church = churchResponse?.data;
   const stats = statsResponse?.data;
@@ -179,6 +200,47 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
       console.error("Failed to download PDF:", error);
     } finally {
       setIsDownloadingPDF(false);
+    }
+  };
+
+  // Minister action handlers
+  const handleMinisterView = (minister: Minister) => {
+    setSelectedMinister(minister);
+    setIsViewMinisterDialogOpen(true);
+  };
+
+  const handleMinisterEdit = (minister: Minister) => {
+    setSelectedMinister(minister);
+    setIsEditMinisterDialogOpen(true);
+  };
+
+  const handleMinisterDelete = (minister: Minister) => {
+    setSelectedMinister(minister);
+    setIsDeleteMinisterDialogOpen(true);
+  };
+
+  const handleMinisterDeleteConfirm = async () => {
+    if (selectedMinister && selectedMinister.id) {
+      try {
+        await deleteMinisterMutation.mutateAsync(selectedMinister.id);
+        setIsDeleteMinisterDialogOpen(false);
+        setSelectedMinister(null);
+      } catch (error) {
+        console.error("Failed to delete minister:", error);
+      }
+    }
+  };
+
+  const handleMinisterPDFDownload = async (minister: Minister) => {
+    setIsDownloadingMinisterPDF(true);
+    try {
+      if (minister.id) {
+        await downloadMinisterPDF(minister.id);
+      }
+    } catch (error) {
+      console.error("Failed to download PDF:", error);
+    } finally {
+      setIsDownloadingMinisterPDF(false);
     }
   };
 
@@ -539,6 +601,20 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
             </CardContent>
           </Card>
 
+          {/* Minister PDF Download Loading Notification */}
+          {isDownloadingMinisterPDF && (
+            <Card className="border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="border-primary h-4 w-4 animate-spin rounded-full border-b-2" />
+                  <span className="text-sm text-blue-700 dark:text-blue-300">
+                    Generating Minister PDF, please wait...
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Ministers Grid */}
           {ministersLoading ? (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -576,22 +652,10 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
                 <MinisterCard
                   key={minister.id}
                   minister={minister}
-                  onDelete={(ministerId) => {
-                    // TODO: Implement delete minister
-                    console.log("Delete minister:", ministerId);
-                  }}
-                  onDownloadPdf={(minister) => {
-                    // TODO: Implement PDF download
-                    console.log("Download PDF for minister:", minister);
-                  }}
-                  onEdit={(minister) => {
-                    // TODO: Implement edit minister
-                    console.log("Edit minister:", minister);
-                  }}
-                  onView={(minister) => {
-                    // TODO: Implement view minister details
-                    console.log("View minister:", minister);
-                  }}
+                  onDelete={() => handleMinisterDelete(minister)}
+                  onDownloadPdf={() => handleMinisterPDFDownload(minister)}
+                  onEdit={() => handleMinisterEdit(minister)}
+                  onView={() => handleMinisterView(minister)}
                 />
               ))}
             </div>
@@ -734,6 +798,80 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
                   onClick={handleMemberDeleteConfirm}
                 >
                   {deleteMemberMutation.isPending ? "Deleting..." : "Delete"}
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </>
+      )}
+
+      {/* Minister Action Dialogs */}
+      {selectedMinister && (
+        <>
+          {/* Edit Minister Dialog */}
+          <Dialog
+            open={isEditMinisterDialogOpen}
+            onOpenChange={setIsEditMinisterDialogOpen}
+          >
+            <DialogContent className="max-h-[90vh] w-full min-w-4xl overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Edit Minister</DialogTitle>
+              </DialogHeader>
+              <MinisterForm
+                initialData={selectedMinister}
+                isDialog={true}
+                mode="edit"
+                onClose={() => {
+                  setIsEditMinisterDialogOpen(false);
+                  setSelectedMinister(null);
+                }}
+              />
+            </DialogContent>
+          </Dialog>
+
+          {/* View Minister Dialog */}
+          {selectedMinister && selectedMinister?.id && (
+            <ViewMinisterDialog
+              isOpen={isViewMinisterDialogOpen}
+              ministerId={selectedMinister.id}
+              onClose={() => {
+                setIsViewMinisterDialogOpen(false);
+                setSelectedMinister(null);
+              }}
+            />
+          )}
+
+          {/* Delete Minister Confirmation Dialog */}
+          <Dialog
+            open={isDeleteMinisterDialogOpen}
+            onOpenChange={setIsDeleteMinisterDialogOpen}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you sure?</DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. This will permanently delete the
+                  minister &quot;{selectedMinister.firstName}{" "}
+                  {selectedMinister.lastName}&quot; and all associated data
+                  including ministry records, skills, and personal information.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex justify-end space-x-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setIsDeleteMinisterDialogOpen(false);
+                    setSelectedMinister(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  disabled={deleteMinisterMutation.isPending}
+                  variant="destructive"
+                  onClick={handleMinisterDeleteConfirm}
+                >
+                  {deleteMinisterMutation.isPending ? "Deleting..." : "Delete"}
                 </Button>
               </div>
             </DialogContent>

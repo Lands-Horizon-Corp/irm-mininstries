@@ -118,6 +118,7 @@ export function MinisterForm({
 
     return {
       // Personal Information
+      churchId: 0,
       biography: "",
       firstName: "",
       lastName: "",

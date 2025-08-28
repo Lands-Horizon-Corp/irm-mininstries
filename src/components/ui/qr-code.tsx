@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import QRCode from "react-qr-code";
+import NextImage from "next/image";
 
 import { Check, Copy, Download, QrCode } from "lucide-react";
 import { toast } from "sonner";
@@ -54,7 +55,8 @@ export function QRCodeDialog({
   };
 
   const downloadQRCode = () => {
-    const qrElement = qrRef.current?.querySelector("svg");
+    const qrContainer = qrRef.current;
+    const qrElement = qrContainer?.querySelector("svg");
     if (!qrElement) {
       toast.error("QR Code not found");
       return;
@@ -91,60 +93,104 @@ export function QRCodeDialog({
         // Draw QR code
         ctx.drawImage(img, padding, padding, size, size);
 
-        // Add text below QR code
-        ctx.fillStyle = "#000000";
-        ctx.font = "14px Arial, sans-serif";
-        ctx.textAlign = "center";
+        // Load and draw the logo in the center
+        const logo = new Image();
+        logo.onload = () => {
+          // Calculate logo position and size (smaller for better scanning)
+          const logoSize = size * 0.15; // Reduced to 15% of QR code size
+          const logoX = padding + (size - logoSize) / 2;
+          const logoY = padding + (size - logoSize) / 2;
 
-        // Split long URLs into multiple lines
-        const maxWidth = canvas.width - padding * 2;
-        const words = value.split("/");
-        let lines: string[] = [];
-        let currentLine = "";
+          // Draw white background circle for logo
+          const centerX = logoX + logoSize / 2;
+          const centerY = logoY + logoSize / 2;
+          const radius = logoSize / 2 + 4; // Reduced padding
 
-        words.forEach((word) => {
-          const testLine = currentLine + (currentLine ? "/" : "") + word;
-          const metrics = ctx.measureText(testLine);
-          if (metrics.width > maxWidth && currentLine) {
+          ctx.fillStyle = "#ffffff";
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+          ctx.fill();
+
+          // Optional: Add subtle shadow/border
+          ctx.strokeStyle = "#e5e7eb";
+          ctx.lineWidth = 1;
+          ctx.stroke();
+
+          // Draw logo
+          ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
+
+          // Continue with text rendering and download
+          renderTextAndDownload();
+        };
+
+        logo.onerror = () => {
+          console.warn("Logo failed to load, proceeding without logo");
+          renderTextAndDownload();
+        };
+
+        // Set logo source
+        logo.src = "/images/logo-white.webp";
+
+        // Function to render text and download
+        function renderTextAndDownload() {
+          if (!ctx) return; // Add null check for TypeScript
+
+          // Add text below QR code
+          ctx.fillStyle = "#000000";
+          ctx.font = "14px Arial, sans-serif";
+          ctx.textAlign = "center";
+
+          // Split long URLs into multiple lines
+          const maxWidth = canvas.width - padding * 2;
+          const words = value.split("/");
+          let lines: string[] = [];
+          let currentLine = "";
+
+          words.forEach((word) => {
+            const testLine = currentLine + (currentLine ? "/" : "") + word;
+            const metrics = ctx!.measureText(testLine);
+            if (metrics.width > maxWidth && currentLine) {
+              lines.push(currentLine);
+              currentLine = word;
+            } else {
+              currentLine = testLine;
+            }
+          });
+          if (currentLine) {
             lines.push(currentLine);
-            currentLine = word;
-          } else {
-            currentLine = testLine;
           }
-        });
-        if (currentLine) {
-          lines.push(currentLine);
-        }
 
-        // Limit to 3 lines and add ellipsis if needed
-        if (lines.length > 3) {
-          lines = lines.slice(0, 2);
-          lines.push("...");
-        }
-
-        // Draw text lines
-        const lineHeight = 16;
-        const startY = size + padding + 20;
-        lines.forEach((line, index) => {
-          ctx.fillText(line, canvas.width / 2, startY + index * lineHeight);
-        });
-
-        // Download the canvas as PNG
-        canvas.toBlob((blob) => {
-          if (blob) {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = filename || `qr-code-${Date.now()}.png`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            toast.success("QR Code downloaded successfully!");
+          // Limit to 3 lines and add ellipsis if needed
+          if (lines.length > 3) {
+            lines = lines.slice(0, 2);
+            lines.push("...");
           }
-        }, "image/png");
 
-        URL.revokeObjectURL(svgUrl);
+          // Draw text lines
+          const lineHeight = 16;
+          const startY = size + padding + 20;
+          lines.forEach((line, index) => {
+            ctx!.fillText(line, canvas.width / 2, startY + index * lineHeight);
+          });
+
+          // Download the canvas as PNG
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = filename || `qr-code-${Date.now()}.png`;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+              toast.success("QR Code downloaded successfully!");
+            }
+          }, "image/png");
+
+          // Clean up the SVG URL
+          URL.revokeObjectURL(svgUrl);
+        }
       };
 
       img.onerror = () => {
@@ -183,10 +229,10 @@ export function QRCodeDialog({
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* QR Code */}
+          {/* QR Code with Logo Overlay */}
           <div className="flex justify-center">
             <div
-              className="rounded-lg border-2 border-gray-100 bg-white p-4 shadow-sm"
+              className="relative rounded-lg border-2 border-gray-100 bg-white p-4 shadow-sm"
               ref={qrRef}
             >
               <QRCode
@@ -198,6 +244,19 @@ export function QRCodeDialog({
                 }}
                 value={value}
               />
+
+              {/* Logo Overlay in the Center */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="rounded-full bg-white p-1 shadow-sm">
+                  <NextImage
+                    alt="Logo"
+                    className="h-6 w-auto object-contain"
+                    height={24}
+                    src="/images/logo-white.webp"
+                    width={60}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 

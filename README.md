@@ -1,1 +1,0 @@
-- putting logo on qr code
