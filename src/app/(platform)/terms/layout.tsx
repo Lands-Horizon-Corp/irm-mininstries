@@ -7,7 +7,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   alternates: {
-    canonical: "https://irmministries.org/terms",
+    canonical: "https://irm-ministries.fly.dev/terms",
   },
   description:
     "Read the terms and conditions for ministry and participation in IRM Ministries. Important information about our ministry guidelines, minster responsibilities, and church policies.",

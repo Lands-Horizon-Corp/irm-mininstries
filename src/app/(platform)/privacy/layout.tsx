@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     description:
       "IRM Ministries values your privacy. Review our privacy policy to understand how your data is processed and secured when participating in our ministry activities.",
     title: "Privacy Policy – IRM Ministries",
-    url: "https://irmministries.org/privacy",
+    url: "https://irm-ministries.fly.dev/privacy",
   },
   title: "Privacy Policy – IRM Ministries",
 };

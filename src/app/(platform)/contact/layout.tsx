@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     description:
       "Get in touch with IRM Ministries for prayer support, spiritual guidance, ministry inquiries, or to connect with our Christian community.",
     title: "Contact – IRM Ministries",
-    url: "https://irmministries.org/contact",
+    url: "https://irm-ministries.fly.dev/contact",
   },
   title: "Contact – IRM Ministries",
 };

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     description:
       "Join IRM Ministries as a member or worker. Become part of our community and help us serve God's people around the world.",
     title: "Join IRM Ministries",
-    url: "https://irmministries.org/join",
+    url: "https://irm-ministries.fly.dev/join",
   },
   title: "Join IRM Ministries",
 };
