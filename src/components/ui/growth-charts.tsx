@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react";
 
 import {
-  TrendingUp,
-  Users,
-  User,
-  Calendar,
-  BarChart3,
   Activity,
+  BarChart3,
+  Calendar,
   Download,
+  TrendingUp,
+  User,
+  Users,
 } from "lucide-react";
 import { Area, AreaChart, Line, LineChart, XAxis, YAxis } from "recharts";
 
@@ -17,8 +17,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
-  ChartTooltip,
   ChartLegend,
+  ChartTooltip,
 } from "@/components/ui/chart";
 
 interface GrowthData {
@@ -95,7 +95,32 @@ const downloadChart = async (chartId: string, filename: string) => {
   }
 };
 
-const CustomTooltipContent = ({ active, payload, label }: any) => {
+interface TooltipPayload {
+  dataKey: string;
+  value: number;
+  color: string;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: TooltipPayload[];
+  label?: string;
+}
+
+interface LegendPayload {
+  dataKey: string;
+  color: string;
+}
+
+interface CustomLegendProps {
+  payload?: LegendPayload[];
+}
+
+const CustomTooltipContent = ({
+  active,
+  payload,
+  label,
+}: CustomTooltipProps) => {
   if (!active || !payload || !payload.length) {
     return null;
   }
@@ -103,10 +128,10 @@ const CustomTooltipContent = ({ active, payload, label }: any) => {
   return (
     <div className="bg-background rounded-lg border p-3 shadow-md">
       <p className="font-medium">{label}</p>
-      {payload.map((entry: any, index: number) => {
+      {payload.map((entry, index) => {
         const config = chartConfig[entry.dataKey as keyof typeof chartConfig];
         return (
-          <p key={index} className="text-sm" style={{ color: entry.color }}>
+          <p className="text-sm" key={index} style={{ color: entry.color }}>
             {config?.label || entry.dataKey}:{" "}
             {entry.value?.toLocaleString() || 0}
           </p>
@@ -116,17 +141,17 @@ const CustomTooltipContent = ({ active, payload, label }: any) => {
   );
 };
 
-const CustomLegendContent = ({ payload }: any) => {
+const CustomLegendContent = ({ payload }: CustomLegendProps) => {
   if (!payload || !payload.length) {
     return null;
   }
 
   return (
     <div className="flex justify-center gap-6 pt-4">
-      {payload.map((entry: any, index: number) => {
+      {payload.map((entry, index) => {
         const config = chartConfig[entry.dataKey as keyof typeof chartConfig];
         return (
-          <div key={index} className="flex items-center gap-2">
+          <div className="flex items-center gap-2" key={index}>
             <div
               className="h-3 w-3 rounded-full"
               style={{ backgroundColor: entry.color }}
@@ -188,7 +213,7 @@ export function GrowthCharts() {
         {/* Loading Summary Cards */}
         <div className="grid gap-6 md:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
-            <Card key={i} className="animate-pulse">
+            <Card className="animate-pulse" key={i}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div className="space-y-2">
@@ -227,7 +252,7 @@ export function GrowthCharts() {
           <p className="text-muted-foreground mb-4">
             {error || "No data available"}
           </p>
-          <Button onClick={() => fetchGrowthData(period)} className="min-w-24">
+          <Button className="min-w-24" onClick={() => fetchGrowthData(period)}>
             Retry
           </Button>
         </CardContent>
@@ -247,7 +272,7 @@ export function GrowthCharts() {
           <p className="text-muted-foreground mb-4">
             The data format is not as expected
           </p>
-          <Button onClick={() => fetchGrowthData(period)} className="min-w-24">
+          <Button className="min-w-24" onClick={() => fetchGrowthData(period)}>
             Retry
           </Button>
         </CardContent>
@@ -279,10 +304,10 @@ export function GrowthCharts() {
           <div className="bg-muted/50 flex overflow-hidden rounded border">
             {(["7", "30", "90"] as const).map((p) => (
               <Button
-                key={p}
-                variant={period === p ? "default" : "ghost"}
-                size="sm"
                 className="h-7 rounded-none border-0 px-3 text-xs font-medium"
+                key={p}
+                size="sm"
+                variant={period === p ? "default" : "ghost"}
                 onClick={() => setPeriod(p)}
               >
                 {p}d
@@ -390,9 +415,9 @@ export function GrowthCharts() {
               </div>
             </div>
             <Button
-              variant="ghost"
-              size="sm"
               className="h-7 px-2"
+              size="sm"
+              variant="ghost"
               onClick={() =>
                 downloadChart("overview-chart", "growth-trends-overview")
               }
@@ -402,14 +427,14 @@ export function GrowthCharts() {
           </div>
         </CardHeader>
         <CardContent className="p-2" id="overview-chart">
-          <ChartContainer config={chartConfig} className="h-56 w-full">
+          <ChartContainer className="h-56 w-full" config={chartConfig}>
             <AreaChart
               data={combined}
               height={224}
               margin={{ top: 10, right: 15, left: 10, bottom: 10 }}
             >
               <defs>
-                <linearGradient id="memberGradient" x1="0" y1="0" x2="0" y2="1">
+                <linearGradient id="memberGradient" x1="0" x2="0" y1="0" y2="1">
                   <stop
                     offset="0%"
                     stopColor="hsl(214 100% 50%)"
@@ -429,8 +454,8 @@ export function GrowthCharts() {
                 <linearGradient
                   id="ministerGradient"
                   x1="0"
-                  y1="0"
                   x2="0"
+                  y1="0"
                   y2="1"
                 >
                   <stop
@@ -450,7 +475,7 @@ export function GrowthCharts() {
                   />
                 </linearGradient>
                 <filter id="glow">
-                  <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                  <feGaussianBlur result="coloredBlur" stdDeviation="3" />
                   <feMerge>
                     <feMergeNode in="coloredBlur" />
                     <feMergeNode in="SourceGraphic" />
@@ -458,17 +483,17 @@ export function GrowthCharts() {
                 </filter>
               </defs>
               <XAxis
-                dataKey="dateFormatted"
                 axisLine={false}
-                tickLine={false}
                 className="fill-muted-foreground text-xs"
+                dataKey="dateFormatted"
                 tick={{ fontSize: 12 }}
+                tickLine={false}
               />
               <YAxis
                 axisLine={false}
-                tickLine={false}
                 className="fill-muted-foreground text-xs"
                 tick={{ fontSize: 12 }}
+                tickLine={false}
               />
               <ChartTooltip
                 content={<CustomTooltipContent />}
@@ -480,13 +505,6 @@ export function GrowthCharts() {
               />
               <ChartLegend content={<CustomLegendContent />} />
               <Area
-                type="monotone"
-                dataKey="membersCumulative"
-                stackId="1"
-                stroke="hsl(214 100% 50%)"
-                fill="url(#memberGradient)"
-                strokeWidth={3}
-                dot={false}
                 activeDot={{
                   r: 6,
                   strokeWidth: 2,
@@ -494,15 +512,15 @@ export function GrowthCharts() {
                   fill: "hsl(214 100% 50%)",
                   filter: "url(#glow)",
                 }}
+                dataKey="membersCumulative"
+                dot={false}
+                fill="url(#memberGradient)"
+                stackId="1"
+                stroke="hsl(214 100% 50%)"
+                strokeWidth={3}
+                type="monotone"
               />
               <Area
-                type="monotone"
-                dataKey="ministersCumulative"
-                stackId="2"
-                stroke="hsl(262 83% 58%)"
-                fill="url(#ministerGradient)"
-                strokeWidth={3}
-                dot={false}
                 activeDot={{
                   r: 6,
                   strokeWidth: 2,
@@ -510,6 +528,13 @@ export function GrowthCharts() {
                   fill: "hsl(262 83% 58%)",
                   filter: "url(#glow)",
                 }}
+                dataKey="ministersCumulative"
+                dot={false}
+                fill="url(#ministerGradient)"
+                stackId="2"
+                stroke="hsl(262 83% 58%)"
+                strokeWidth={3}
+                type="monotone"
               />
             </AreaChart>
           </ChartContainer>
@@ -532,9 +557,9 @@ export function GrowthCharts() {
                 </p>
               </div>
               <Button
-                variant="ghost"
-                size="sm"
                 className="h-6 px-2"
+                size="sm"
+                variant="ghost"
                 onClick={() =>
                   downloadChart("member-chart", "member-growth-trend")
                 }
@@ -544,7 +569,7 @@ export function GrowthCharts() {
             </div>
           </CardHeader>
           <CardContent className="p-2" id="member-chart">
-            <ChartContainer config={chartConfig} className="h-32 w-full">
+            <ChartContainer className="h-32 w-full" config={chartConfig}>
               <LineChart
                 data={combined}
                 height={128}
@@ -554,8 +579,8 @@ export function GrowthCharts() {
                   <linearGradient
                     id="memberLineGradient"
                     x1="0"
-                    y1="0"
                     x2="0"
+                    y1="0"
                     y2="1"
                   >
                     <stop offset="0%" stopColor="hsl(214 100% 50%)" />
@@ -563,30 +588,20 @@ export function GrowthCharts() {
                   </linearGradient>
                 </defs>
                 <XAxis
-                  dataKey="dateFormatted"
                   axisLine={false}
-                  tickLine={false}
-                  tick={{ fontSize: 11 }}
                   className="fill-muted-foreground"
+                  dataKey="dateFormatted"
+                  tick={{ fontSize: 11 }}
+                  tickLine={false}
                 />
                 <YAxis
                   axisLine={false}
-                  tickLine={false}
-                  tick={{ fontSize: 11 }}
                   className="fill-muted-foreground"
+                  tick={{ fontSize: 11 }}
+                  tickLine={false}
                 />
                 <ChartTooltip content={<CustomTooltipContent />} />
                 <Line
-                  type="monotone"
-                  dataKey="membersCumulative"
-                  stroke="hsl(214 100% 50%)" // Blue
-                  strokeWidth={4}
-                  dot={{
-                    fill: "hsl(214 100% 50%)",
-                    strokeWidth: 2,
-                    stroke: "hsl(var(--background))",
-                    r: 4,
-                  }}
                   activeDot={{
                     r: 7,
                     strokeWidth: 3,
@@ -594,6 +609,16 @@ export function GrowthCharts() {
                     fill: "hsl(214 100% 50%)",
                     filter: "drop-shadow(0 0 6px hsl(214 100% 50%))",
                   }}
+                  dataKey="membersCumulative"
+                  dot={{
+                    fill: "hsl(214 100% 50%)",
+                    strokeWidth: 2,
+                    stroke: "hsl(var(--background))",
+                    r: 4,
+                  }}
+                  stroke="hsl(214 100% 50%)" // Blue
+                  strokeWidth={4}
+                  type="monotone"
                 />
               </LineChart>
             </ChartContainer>
@@ -615,9 +640,9 @@ export function GrowthCharts() {
                 </p>
               </div>
               <Button
-                variant="ghost"
-                size="sm"
                 className="h-6 px-2"
+                size="sm"
+                variant="ghost"
                 onClick={() =>
                   downloadChart("minister-chart", "minister-growth-trend")
                 }
@@ -627,7 +652,7 @@ export function GrowthCharts() {
             </div>
           </CardHeader>
           <CardContent className="p-2" id="minister-chart">
-            <ChartContainer config={chartConfig} className="h-32 w-full">
+            <ChartContainer className="h-32 w-full" config={chartConfig}>
               <LineChart
                 data={combined}
                 height={128}
@@ -637,8 +662,8 @@ export function GrowthCharts() {
                   <linearGradient
                     id="ministerLineGradient"
                     x1="0"
-                    y1="0"
                     x2="1"
+                    y1="0"
                     y2="0"
                   >
                     <stop
@@ -654,30 +679,20 @@ export function GrowthCharts() {
                   </linearGradient>
                 </defs>
                 <XAxis
-                  dataKey="dateFormatted"
                   axisLine={false}
-                  tickLine={false}
-                  tick={{ fontSize: 11 }}
                   className="fill-muted-foreground"
+                  dataKey="dateFormatted"
+                  tick={{ fontSize: 11 }}
+                  tickLine={false}
                 />
                 <YAxis
                   axisLine={false}
-                  tickLine={false}
-                  tick={{ fontSize: 11 }}
                   className="fill-muted-foreground"
+                  tick={{ fontSize: 11 }}
+                  tickLine={false}
                 />
                 <ChartTooltip content={<CustomTooltipContent />} />
                 <Line
-                  type="monotone"
-                  dataKey="ministersCumulative"
-                  stroke="url(#ministerLineGradient)"
-                  strokeWidth={4}
-                  dot={{
-                    fill: "hsl(262 83% 58%)",
-                    strokeWidth: 2,
-                    stroke: "hsl(var(--background))",
-                    r: 4,
-                  }}
                   activeDot={{
                     r: 7,
                     strokeWidth: 3,
@@ -685,6 +700,16 @@ export function GrowthCharts() {
                     fill: "hsl(262 83% 58%)",
                     filter: "drop-shadow(0 0 6px hsl(262 83% 58%))",
                   }}
+                  dataKey="ministersCumulative"
+                  dot={{
+                    fill: "hsl(262 83% 58%)",
+                    strokeWidth: 2,
+                    stroke: "hsl(var(--background))",
+                    r: 4,
+                  }}
+                  stroke="url(#ministerLineGradient)"
+                  strokeWidth={4}
+                  type="monotone"
                 />
               </LineChart>
             </ChartContainer>

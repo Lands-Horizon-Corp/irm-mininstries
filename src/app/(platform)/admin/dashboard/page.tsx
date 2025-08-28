@@ -14,9 +14,9 @@ import {
 
 import { SearchProvider } from "@/components/providers/search-provider";
 import { Card } from "@/components/ui/card";
-import { Container } from "@/components/ui/container";
 import { DashboardQRScanner } from "@/components/ui/dashboard-qr-scanner";
 import { GrowthCharts } from "@/components/ui/growth-charts";
+import { RecentMembers } from "@/components/ui/recent-members";
 
 const quickLinks = [
   {
@@ -72,8 +72,8 @@ const quickLinks = [
 export default function DashboardPage() {
   return (
     <div className="bg-background min-h-screen p-8">
-      <Container>
-        <div className="mx-auto max-w-6xl">
+      <div>
+        <div className="mx-auto">
           {/* Header */}
           <div className="mb-8">
             <div className="mb-4 flex items-center gap-3">
@@ -93,13 +93,24 @@ export default function DashboardPage() {
 
           {/* Content Grid */}
           <div className="space-y-6">
-            {/* Growth Analytics Charts */}
-            <GrowthCharts />
+            {/* Main Content - Two Column Layout */}
+            <div className="grid gap-7 lg:grid-cols-4">
+              {/* Left Column - Charts and QR Scanner */}
+              <div className="space-y-6 lg:col-span-3">
+                {/* Growth Analytics Charts */}
+                <GrowthCharts />
 
-            {/* QR Scanner & Search - Full Width */}
-            <SearchProvider>
-              <DashboardQRScanner />
-            </SearchProvider>
+                {/* QR Scanner & Search */}
+                <SearchProvider>
+                  <DashboardQRScanner />
+                </SearchProvider>
+              </div>
+
+              {/* Right Column - Recent Members */}
+              <div className="lg:col-span-1">
+                <RecentMembers />
+              </div>
+            </div>
 
             {/* Quick Links Grid */}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -141,7 +152,7 @@ export default function DashboardPage() {
             </p>
           </Card>
         </div>
-      </Container>
+      </div>
     </div>
   );
 }
