@@ -25,6 +25,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
 import type { StepProps } from "../../ministry-validation";
@@ -336,13 +343,18 @@ export function PersonalInformation({
                         <span className="text-destructive ml-1">*</span>
                       </FormLabel>
                       <FormControl>
-                        <select
-                          {...field}
-                          className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:text-base"
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
                         >
-                          <option value="male">Male</option>
-                          <option value="female">Female</option>
-                        </select>
+                          <SelectTrigger className="h-10 text-sm sm:h-11 sm:text-base">
+                            <SelectValue placeholder="Select gender" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="male">Male</SelectItem>
+                            <SelectItem value="female">Female</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -401,16 +413,21 @@ export function PersonalInformation({
                         <span className="text-destructive ml-1">*</span>
                       </FormLabel>
                       <FormControl>
-                        <select
-                          {...field}
-                          className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:text-base"
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
                         >
-                          <option value="single">Single</option>
-                          <option value="married">Married</option>
-                          <option value="widowed">Widowed</option>
-                          <option value="separated">Separated</option>
-                          <option value="divorced">Divorced</option>
-                        </select>
+                          <SelectTrigger className="h-10 text-sm sm:h-11 sm:text-base">
+                            <SelectValue placeholder="Select civil status" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="single">Single</SelectItem>
+                            <SelectItem value="married">Married</SelectItem>
+                            <SelectItem value="widowed">Widowed</SelectItem>
+                            <SelectItem value="separated">Separated</SelectItem>
+                            <SelectItem value="divorced">Divorced</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>

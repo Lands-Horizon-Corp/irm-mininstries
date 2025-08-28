@@ -52,9 +52,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - Education attianment
 - School
 - Degree
-- mobile number
-- facebook link
-- x link
-- instagram link
-- email addresss
-- home address
+- mobile number: optional
+- facebook link: optional or string name
+- x link: optional or string name
+- instagram link: optional or string name or url
+- email addresss: optional
+- home address: optional
+- notes: text
