@@ -34,3 +34,19 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+// Church and Church Members
+
+- can you change the church table to instead of cards with image
+- use shadcn for deisng and lucide icons for icons
+- have pagination as well as church
+- add the api count of members and count of ministers on that specific church and put it
+  on the cards please
+- of course there will be filters the same as the table but different design
+- make design shadcn and colored.
+- just make this page changed
+
+Create me reusable QR link
+
+- church table actions
+- inside church view page

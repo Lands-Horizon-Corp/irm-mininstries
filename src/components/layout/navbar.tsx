@@ -43,7 +43,7 @@ export function Navbar() {
               Contact
             </Link>
             <Link className={cn(buttonVariants(), "ml-4")} href="/join">
-              <UserIcon className="mr-2 inline h-4 w-4" /> Join Ministry
+              <UserIcon className="mr-2 inline h-4 w-4" /> Join
             </Link>
           </div>
 
@@ -96,7 +96,7 @@ export function Navbar() {
               href="/join"
               onClick={() => setIsMenuOpen(false)}
             >
-              Join Ministry
+              Join
             </Link>
           </div>
         </div>

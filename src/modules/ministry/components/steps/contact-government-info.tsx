@@ -17,17 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import type { Minister } from "../../ministry-validation";
-
-interface StepProps {
-  formData: Minister;
-  updateMinisterData: (
-    field: keyof Minister,
-    value: string | boolean | Date | string[] | File | null
-  ) => void;
-  onNext: () => void;
-  onBack: () => void;
-}
+import type { StepProps } from "../../ministry-validation";
 
 const contactGovernmentInfoSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email" }).optional(),

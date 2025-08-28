@@ -25,26 +25,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import type { Minister } from "../../ministry-validation";
-
-interface StepProps {
-  formData: Minister;
-  updateMinisterData: (
-    field: keyof Minister,
-    value: string | boolean | Date | string[] | File | null
-  ) => void;
-  onNext: () => void;
-  onBack: () => void;
-}
+import type { Minister, StepProps } from "../../ministry-validation";
 
 const childSchema = z.object({
   id: z.number().int().optional(),
+  ministerId: z.number().int().optional(),
   name: z.string().min(1, { message: "Child name is required" }),
   placeOfBirth: z.string().min(1, { message: "Place of birth is required" }),
   dateOfBirth: z.date(),
   gender: z.enum(["male", "female"]),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  createdAt: z.any().optional(),
+  updatedAt: z.any().optional(),
 });
 
 const familySpouseInformationSchema = z.object({
@@ -105,7 +96,6 @@ export function FamilySpouseInformation({
     },
     mode: "onBlur",
   });
-
   const { watch } = form;
   const children = watch("children") || [];
 
@@ -131,49 +121,34 @@ export function FamilySpouseInformation({
   };
 
   const onSubmit = async (values: FormValues) => {
-    const valid = await form.trigger();
-    if (!valid) {
-      // Scroll to first error field
-      const firstErrorField = document.querySelector(
-        '[aria-invalid="true"], [data-invalid]'
-      );
-      if (firstErrorField) {
-        firstErrorField.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }
-      return;
-    }
-
-    // Update form data with family and spouse information
-    Object.entries(values).forEach(([key, value]) => {
-      if (value !== undefined) {
-        // Handle different value types appropriately
-        if (key === "children") {
-          // For children array, we need to handle it specially since it's not in the basic updateMinisterData types
-          // We'll cast the function to accept the children array type
-          (
-            updateMinisterData as (
-              field: keyof Minister,
-              value: unknown
-            ) => void
-          )(key as keyof Minister, value);
-        } else if (
-          typeof value === "string" ||
-          typeof value === "boolean" ||
-          value instanceof Date
-        ) {
-          updateMinisterData(key as keyof Minister, value);
+    try {
+      Object.entries(values).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+          // Handle different value types appropriately
+          if (key === "children") {
+            (
+              updateMinisterData as (
+                field: keyof Minister,
+                value: unknown
+              ) => void
+            )(key as keyof Minister, value);
+          } else if (
+            typeof value === "string" ||
+            typeof value === "boolean" ||
+            value instanceof Date
+          ) {
+            updateMinisterData(key as keyof Minister, value);
+          }
         }
-      }
-    });
+      });
 
-    // Scroll to top of page after successful form submission
-    window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "smooth" });
 
-    // Continue to next step
-    onNext();
+      // Continue to next step
+      onNext();
+    } catch {
+      onNext();
+    }
   };
 
   return (

@@ -21,17 +21,7 @@ import { MinistryRankSelect } from "@/components/ui/ministry-rank-select";
 import { MinistrySkillSelect } from "@/components/ui/ministry-skill-select";
 import { Textarea } from "@/components/ui/textarea";
 
-import type { Minister } from "../../ministry-validation";
-
-interface StepProps {
-  formData: Minister;
-  updateMinisterData: (
-    field: keyof Minister,
-    value: string | boolean | Date | string[] | File | null
-  ) => void;
-  onNext: () => void;
-  onBack: () => void;
-}
+import type { Minister, StepProps } from "../../ministry-validation";
 
 const ministryExperienceSchema = z.object({
   id: z.number().int().optional(),
@@ -42,8 +32,8 @@ const ministryExperienceSchema = z.object({
   description: z.string().optional().nullable(),
   fromYear: z.string().min(1, { message: "From year is required" }),
   toYear: z.string().optional().nullable(),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  createdAt: z.any().optional(),
+  updatedAt: z.any().optional(),
 });
 
 const ministrySkillSchema = z.object({
@@ -52,8 +42,8 @@ const ministrySkillSchema = z.object({
     .number()
     .int()
     .min(1, { message: "Please select a ministry skill" }),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  createdAt: z.any().optional(),
+  updatedAt: z.any().optional(),
 });
 
 const ministryExperienceSkillsSchema = z.object({

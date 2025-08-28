@@ -104,13 +104,6 @@ export async function POST(request: NextRequest) {
     // Validate the request data against our schema
     const validatedData = ministrySkillsSchema.parse(body);
 
-    // Log the ministry skill submission (for debugging - remove in production)
-    console.log("Ministry skill submission:", {
-      name: validatedData.name,
-      description: validatedData.description.substring(0, 50) + "...",
-      timestamp: new Date().toISOString(),
-    });
-
     // Save to database
     const [savedSkill] = await db
       .insert(ministrySkills)

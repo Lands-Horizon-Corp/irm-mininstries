@@ -11,9 +11,9 @@ export const ministryRanksSeedData: NewMinistryRank[] = [
     description: "Missionary rank in ministry experience.",
   },
   {
-    name: "Pastor / Deaconess (Probationary)",
+    name: "Pastor / Deaconess (Provisionary)",
     description:
-      "Probationary Pastor or Deaconess rank in ministry experience.",
+      "Provisionary Pastor or Deaconess rank in ministry experience.",
   },
   {
     name: "Ordained Pastor / Ordained Deaconess",

@@ -2,8 +2,15 @@ import { z } from "zod";
 
 export const ministerSchema = z.object({
   id: z.number().int().optional(),
+  biography: z.string().optional().nullable(),
 
   // ==================== STEP 1: PERSONAL INFORMATION ====================
+  // Church Association
+  churchId: z
+    .number()
+    .int()
+    .min(1, { message: "Church designation is required" }),
+
   firstName: z.string(),
   lastName: z.string(),
   middleName: z.string().optional().nullable(),
@@ -196,6 +203,18 @@ export const ministerSchema = z.object({
     .optional(),
 
   // ==================== STEP 9: CERTIFICATION & SIGNATURES ====================
+  caseReports: z
+    .array(
+      z.object({
+        id: z.number().int().optional(),
+        description: z.string().min(1, { message: "Description is required" }),
+        year: z.string().min(1, { message: "Year is required" }),
+        createdAt: z.coerce.date().optional(),
+        updatedAt: z.coerce.date().optional(),
+      })
+    )
+    .optional(),
+
   certifiedBy: z.string().optional().nullable(),
   signatureImageUrl: z.string().optional().nullable(),
   signatureByCertifiedImageUrl: z.string().optional().nullable(),
@@ -218,7 +237,7 @@ export type UpdateMinister = z.infer<typeof updateMinisterSchema>;
 export type MinisterQueryParams = z.infer<typeof ministerQuerySchema>;
 
 export interface StepProps {
-  formData: FormData;
+  formData: Minister;
   updateFormData: (
     field: keyof FormData,
     value: string | Date | boolean | Minister

@@ -7,6 +7,7 @@ import { z } from "zod";
 import { db } from "@/db/drizzle";
 import {
   ministerAwardsRecognitions,
+  ministerCaseReports,
   ministerChildren,
   ministerEducationBackgrounds,
   ministerEmergencyContacts,
@@ -67,6 +68,7 @@ export async function GET(
       awardsRecognitions,
       employmentRecords,
       seminarsConferences,
+      caseReports,
     ] = await Promise.all([
       db
         .select()
@@ -104,6 +106,10 @@ export async function GET(
         .select()
         .from(ministerSeminarsConferences)
         .where(eq(ministerSeminarsConferences.ministerId, id)),
+      db
+        .select()
+        .from(ministerCaseReports)
+        .where(eq(ministerCaseReports.ministerId, id)),
     ]);
 
     // Combine all data
@@ -118,6 +124,7 @@ export async function GET(
       awardsRecognitions,
       employmentRecords,
       seminarsConferences,
+      caseReports,
     };
 
     return NextResponse.json({
@@ -181,92 +188,96 @@ export async function PUT(
       );
     }
 
-    // Start a database transaction to update all data
-    const result = await db.transaction(async (tx) => {
-      // Update the main minister record
-      const [updatedMinister] = await tx
-        .update(ministers)
-        .set({
-          firstName: validatedData.firstName,
-          lastName: validatedData.lastName,
-          middleName: validatedData.middleName,
-          suffix: validatedData.suffix,
-          nickname: validatedData.nickname,
-          dateOfBirth: validatedData.dateOfBirth,
-          placeOfBirth: validatedData.placeOfBirth,
-          address: validatedData.address,
-          gender: validatedData.gender,
-          heightFeet: validatedData.heightFeet,
-          weightKg: validatedData.weightKg,
-          civilStatus: validatedData.civilStatus,
-          email: validatedData.email,
-          telephone: validatedData.telephone,
-          passportNumber: validatedData.passportNumber,
-          sssNumber: validatedData.sssNumber,
-          philhealth: validatedData.philhealth,
-          tin: validatedData.tin,
-          presentAddress: validatedData.presentAddress,
-          permanentAddress: validatedData.permanentAddress,
-          fatherName: validatedData.fatherName,
-          fatherProvince: validatedData.fatherProvince,
-          fatherBirthday: validatedData.fatherBirthday,
-          fatherOccupation: validatedData.fatherOccupation,
-          motherName: validatedData.motherName,
-          motherProvince: validatedData.motherProvince,
-          motherBirthday: validatedData.motherBirthday,
-          motherOccupation: validatedData.motherOccupation,
-          spouseName: validatedData.spouseName,
-          spouseProvince: validatedData.spouseProvince,
-          spouseBirthday: validatedData.spouseBirthday,
-          spouseOccupation: validatedData.spouseOccupation,
-          weddingDate: validatedData.weddingDate,
-          skills: validatedData.skills,
-          hobbies: validatedData.hobbies,
-          sports: validatedData.sports,
-          otherReligiousSecularTraining:
-            validatedData.otherReligiousSecularTraining,
-          certifiedBy: validatedData.certifiedBy,
-          signatureImageUrl: validatedData.signatureImageUrl,
-          signatureByCertifiedImageUrl:
-            validatedData.signatureByCertifiedImageUrl,
-          imageUrl: validatedData.imageUrl,
-          updatedAt: new Date(),
-        })
-        .where(eq(ministers.id, id))
-        .returning();
+    // Update the main minister record
+    const [updatedMinister] = await db
+      .update(ministers)
+      .set({
+        biography: validatedData.biography,
+        firstName: validatedData.firstName,
+        lastName: validatedData.lastName,
+        middleName: validatedData.middleName,
+        suffix: validatedData.suffix,
+        nickname: validatedData.nickname,
+        dateOfBirth: validatedData.dateOfBirth,
+        placeOfBirth: validatedData.placeOfBirth,
+        address: validatedData.address,
+        gender: validatedData.gender,
+        heightFeet: validatedData.heightFeet,
+        weightKg: validatedData.weightKg,
+        civilStatus: validatedData.civilStatus,
+        email: validatedData.email,
+        telephone: validatedData.telephone,
+        passportNumber: validatedData.passportNumber,
+        sssNumber: validatedData.sssNumber,
+        philhealth: validatedData.philhealth,
+        tin: validatedData.tin,
+        presentAddress: validatedData.presentAddress,
+        permanentAddress: validatedData.permanentAddress,
+        fatherName: validatedData.fatherName,
+        fatherProvince: validatedData.fatherProvince,
+        fatherBirthday: validatedData.fatherBirthday,
+        fatherOccupation: validatedData.fatherOccupation,
+        motherName: validatedData.motherName,
+        motherProvince: validatedData.motherProvince,
+        motherBirthday: validatedData.motherBirthday,
+        motherOccupation: validatedData.motherOccupation,
+        spouseName: validatedData.spouseName,
+        spouseProvince: validatedData.spouseProvince,
+        spouseBirthday: validatedData.spouseBirthday,
+        spouseOccupation: validatedData.spouseOccupation,
+        weddingDate: validatedData.weddingDate,
+        skills: validatedData.skills,
+        hobbies: validatedData.hobbies,
+        sports: validatedData.sports,
+        otherReligiousSecularTraining:
+          validatedData.otherReligiousSecularTraining,
+        certifiedBy: validatedData.certifiedBy,
+        signatureImageUrl: validatedData.signatureImageUrl,
+        signatureByCertifiedImageUrl:
+          validatedData.signatureByCertifiedImageUrl,
+        imageUrl: validatedData.imageUrl,
+        updatedAt: new Date(),
+      })
+      .where(eq(ministers.id, id))
+      .returning();
 
+    // Delete existing related records and insert new ones
+    try {
       // Delete existing related records
       await Promise.all([
-        tx.delete(ministerChildren).where(eq(ministerChildren.ministerId, id)),
-        tx
+        db.delete(ministerChildren).where(eq(ministerChildren.ministerId, id)),
+        db
           .delete(ministerEmergencyContacts)
           .where(eq(ministerEmergencyContacts.ministerId, id)),
-        tx
+        db
           .delete(ministerEducationBackgrounds)
           .where(eq(ministerEducationBackgrounds.ministerId, id)),
-        tx
+        db
           .delete(ministerMinistryExperiences)
           .where(eq(ministerMinistryExperiences.ministerId, id)),
-        tx
+        db
           .delete(ministerMinistrySkills)
           .where(eq(ministerMinistrySkills.ministerId, id)),
-        tx
+        db
           .delete(ministerMinistryRecords)
           .where(eq(ministerMinistryRecords.ministerId, id)),
-        tx
+        db
           .delete(ministerAwardsRecognitions)
           .where(eq(ministerAwardsRecognitions.ministerId, id)),
-        tx
+        db
           .delete(ministerEmploymentRecords)
           .where(eq(ministerEmploymentRecords.ministerId, id)),
-        tx
+        db
           .delete(ministerSeminarsConferences)
           .where(eq(ministerSeminarsConferences.ministerId, id)),
+        db
+          .delete(ministerCaseReports)
+          .where(eq(ministerCaseReports.ministerId, id)),
       ]);
 
       // Insert updated related data if provided
       if (validatedData.children && validatedData.children.length > 0) {
-        await tx.insert(ministerChildren).values(
+        await db.insert(ministerChildren).values(
           validatedData.children.map((child) => ({
             ministerId: id,
             name: child.name,
@@ -281,7 +292,7 @@ export async function PUT(
         validatedData.emergencyContacts &&
         validatedData.emergencyContacts.length > 0
       ) {
-        await tx.insert(ministerEmergencyContacts).values(
+        await db.insert(ministerEmergencyContacts).values(
           validatedData.emergencyContacts.map((contact) => ({
             ministerId: id,
             name: contact.name,
@@ -296,7 +307,7 @@ export async function PUT(
         validatedData.educationBackgrounds &&
         validatedData.educationBackgrounds.length > 0
       ) {
-        await tx.insert(ministerEducationBackgrounds).values(
+        await db.insert(ministerEducationBackgrounds).values(
           validatedData.educationBackgrounds.map((education) => ({
             ministerId: id,
             schoolName: education.schoolName,
@@ -312,10 +323,10 @@ export async function PUT(
         validatedData.ministryExperiences &&
         validatedData.ministryExperiences.length > 0
       ) {
-        await tx.insert(ministerMinistryExperiences).values(
+        await db.insert(ministerMinistryExperiences).values(
           validatedData.ministryExperiences.map((experience) => ({
             ministerId: id,
-            title: experience.title,
+            ministryRankId: experience.ministryRankId,
             description: experience.description,
             fromYear: experience.fromYear,
             toYear: experience.toYear,
@@ -327,7 +338,7 @@ export async function PUT(
         validatedData.ministrySkills &&
         validatedData.ministrySkills.length > 0
       ) {
-        await tx.insert(ministerMinistrySkills).values(
+        await db.insert(ministerMinistrySkills).values(
           validatedData.ministrySkills.map((skill) => ({
             ministerId: id,
             ministrySkillId: skill.ministrySkillId,
@@ -339,7 +350,7 @@ export async function PUT(
         validatedData.ministryRecords &&
         validatedData.ministryRecords.length > 0
       ) {
-        await tx.insert(ministerMinistryRecords).values(
+        await db.insert(ministerMinistryRecords).values(
           validatedData.ministryRecords.map((record) => ({
             ministerId: id,
             churchLocationId: record.churchLocationId,
@@ -354,7 +365,7 @@ export async function PUT(
         validatedData.awardsRecognitions &&
         validatedData.awardsRecognitions.length > 0
       ) {
-        await tx.insert(ministerAwardsRecognitions).values(
+        await db.insert(ministerAwardsRecognitions).values(
           validatedData.awardsRecognitions.map((award) => ({
             ministerId: id,
             year: award.year,
@@ -367,7 +378,7 @@ export async function PUT(
         validatedData.employmentRecords &&
         validatedData.employmentRecords.length > 0
       ) {
-        await tx.insert(ministerEmploymentRecords).values(
+        await db.insert(ministerEmploymentRecords).values(
           validatedData.employmentRecords.map((employment) => ({
             ministerId: id,
             companyName: employment.companyName,
@@ -382,7 +393,7 @@ export async function PUT(
         validatedData.seminarsConferences &&
         validatedData.seminarsConferences.length > 0
       ) {
-        await tx.insert(ministerSeminarsConferences).values(
+        await db.insert(ministerSeminarsConferences).values(
           validatedData.seminarsConferences.map((seminar) => ({
             ministerId: id,
             title: seminar.title,
@@ -394,13 +405,24 @@ export async function PUT(
         );
       }
 
-      return updatedMinister;
-    });
+      if (validatedData.caseReports && validatedData.caseReports.length > 0) {
+        await db.insert(ministerCaseReports).values(
+          validatedData.caseReports.map((caseReport) => ({
+            ministerId: id,
+            description: caseReport.description,
+            year: caseReport.year,
+          }))
+        );
+      }
+    } catch (relatedDataError) {
+      console.error("Error updating related data:", relatedDataError);
+      // The main minister record has been updated, but some related data may have failed
+    }
 
     return NextResponse.json({
       success: true,
       message: "Minister updated successfully",
-      data: result,
+      data: updatedMinister,
     });
   } catch (error) {
     console.error("Update minister error:", error);
@@ -481,40 +503,43 @@ export async function DELETE(
       );
     }
 
-    // Delete the minister and all related data in a transaction
-    await db.transaction(async (tx) => {
+    // Delete the minister and all related data
+    try {
       // Delete all related records first
       await Promise.all([
-        tx.delete(ministerChildren).where(eq(ministerChildren.ministerId, id)),
-        tx
+        db.delete(ministerChildren).where(eq(ministerChildren.ministerId, id)),
+        db
           .delete(ministerEmergencyContacts)
           .where(eq(ministerEmergencyContacts.ministerId, id)),
-        tx
+        db
           .delete(ministerEducationBackgrounds)
           .where(eq(ministerEducationBackgrounds.ministerId, id)),
-        tx
+        db
           .delete(ministerMinistryExperiences)
           .where(eq(ministerMinistryExperiences.ministerId, id)),
-        tx
+        db
           .delete(ministerMinistrySkills)
           .where(eq(ministerMinistrySkills.ministerId, id)),
-        tx
+        db
           .delete(ministerMinistryRecords)
           .where(eq(ministerMinistryRecords.ministerId, id)),
-        tx
+        db
           .delete(ministerAwardsRecognitions)
           .where(eq(ministerAwardsRecognitions.ministerId, id)),
-        tx
+        db
           .delete(ministerEmploymentRecords)
           .where(eq(ministerEmploymentRecords.ministerId, id)),
-        tx
+        db
           .delete(ministerSeminarsConferences)
           .where(eq(ministerSeminarsConferences.ministerId, id)),
       ]);
 
       // Delete the main minister record
-      await tx.delete(ministers).where(eq(ministers.id, id));
-    });
+      await db.delete(ministers).where(eq(ministers.id, id));
+    } catch (deleteError) {
+      console.error("Error deleting minister:", deleteError);
+      throw deleteError;
+    }
 
     return NextResponse.json({
       success: true,

@@ -20,17 +20,7 @@ import { Input } from "@/components/ui/input";
 import { RelationshipSelect } from "@/components/ui/relationship-select";
 import { Textarea } from "@/components/ui/textarea";
 
-import type { Minister } from "../../ministry-validation";
-
-interface StepProps {
-  formData: Minister;
-  updateMinisterData: (
-    field: keyof Minister,
-    value: string | boolean | Date | string[] | File | null
-  ) => void;
-  onNext: () => void;
-  onBack: () => void;
-}
+import type { Minister, StepProps } from "../../ministry-validation";
 
 const emergencyContactSchema = z.object({
   id: z.number().int().optional(),
@@ -38,8 +28,8 @@ const emergencyContactSchema = z.object({
   relationship: z.string().min(1, { message: "Relationship is required" }),
   address: z.string().min(1, { message: "Address is required" }),
   contactNumber: z.string().min(1, { message: "Contact number is required" }),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  createdAt: z.any().optional(),
+  updatedAt: z.any().optional(),
 });
 
 const emergencyContactsSkillsSchema = z.object({

@@ -22,6 +22,7 @@ import {
   ChevronDown,
   Edit,
   Eye,
+  FileTextIcon,
   Mail,
   MapPin,
   MoreHorizontal,
@@ -58,7 +59,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { useDeleteMinister, useMinisters } from "../ministry-service";
+import {
+  downloadMinisterPDF,
+  useDeleteMinister,
+  useMinisters,
+} from "../ministry-service";
+
+import { EditMinisterDialog } from "./edit-minister-dialog";
+import { ViewMinisterDialog } from "./view-minister-dialog";
 
 // Minister interface based on your requirements
 interface Minister {
@@ -84,6 +92,9 @@ interface MinisterActionsProps {
 
 const MinisterActions = ({ minister }: MinisterActionsProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
   const deleteMinisterMutation = useDeleteMinister();
 
   const handleDelete = async () => {
@@ -92,6 +103,17 @@ const MinisterActions = ({ minister }: MinisterActionsProps) => {
       setIsDeleteDialogOpen(false);
     } catch (error) {
       console.error("Failed to delete minister:", error);
+    }
+  };
+
+  const handlePDFDownload = async () => {
+    setIsDownloadingPDF(true);
+    try {
+      await downloadMinisterPDF(minister.id);
+    } catch (error) {
+      console.error("Failed to download PDF:", error);
+    } finally {
+      setIsDownloadingPDF(false);
     }
   };
 
@@ -114,11 +136,18 @@ const MinisterActions = ({ minister }: MinisterActionsProps) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem
+            disabled={isDownloadingPDF}
+            onClick={handlePDFDownload}
+          >
+            <FileTextIcon className="mr-2 h-4 w-4" />
+            {isDownloadingPDF ? "Downloading..." : "PDF Download"}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsViewDialogOpen(true)}>
             <Eye className="mr-2 h-4 w-4" />
             View
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
             <Edit className="mr-2 h-4 w-4" />
             Edit
           </DropdownMenuItem>
@@ -161,12 +190,31 @@ const MinisterActions = ({ minister }: MinisterActionsProps) => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Edit Minister Dialog */}
+      <EditMinisterDialog
+        isOpen={isEditDialogOpen}
+        ministerId={minister.id}
+        onClose={() => setIsEditDialogOpen(false)}
+      />
+
+      {/* View Minister Dialog */}
+      <ViewMinisterDialog
+        isOpen={isViewDialogOpen}
+        ministerId={minister.id}
+        onClose={() => setIsViewDialogOpen(false)}
+      />
     </>
   );
 };
 
 // Define table columns
 const columns: ColumnDef<Minister>[] = [
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => <MinisterActions minister={row.original} />,
+  },
   {
     accessorKey: "id",
     header: ({ column }) => (
@@ -347,11 +395,6 @@ const columns: ColumnDef<Minister>[] = [
         </div>
       );
     },
-  },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => <MinisterActions minister={row.original} />,
   },
 ];
 

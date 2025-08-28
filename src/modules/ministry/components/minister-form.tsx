@@ -3,7 +3,8 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import type { Minister } from "../ministry-validation";
+import { useCreateMinister, useUpdateMinister } from "../ministry-service";
+import type { Minister, StepProps } from "../ministry-validation";
 
 import { CertificationSignatures } from "./steps/certification-signatures";
 import { ContactGovernmentInfo } from "./steps/contact-government-info";
@@ -12,10 +13,11 @@ import { EmergencyContactsSkills } from "./steps/emergency-contacts-skills";
 import { FamilySpouseInformation } from "./steps/family-spouse-information";
 import { MinistryExperienceSkills } from "./steps/ministry-experience-skills";
 import { MinistryRecordsAwards } from "./steps/ministry-records-awards";
+import { Overview } from "./steps/overview";
 import { PersonalInformation } from "./steps/personal-information";
 import { SeminarsConferences } from "./steps/seminars-conferences";
 import { StepIndicator } from "./step-indicator";
-
+import { SuccessDialog } from "./success-dialog";
 enum FormStep {
   PERSONAL_INFORMATION = "PERSONAL_INFORMATION",
   CONTACT_GOVERNMENT_INFO = "CONTACT_GOVERNMENT_INFO",
@@ -26,6 +28,7 @@ enum FormStep {
   MINISTRY_RECORDS_AWARDS = "MINISTRY_RECORDS_AWARDS",
   SEMINARS_CONFERENCES = "SEMINARS_CONFERENCES",
   CERTIFICATION_SIGNATURES = "CERTIFICATION_SIGNATURES",
+  OVERVIEW = "OVERVIEW",
 }
 
 const formSteps = [
@@ -53,19 +56,29 @@ const formSteps = [
   },
   { key: FormStep.SEMINARS_CONFERENCES, label: "Seminars & Conferences" },
   { key: FormStep.CERTIFICATION_SIGNATURES, label: "Certification" },
+  { key: FormStep.OVERVIEW, label: "Review & Submit" },
 ] as const;
 
 type FormStepComponents = {
-  [FormStep.PERSONAL_INFORMATION]: React.ComponentType<StepComponentProps>;
-  [FormStep.CONTACT_GOVERNMENT_INFO]: React.ComponentType<StepComponentProps>;
-  [FormStep.FAMILY_SPOUSE_INFORMATION]: React.ComponentType<StepComponentProps>;
-  [FormStep.EMERGENCY_CONTACTS_SKILLS]: React.ComponentType<StepComponentProps>;
-  [FormStep.EDUCATION_EMPLOYMENT]: React.ComponentType<StepComponentProps>;
-  [FormStep.MINISTRY_EXPERIENCE_SKILLS]: React.ComponentType<StepComponentProps>;
-  [FormStep.MINISTRY_RECORDS_AWARDS]: React.ComponentType<StepComponentProps>;
-  [FormStep.SEMINARS_CONFERENCES]: React.ComponentType<StepComponentProps>;
-  [FormStep.CERTIFICATION_SIGNATURES]: React.ComponentType<StepComponentProps>;
+  [FormStep.PERSONAL_INFORMATION]: React.ComponentType<StepProps>;
+  [FormStep.CONTACT_GOVERNMENT_INFO]: React.ComponentType<StepProps>;
+  [FormStep.FAMILY_SPOUSE_INFORMATION]: React.ComponentType<StepProps>;
+  [FormStep.EMERGENCY_CONTACTS_SKILLS]: React.ComponentType<StepProps>;
+  [FormStep.EDUCATION_EMPLOYMENT]: React.ComponentType<StepProps>;
+  [FormStep.MINISTRY_EXPERIENCE_SKILLS]: React.ComponentType<StepProps>;
+  [FormStep.MINISTRY_RECORDS_AWARDS]: React.ComponentType<StepProps>;
+  [FormStep.SEMINARS_CONFERENCES]: React.ComponentType<StepProps>;
+  [FormStep.CERTIFICATION_SIGNATURES]: React.ComponentType<StepProps>;
+  [FormStep.OVERVIEW]: React.ComponentType<StepProps>;
 };
+
+interface MinisterFormProps {
+  onClose?: () => void;
+  isDialog?: boolean;
+  mode?: "create" | "edit";
+  initialData?: Minister;
+  onSuccess?: () => void;
+}
 
 // Note: Component imports would need to be added when components are created
 const formComponents: Partial<FormStepComponents> = {
@@ -78,108 +91,115 @@ const formComponents: Partial<FormStepComponents> = {
   [FormStep.MINISTRY_RECORDS_AWARDS]: MinistryRecordsAwards,
   [FormStep.SEMINARS_CONFERENCES]: SeminarsConferences,
   [FormStep.CERTIFICATION_SIGNATURES]: CertificationSignatures,
+  [FormStep.OVERVIEW]: Overview,
 };
 
-type StepComponentProps = {
-  formData: Minister;
-  updateMinister: (
-    field: keyof Minister,
-    value?: string | Date | boolean | Minister
-  ) => void;
-  updateMinisterData: (
-    field: keyof Minister,
-    value: string | boolean | Date | string[] | File | null
-  ) => void;
-  onNext: (
-    updatedMinister?: Minister,
-    confirmation?: boolean
-  ) => void | Promise<void>;
-  onBack: () => void;
-  onCancel: () => void;
-
-  isSubmitting?: boolean;
-  error?: string | null;
-};
-
-export function MinisterForm() {
+export function MinisterForm({
+  onClose,
+  isDialog = false,
+  mode = "create",
+  initialData,
+  onSuccess,
+}: MinisterFormProps) {
   const router = useRouter();
   const cardRef = useRef<HTMLDivElement>(null);
+  const createMinister = useCreateMinister();
+  const updateMinisterMutation = useUpdateMinister();
+
+  const isEdit = mode === "edit" && initialData;
+
   const [currentStep, setCurrentStep] = useState<FormStep>(
     FormStep.PERSONAL_INFORMATION
   );
-  const [formData, setMinister] = useState<Minister>({
-    // Personal Information
-    firstName: "",
-    lastName: "",
-    middleName: "",
-    suffix: "",
-    nickname: "",
-    dateOfBirth: new Date(),
-    placeOfBirth: "",
-    gender: "male",
-    heightFeet: "",
-    weightKg: "",
-    civilStatus: "single",
-    imageUrl: "",
+  const [formData, setMinister] = useState<Minister>(() => {
+    if (isEdit && initialData) {
+      return { ...initialData };
+    }
 
-    // Contact Information
-    email: "",
-    telephone: "",
-    address: "",
-    presentAddress: "",
-    permanentAddress: "",
+    return {
+      // Personal Information
+      biography: "",
+      firstName: "",
+      lastName: "",
+      middleName: "",
+      suffix: "",
+      nickname: "",
+      dateOfBirth: new Date(),
+      placeOfBirth: "",
+      gender: "male",
+      heightFeet: "",
+      weightKg: "",
+      civilStatus: "single",
+      imageUrl: "",
 
-    // Government & Identification
-    passportNumber: "",
-    sssNumber: "",
-    philhealth: "",
-    tin: "",
+      // Contact Information
+      email: "",
+      telephone: "",
+      address: "",
+      presentAddress: "",
+      permanentAddress: "",
 
-    // Family Information
-    fatherName: "",
-    fatherProvince: "",
-    fatherBirthday: new Date(),
-    fatherOccupation: "",
-    motherName: "",
-    motherProvince: "",
-    motherBirthday: new Date(),
-    motherOccupation: "",
+      // Government & Identification
+      passportNumber: "",
+      sssNumber: "",
+      philhealth: "",
+      tin: "",
 
-    // Spouse Information
-    spouseName: "",
-    spouseProvince: "",
-    spouseBirthday: undefined,
-    spouseOccupation: "",
-    weddingDate: undefined,
+      // Family Information
+      fatherName: "",
+      fatherProvince: "",
+      fatherBirthday: new Date(),
+      fatherOccupation: "",
+      motherName: "",
+      motherProvince: "",
+      motherBirthday: new Date(),
+      motherOccupation: "",
 
-    // Skills & Interests
-    skills: "",
-    hobbies: "",
-    sports: "",
-    otherReligiousSecularTraining: "",
+      // Spouse Information
+      spouseName: "",
+      spouseProvince: "",
+      spouseBirthday: undefined,
+      spouseOccupation: "",
+      weddingDate: undefined,
 
-    // Certification & Signatures
-    certifiedBy: "",
-    signatureImageUrl: "",
-    signatureByCertifiedImageUrl: "",
+      // Skills & Interests
+      skills: "",
+      hobbies: "",
+      sports: "",
+      otherReligiousSecularTraining: "",
 
-    // Relations (initially empty arrays)
-    children: [],
-    emergencyContacts: [],
-    educationBackgrounds: [],
-    ministryExperiences: [],
-    ministrySkills: [],
-    ministryRecords: [],
-    awardsRecognitions: [],
-    employmentRecords: [],
-    seminarsConferences: [],
+      // Certification & Signatures
+      certifiedBy: "",
+      signatureImageUrl: "",
+      signatureByCertifiedImageUrl: "",
+
+      // Relations (initially empty arrays)
+      children: [],
+      emergencyContacts: [],
+      educationBackgrounds: [],
+      ministryExperiences: [],
+      ministrySkills: [],
+      ministryRecords: [],
+      awardsRecognitions: [],
+      employmentRecords: [],
+      seminarsConferences: [],
+      caseReports: [],
+    };
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [createdMinisterId, setCreatedMinisterId] = useState<number | null>(
+    null
+  );
 
   // Handle cancel button click
   const handleCancel = async () => {
-    router.push("/");
+    if (isDialog && onClose) {
+      onClose();
+    } else {
+      router.push("/");
+    }
   };
 
   const scrollToCard = () => {
@@ -237,17 +257,52 @@ export function MinisterForm() {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    setSubmissionError(null);
+
     try {
-      setSubmissionError(null);
-    } catch {
+      if (isEdit && initialData?.id) {
+        // Update existing minister
+        const result = await updateMinisterMutation.mutateAsync({
+          id: initialData.id,
+          data: formData,
+        });
+
+        if (result.success) {
+          if (onSuccess) {
+            onSuccess();
+          } else if (isDialog && onClose) {
+            onClose();
+          } else {
+            setCreatedMinisterId(initialData.id);
+            setShowSuccessDialog(true);
+          }
+        }
+      } else {
+        // Create new minister
+        const result = await createMinister.mutateAsync(formData);
+
+        if (result.success && result.data) {
+          if (onSuccess) {
+            onSuccess();
+          } else if (isDialog && onClose) {
+            onClose();
+          } else {
+            setCreatedMinisterId(result.data.id || null);
+            setShowSuccessDialog(true);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
       setSubmissionError(
-        "An error occurred while submitting the form. Please try again."
+        error instanceof Error
+          ? error.message
+          : `An error occurred while ${isEdit ? "updating" : "submitting"} the form. Please try again.`
       );
     } finally {
       setIsSubmitting(false);
     }
   };
-
   const renderCurrentStep = () => {
     const StepComponent = formComponents[currentStep];
 
@@ -260,9 +315,14 @@ export function MinisterForm() {
         formData,
         updateMinister,
         updateMinisterData,
+        updateFormData: updateMinisterData,
         onNext: handleNext,
         onBack: () => {
-          router.push("/form");
+          if (isDialog && onClose) {
+            onClose();
+          } else {
+            router.push("/form");
+          }
         },
         onCancel: handleCancel,
         error: submissionError,
@@ -272,6 +332,7 @@ export function MinisterForm() {
         formData,
         updateMinister,
         updateMinisterData,
+        updateFormData: updateMinisterData,
         onNext: handleNext,
         onBack: handleBack,
         onCancel: handleCancel,
@@ -282,6 +343,7 @@ export function MinisterForm() {
         formData,
         updateMinister,
         updateMinisterData,
+        updateFormData: updateMinisterData,
         onNext: handleNext,
         onBack: handleBack,
         onCancel: handleCancel,
@@ -292,6 +354,7 @@ export function MinisterForm() {
         formData,
         updateMinister,
         updateMinisterData,
+        updateFormData: updateMinisterData,
         onNext: handleNext,
         onBack: handleBack,
         onCancel: handleCancel,
@@ -302,6 +365,7 @@ export function MinisterForm() {
         formData,
         updateMinister,
         updateMinisterData,
+        updateFormData: updateMinisterData,
         onNext: handleNext,
         onBack: handleBack,
         onCancel: handleCancel,
@@ -312,6 +376,7 @@ export function MinisterForm() {
         formData,
         updateMinister,
         updateMinisterData,
+        updateFormData: updateMinisterData,
         onNext: handleNext,
         onBack: handleBack,
         onCancel: handleCancel,
@@ -322,6 +387,7 @@ export function MinisterForm() {
         formData,
         updateMinister,
         updateMinisterData,
+        updateFormData: updateMinisterData,
         onNext: handleNext,
         onBack: handleBack,
         onCancel: handleCancel,
@@ -332,6 +398,7 @@ export function MinisterForm() {
         formData,
         updateMinister,
         updateMinisterData,
+        updateFormData: updateMinisterData,
         onNext: handleNext,
         onBack: handleBack,
         onCancel: handleCancel,
@@ -342,6 +409,18 @@ export function MinisterForm() {
         formData,
         updateMinister,
         updateMinisterData,
+        updateFormData: updateMinisterData,
+        onNext: handleNext,
+        onBack: handleBack,
+        onCancel: handleCancel,
+        error: submissionError,
+        isSubmitting,
+      },
+      [FormStep.OVERVIEW]: {
+        formData,
+        updateMinister,
+        updateMinisterData,
+        updateFormData: updateMinisterData,
         onNext: handleSubmit,
         onBack: handleBack,
         onCancel: handleCancel,
@@ -350,7 +429,7 @@ export function MinisterForm() {
       },
     }[currentStep];
 
-    return <StepComponent {...(props as StepComponentProps)} />;
+    return <StepComponent {...(props as unknown as StepProps)} />;
   };
 
   return (
@@ -363,6 +442,14 @@ export function MinisterForm() {
         steps={formSteps.map((step) => step.label)}
       />
       <div ref={cardRef}>{renderCurrentStep()}</div>
+
+      <SuccessDialog
+        isOpen={showSuccessDialog}
+        ministerId={createdMinisterId}
+        ministerName={`${formData.firstName} ${formData.lastName}`}
+        mode={mode}
+        onClose={() => setShowSuccessDialog(false)}
+      />
     </>
   );
 }

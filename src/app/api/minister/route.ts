@@ -7,6 +7,7 @@ import { z } from "zod";
 import { db } from "@/db/drizzle";
 import {
   ministerAwardsRecognitions,
+  ministerCaseReports,
   ministerChildren,
   ministerEducationBackgrounds,
   ministerEmergencyContacts,
@@ -73,6 +74,7 @@ export async function GET(request: NextRequest) {
     const results = await db
       .select({
         id: ministers.id,
+        churchId: ministers.churchId,
         firstName: ministers.firstName,
         lastName: ministers.lastName,
         middleName: ministers.middleName,
@@ -134,72 +136,64 @@ export async function POST(request: NextRequest) {
     // Validate the request data against our schema
     const validatedData = ministerSchema.parse(body);
 
-    // Log the minister submission (for debugging - remove in production)
-    console.log("Ministry submission:", {
-      firstName: validatedData.firstName,
-      lastName: validatedData.lastName,
-      email: validatedData.email || "No email provided",
-      dateOfBirth: validatedData.dateOfBirth,
-      timestamp: new Date().toISOString(),
-    });
+    // Insert the main minister record first
+    const [newMinister] = await db
+      .insert(ministers)
+      .values({
+        churchId: validatedData.churchId,
+        biography: validatedData.biography,
+        firstName: validatedData.firstName,
+        lastName: validatedData.lastName,
+        middleName: validatedData.middleName,
+        suffix: validatedData.suffix,
+        nickname: validatedData.nickname,
+        dateOfBirth: validatedData.dateOfBirth,
+        placeOfBirth: validatedData.placeOfBirth,
+        address: validatedData.address,
+        gender: validatedData.gender,
+        heightFeet: validatedData.heightFeet,
+        weightKg: validatedData.weightKg,
+        civilStatus: validatedData.civilStatus,
+        email: validatedData.email,
+        telephone: validatedData.telephone,
+        passportNumber: validatedData.passportNumber,
+        sssNumber: validatedData.sssNumber,
+        philhealth: validatedData.philhealth,
+        tin: validatedData.tin,
+        presentAddress: validatedData.presentAddress,
+        permanentAddress: validatedData.permanentAddress,
+        fatherName: validatedData.fatherName,
+        fatherProvince: validatedData.fatherProvince,
+        fatherBirthday: validatedData.fatherBirthday,
+        fatherOccupation: validatedData.fatherOccupation,
+        motherName: validatedData.motherName,
+        motherProvince: validatedData.motherProvince,
+        motherBirthday: validatedData.motherBirthday,
+        motherOccupation: validatedData.motherOccupation,
+        spouseName: validatedData.spouseName,
+        spouseProvince: validatedData.spouseProvince,
+        spouseBirthday: validatedData.spouseBirthday,
+        spouseOccupation: validatedData.spouseOccupation,
+        weddingDate: validatedData.weddingDate,
+        skills: validatedData.skills,
+        hobbies: validatedData.hobbies,
+        sports: validatedData.sports,
+        otherReligiousSecularTraining:
+          validatedData.otherReligiousSecularTraining,
+        certifiedBy: validatedData.certifiedBy,
+        signatureImageUrl: validatedData.signatureImageUrl,
+        signatureByCertifiedImageUrl:
+          validatedData.signatureByCertifiedImageUrl,
+        imageUrl: validatedData.imageUrl,
+      })
+      .returning();
 
-    // Start a database transaction to ensure data consistency
-    const result = await db.transaction(async (tx) => {
-      // Insert the main minister record
-      const [newMinister] = await tx
-        .insert(ministers)
-        .values({
-          firstName: validatedData.firstName,
-          lastName: validatedData.lastName,
-          middleName: validatedData.middleName,
-          suffix: validatedData.suffix,
-          nickname: validatedData.nickname,
-          dateOfBirth: validatedData.dateOfBirth,
-          placeOfBirth: validatedData.placeOfBirth,
-          address: validatedData.address,
-          gender: validatedData.gender,
-          heightFeet: validatedData.heightFeet,
-          weightKg: validatedData.weightKg,
-          civilStatus: validatedData.civilStatus,
-          email: validatedData.email,
-          telephone: validatedData.telephone,
-          passportNumber: validatedData.passportNumber,
-          sssNumber: validatedData.sssNumber,
-          philhealth: validatedData.philhealth,
-          tin: validatedData.tin,
-          presentAddress: validatedData.presentAddress,
-          permanentAddress: validatedData.permanentAddress,
-          fatherName: validatedData.fatherName,
-          fatherProvince: validatedData.fatherProvince,
-          fatherBirthday: validatedData.fatherBirthday,
-          fatherOccupation: validatedData.fatherOccupation,
-          motherName: validatedData.motherName,
-          motherProvince: validatedData.motherProvince,
-          motherBirthday: validatedData.motherBirthday,
-          motherOccupation: validatedData.motherOccupation,
-          spouseName: validatedData.spouseName,
-          spouseProvince: validatedData.spouseProvince,
-          spouseBirthday: validatedData.spouseBirthday,
-          spouseOccupation: validatedData.spouseOccupation,
-          weddingDate: validatedData.weddingDate,
-          skills: validatedData.skills,
-          hobbies: validatedData.hobbies,
-          sports: validatedData.sports,
-          otherReligiousSecularTraining:
-            validatedData.otherReligiousSecularTraining,
-          certifiedBy: validatedData.certifiedBy,
-          signatureImageUrl: validatedData.signatureImageUrl,
-          signatureByCertifiedImageUrl:
-            validatedData.signatureByCertifiedImageUrl,
-          imageUrl: validatedData.imageUrl,
-        })
-        .returning();
+    const ministerId = newMinister.id;
 
-      const ministerId = newMinister.id;
-
-      // Insert related data if provided
+    // Insert related data if provided (without transactions)
+    try {
       if (validatedData.children && validatedData.children.length > 0) {
-        await tx.insert(ministerChildren).values(
+        await db.insert(ministerChildren).values(
           validatedData.children.map((child) => ({
             ministerId,
             name: child.name,
@@ -214,7 +208,7 @@ export async function POST(request: NextRequest) {
         validatedData.emergencyContacts &&
         validatedData.emergencyContacts.length > 0
       ) {
-        await tx.insert(ministerEmergencyContacts).values(
+        await db.insert(ministerEmergencyContacts).values(
           validatedData.emergencyContacts.map((contact) => ({
             ministerId,
             name: contact.name,
@@ -229,7 +223,7 @@ export async function POST(request: NextRequest) {
         validatedData.educationBackgrounds &&
         validatedData.educationBackgrounds.length > 0
       ) {
-        await tx.insert(ministerEducationBackgrounds).values(
+        await db.insert(ministerEducationBackgrounds).values(
           validatedData.educationBackgrounds.map((education) => ({
             ministerId,
             schoolName: education.schoolName,
@@ -245,7 +239,7 @@ export async function POST(request: NextRequest) {
         validatedData.ministryExperiences &&
         validatedData.ministryExperiences.length > 0
       ) {
-        await tx.insert(ministerMinistryExperiences).values(
+        await db.insert(ministerMinistryExperiences).values(
           validatedData.ministryExperiences.map((experience) => ({
             ministerId,
             ministryRankId: experience.ministryRankId,
@@ -260,7 +254,7 @@ export async function POST(request: NextRequest) {
         validatedData.ministrySkills &&
         validatedData.ministrySkills.length > 0
       ) {
-        await tx.insert(ministerMinistrySkills).values(
+        await db.insert(ministerMinistrySkills).values(
           validatedData.ministrySkills.map((skill) => ({
             ministerId,
             ministrySkillId: skill.ministrySkillId,
@@ -272,7 +266,7 @@ export async function POST(request: NextRequest) {
         validatedData.ministryRecords &&
         validatedData.ministryRecords.length > 0
       ) {
-        await tx.insert(ministerMinistryRecords).values(
+        await db.insert(ministerMinistryRecords).values(
           validatedData.ministryRecords.map((record) => ({
             ministerId,
             churchLocationId: record.churchLocationId,
@@ -287,7 +281,7 @@ export async function POST(request: NextRequest) {
         validatedData.awardsRecognitions &&
         validatedData.awardsRecognitions.length > 0
       ) {
-        await tx.insert(ministerAwardsRecognitions).values(
+        await db.insert(ministerAwardsRecognitions).values(
           validatedData.awardsRecognitions.map((award) => ({
             ministerId,
             year: award.year,
@@ -300,7 +294,7 @@ export async function POST(request: NextRequest) {
         validatedData.employmentRecords &&
         validatedData.employmentRecords.length > 0
       ) {
-        await tx.insert(ministerEmploymentRecords).values(
+        await db.insert(ministerEmploymentRecords).values(
           validatedData.employmentRecords.map((employment) => ({
             ministerId,
             companyName: employment.companyName,
@@ -315,7 +309,7 @@ export async function POST(request: NextRequest) {
         validatedData.seminarsConferences &&
         validatedData.seminarsConferences.length > 0
       ) {
-        await tx.insert(ministerSeminarsConferences).values(
+        await db.insert(ministerSeminarsConferences).values(
           validatedData.seminarsConferences.map((seminar) => ({
             ministerId,
             title: seminar.title,
@@ -327,14 +321,28 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      return newMinister;
-    });
+      if (validatedData.caseReports && validatedData.caseReports.length > 0) {
+        await db.insert(ministerCaseReports).values(
+          validatedData.caseReports.map((caseReport) => ({
+            ministerId,
+            description: caseReport.description,
+            year: caseReport.year,
+          }))
+        );
+      }
+    } catch (relatedDataError) {
+      console.error("Error inserting related data:", relatedDataError);
+      // Note: Since we can't use transactions with neon-http, the main minister record
+      // will still be created even if related data fails. Consider implementing
+      // cleanup logic or switching to a full PostgreSQL connection if strict
+      // transaction support is required.
+    }
 
     // Return success response
     return NextResponse.json({
       success: true,
       message: "Ministry added successfully",
-      data: result,
+      data: newMinister,
     });
   } catch (error) {
     console.error("Ministry submission error:", error);

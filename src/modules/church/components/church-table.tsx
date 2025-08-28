@@ -239,6 +239,11 @@ const ChurchActions = ({ church }: ChurchActionsProps) => {
 // Define table columns
 const columns: ColumnDef<Church>[] = [
   {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => <ChurchActions church={row.original} />,
+  },
+  {
     accessorKey: "id",
     header: ({ column }) => (
       <Button
@@ -325,11 +330,6 @@ const columns: ColumnDef<Church>[] = [
         </div>
       );
     },
-  },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => <ChurchActions church={row.original} />,
   },
 ];
 
