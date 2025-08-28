@@ -1,7 +1,5 @@
 import { date, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
-export const genderEnum = text("gender", { enum: ["male", "female"] });
-
 export const members = pgTable("members", {
   id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
 
@@ -10,7 +8,7 @@ export const members = pgTable("members", {
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
   middleName: text("middle_name"),
-  gender: genderEnum.notNull(),
+  gender: text("gender", { enum: ["male", "female"] }).notNull(),
   birthdate: date("birthdate").notNull(),
   yearJoined: integer("year_joined").notNull(),
 

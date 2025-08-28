@@ -1,10 +1,10 @@
 import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 import { churches } from "../church/church-schema";
-import { genderEnum } from "../member/member-schema";
 import { ministryRanks } from "../ministry-ranks/ministry-ranks-schema";
 import { ministrySkills } from "../ministry-skills/ministry-skills-schema";
 
+export const genderEnum = text("gender", { enum: ["male", "female"] });
 export const civilStatusEnum = text("civil_status", {
   enum: ["single", "married", "widowed", "separated", "divorced"],
 });

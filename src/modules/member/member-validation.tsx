@@ -27,7 +27,16 @@ export const memberSchema = z.object({
 
   // Contact Information
   mobileNumber: z.string().optional().nullable(),
-  email: z.string().email().optional().nullable(),
+  email: z
+    .string()
+    .optional()
+    .nullable()
+    .refine(
+      (val) => !val || val === "" || z.string().email().safeParse(val).success,
+      {
+        message: "Invalid email format",
+      }
+    ),
   homeAddress: z.string().optional().nullable(),
 
   // Social Media Links
