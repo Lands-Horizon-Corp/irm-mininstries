@@ -9,12 +9,15 @@ import {
   Eye,
   EyeOff,
   QrCode,
+  Search,
   Upload,
+  User,
   Users,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
 
+import { useSearch } from "@/components/providers/search-provider";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -54,6 +57,24 @@ export function DashboardQRScanner({
   const [error, setError] = useState<string>("");
   const [cameraStatus, setCameraStatus] = useState<string>("idle");
   const [isMounted, setIsMounted] = useState(false);
+  const [searchMode, setSearchMode] = useState<"qr" | "search">("qr");
+
+  // Search provider
+  const {
+    memberSearchQuery,
+    ministerSearchQuery,
+    memberResults,
+    ministerResults,
+    isSearchingMembers,
+    isSearchingMinisters,
+    setMemberSearchQuery,
+    setMinisterSearchQuery,
+    searchMembers,
+    searchMinisters,
+    clearMemberSearch,
+    clearMinisterSearch,
+    clearAllSearches,
+  } = useSearch();
 
   // Dialog states
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
@@ -406,8 +427,44 @@ export function DashboardQRScanner({
   const handleReset = () => {
     setScannedData(null);
     setError("");
-    toast.info("Scanned data cleared. Ready to scan a new QR code.");
+    clearAllSearches();
+    toast.info("Data cleared. Ready to scan or search again.");
   };
+
+  // Handle search result selection
+  const handleSearchResultSelect = (result: {
+    id: number;
+    type: "member" | "minister";
+  }) => {
+    setScannedData({ id: result.id, type: result.type });
+    clearAllSearches();
+    setSearchMode("qr"); // Switch back to QR mode
+  };
+
+  // Handle search input with debouncing
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (memberSearchQuery.length >= 2) {
+        searchMembers(memberSearchQuery);
+      } else {
+        clearMemberSearch();
+      }
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [memberSearchQuery, searchMembers, clearMemberSearch]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (ministerSearchQuery.length >= 2) {
+        searchMinisters(ministerSearchQuery);
+      } else {
+        clearMinisterSearch();
+      }
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [ministerSearchQuery, searchMinisters, clearMinisterSearch]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -444,138 +501,369 @@ export function DashboardQRScanner({
   return (
     <Card className="col-span-full">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Users className="h-5 w-5" />
-          QR Code Scanner
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Users className="h-5 w-5" />
+            QR Code Scanner & Search
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant={searchMode === "qr" ? "default" : "outline"}
+              onClick={() => {
+                setSearchMode("qr");
+                clearAllSearches();
+              }}
+            >
+              <QrCode className="mr-2 h-4 w-4" />
+              QR Scan
+            </Button>
+            <Button
+              size="sm"
+              variant={searchMode === "search" ? "default" : "outline"}
+              onClick={() => {
+                setSearchMode("search");
+                setScannedData(null);
+                stopCamera();
+                setIsScanning(false);
+              }}
+            >
+              <Search className="mr-2 h-4 w-4" />
+              Search By Name
+            </Button>
+          </div>
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid gap-6 lg:grid-cols-3">
-          {/* QR Scanner Section */}
+          {/* Scanner/Search Section */}
           <div className="lg:col-span-1">
             <div className="space-y-4">
-              {/* Scanner Controls */}
-              <div className="flex items-center justify-between">
-                <Label className="text-sm font-medium">Camera Scanner</Label>
-                <Button
-                  className="flex items-center gap-2"
-                  size="sm"
-                  variant="outline"
-                  onClick={toggleScanning}
-                >
-                  {isScanning ? (
-                    <>
-                      <EyeOff className="h-4 w-4" />
-                      Stop
-                    </>
-                  ) : (
-                    <>
-                      <Eye className="h-4 w-4" />
-                      Start
-                    </>
-                  )}
-                </Button>
-              </div>
+              {searchMode === "qr" ? (
+                <>
+                  {/* Scanner Controls */}
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm font-medium">
+                      Camera Scanner
+                    </Label>
+                    <Button
+                      className="flex items-center gap-2"
+                      size="sm"
+                      variant="outline"
+                      onClick={toggleScanning}
+                    >
+                      {isScanning ? (
+                        <>
+                          <EyeOff className="h-4 w-4" />
+                          Stop
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="h-4 w-4" />
+                          Start
+                        </>
+                      )}
+                    </Button>
+                  </div>
 
-              {/* Camera Feed */}
-              <div className="bg-muted relative aspect-square overflow-hidden rounded-lg border">
-                {/* Video element - always present in DOM */}
-                <video
-                  autoPlay
-                  muted
-                  playsInline
-                  className={`h-full w-full object-cover ${
-                    isScanning && cameraStatus === "playing"
-                      ? "block"
-                      : "hidden"
-                  }`}
-                  ref={videoRef}
-                />
-                <canvas className="hidden" ref={canvasRef} />
+                  {/* Camera Feed */}
+                  <div className="bg-muted relative aspect-square overflow-hidden rounded-lg border">
+                    {/* Video element - always present in DOM */}
+                    <video
+                      autoPlay
+                      muted
+                      playsInline
+                      className={`h-full w-full object-cover ${
+                        isScanning && cameraStatus === "playing"
+                          ? "block"
+                          : "hidden"
+                      }`}
+                      ref={videoRef}
+                    />
+                    <canvas className="hidden" ref={canvasRef} />
 
-                {/* Scanning UI - only show when actively scanning */}
-                {isScanning && cameraStatus === "playing" && (
-                  <>
-                    {/* Scanning Overlay */}
-                    <div className="border-primary/50 absolute inset-4 rounded border-2">
-                      <div className="border-primary absolute -top-1 -left-1 h-6 w-6 border-t-2 border-l-2" />
-                      <div className="border-primary absolute -top-1 -right-1 h-6 w-6 border-t-2 border-r-2" />
-                      <div className="border-primary absolute -bottom-1 -left-1 h-6 w-6 border-b-2 border-l-2" />
-                      <div className="border-primary absolute -right-1 -bottom-1 h-6 w-6 border-r-2 border-b-2" />
-                    </div>
+                    {/* Scanning UI - only show when actively scanning */}
+                    {isScanning && cameraStatus === "playing" && (
+                      <>
+                        {/* Scanning Overlay */}
+                        <div className="border-primary/50 absolute inset-4 rounded border-2">
+                          <div className="border-primary absolute -top-1 -left-1 h-6 w-6 border-t-2 border-l-2" />
+                          <div className="border-primary absolute -top-1 -right-1 h-6 w-6 border-t-2 border-r-2" />
+                          <div className="border-primary absolute -bottom-1 -left-1 h-6 w-6 border-b-2 border-l-2" />
+                          <div className="border-primary absolute -right-1 -bottom-1 h-6 w-6 border-r-2 border-b-2" />
+                        </div>
 
-                    {/* Status Indicator */}
-                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
-                      <div className="bg-primary/90 text-primary-foreground rounded-full px-3 py-1 text-xs">
-                        Scanning...
-                      </div>
-                    </div>
-                  </>
-                )}
+                        {/* Status Indicator */}
+                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
+                          <div className="bg-primary/90 text-primary-foreground rounded-full px-3 py-1 text-xs">
+                            Scanning...
+                          </div>
+                        </div>
+                      </>
+                    )}
 
-                {/* Placeholder UI - show when not actively scanning */}
-                {(!isScanning || cameraStatus !== "playing") && (
-                  <div className="absolute inset-0 flex h-full items-center justify-center">
-                    <div className="text-center">
-                      <QrCode className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-                      <p className="text-muted-foreground text-sm">
-                        {isScanning && cameraStatus !== "playing"
-                          ? cameraStatus === "requesting"
-                            ? "Requesting camera access..."
-                            : cameraStatus === "stream-obtained"
-                              ? "Initializing camera..."
-                              : "Starting camera..."
-                          : "Click Start to begin scanning"}
-                      </p>
-                      {error && (
-                        <div className="mt-3 space-y-2">
-                          <p className="text-destructive text-xs">{error}</p>
-                          {(cameraStatus === "error" ||
-                            cameraStatus === "play-error") && (
-                            <Button
-                              className="h-8 text-xs"
-                              size="sm"
-                              variant="outline"
-                              onClick={() => {
-                                setError("");
-                                setCameraStatus("idle");
-                                setIsScanning(false);
-                                // Small delay to ensure state is reset
-                                setTimeout(() => toggleScanning(), 100);
-                              }}
-                            >
-                              Try Again
-                            </Button>
+                    {/* Placeholder UI - show when not actively scanning */}
+                    {(!isScanning || cameraStatus !== "playing") && (
+                      <div className="absolute inset-0 flex h-full items-center justify-center">
+                        <div className="text-center">
+                          <QrCode className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
+                          <p className="text-muted-foreground text-sm">
+                            {isScanning && cameraStatus !== "playing"
+                              ? cameraStatus === "requesting"
+                                ? "Requesting camera access..."
+                                : cameraStatus === "stream-obtained"
+                                  ? "Initializing camera..."
+                                  : "Starting camera..."
+                              : "Click Start to begin scanning"}
+                          </p>
+                          {error && (
+                            <div className="mt-3 space-y-2">
+                              <p className="text-destructive text-xs">
+                                {error}
+                              </p>
+                              {(cameraStatus === "error" ||
+                                cameraStatus === "play-error") && (
+                                <Button
+                                  className="h-8 text-xs"
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => {
+                                    setError("");
+                                    setCameraStatus("idle");
+                                    setIsScanning(false);
+                                    // Small delay to ensure state is reset
+                                    setTimeout(() => toggleScanning(), 100);
+                                  }}
+                                >
+                                  Try Again
+                                </Button>
+                              )}
+                            </div>
                           )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Upload QR Code */}
+                  <Separator />
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">
+                      Upload QR Image
+                    </Label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        accept="image/*"
+                        className="hidden"
+                        ref={fileInputRef}
+                        type="file"
+                        onChange={handleFileUpload}
+                      />
+                      <Button
+                        className="flex items-center gap-2"
+                        variant="outline"
+                        onClick={() => fileInputRef.current?.click()}
+                      >
+                        <Upload className="h-4 w-4" />
+                        Upload QR
+                      </Button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Search Interface */}
+                  <div className="space-y-4">
+                    <Label className="text-sm font-medium">
+                      Search by Name
+                    </Label>
+
+                    {/* Member Search */}
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <User className="text-muted-foreground h-4 w-4" />
+                        <Label className="text-muted-foreground text-xs font-medium">
+                          Members
+                        </Label>
+                      </div>
+                      <Input
+                        placeholder="Search members by name..."
+                        value={memberSearchQuery}
+                        onChange={(e) => setMemberSearchQuery(e.target.value)}
+                      />
+
+                      {/* Member Results */}
+                      {memberResults.length > 0 && (
+                        <div className="max-h-60 space-y-2 overflow-y-auto rounded-md border p-2">
+                          {memberResults.map((result) => (
+                            <div
+                              className="group relative flex cursor-pointer items-center gap-3 rounded-lg border border-blue-200/50 bg-gradient-to-r from-blue-50 to-slate-50 p-3 transition-all duration-200 hover:border-blue-300 hover:from-blue-100 hover:to-slate-100 hover:shadow-md dark:border-blue-800/30 dark:from-blue-950/30 dark:to-slate-950/30 dark:hover:border-blue-700/50 dark:hover:from-blue-900/40 dark:hover:to-slate-900/40"
+                              key={`member-${result.id}`}
+                              onClick={() =>
+                                handleSearchResultSelect({
+                                  id: result.id,
+                                  type: "member",
+                                })
+                              }
+                            >
+                              {/* Member Badge */}
+                              <div className="absolute -top-1 -right-1 rounded-full bg-blue-500 px-2 py-0.5 text-[10px] font-medium text-white shadow-sm">
+                                Member
+                              </div>
+
+                              <Avatar className="h-12 w-12 ring-2 ring-blue-200/50 transition-all group-hover:ring-blue-300 dark:ring-blue-800/50 dark:group-hover:ring-blue-700/50">
+                                <AvatarImage
+                                  className="object-cover"
+                                  src={result.profilePicture || undefined}
+                                />
+                                <AvatarFallback className="bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
+                                  {result.firstName[0]}
+                                  {result.lastName[0]}
+                                </AvatarFallback>
+                              </Avatar>
+
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2">
+                                  <User className="h-3.5 w-3.5 text-blue-500" />
+                                  <p className="truncate text-sm font-semibold text-blue-900 dark:text-blue-100">
+                                    {result.firstName}{" "}
+                                    {result.middleName &&
+                                      result.middleName + " "}
+                                    {result.lastName}
+                                  </p>
+                                </div>
+                                <div className="mt-1 flex items-center gap-2 text-xs text-blue-600/80 dark:text-blue-400/80">
+                                  <span>
+                                    Born:{" "}
+                                    {new Date(
+                                      result.dateOfBirth
+                                    ).toLocaleDateString()}
+                                  </span>
+                                  {result.churchName && (
+                                    <>
+                                      <span>•</span>
+                                      <span className="truncate">
+                                        {result.churchName}
+                                      </span>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Hover indicator */}
+                              <div className="opacity-0 transition-opacity group-hover:opacity-100">
+                                <div className="h-2 w-2 rounded-full bg-blue-500"></div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {isSearchingMembers && (
+                        <div className="flex items-center justify-center py-4">
+                          <div className="text-muted-foreground flex items-center gap-2 text-sm">
+                            <div className="border-primary h-4 w-4 animate-spin rounded-full border-2 border-r-transparent" />
+                            Searching members...
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <Separator />
+
+                    {/* Minister Search */}
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Users className="text-muted-foreground h-4 w-4" />
+                        <Label className="text-muted-foreground text-xs font-medium">
+                          Ministers
+                        </Label>
+                      </div>
+                      <Input
+                        placeholder="Search ministers by name..."
+                        value={ministerSearchQuery}
+                        onChange={(e) => setMinisterSearchQuery(e.target.value)}
+                      />
+
+                      {/* Minister Results */}
+                      {ministerResults.length > 0 && (
+                        <div className="max-h-60 space-y-2 overflow-y-auto rounded-md border p-2">
+                          {ministerResults.map((result) => (
+                            <div
+                              className="group relative flex cursor-pointer items-center gap-3 rounded-lg border border-purple-200/50 bg-gradient-to-r from-purple-50 to-indigo-50 p-3 transition-all duration-200 hover:border-purple-300 hover:from-purple-100 hover:to-indigo-100 hover:shadow-md dark:border-purple-800/30 dark:from-purple-950/30 dark:to-indigo-950/30 dark:hover:border-purple-700/50 dark:hover:from-purple-900/40 dark:hover:to-indigo-900/40"
+                              key={`minister-${result.id}`}
+                              onClick={() =>
+                                handleSearchResultSelect({
+                                  id: result.id,
+                                  type: "minister",
+                                })
+                              }
+                            >
+                              {/* Minister Badge */}
+                              <div className="absolute -top-1 -right-1 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 px-2 py-0.5 text-[10px] font-medium text-white shadow-sm">
+                                Minister
+                              </div>
+
+                              <Avatar className="h-12 w-12 ring-2 ring-purple-200/50 transition-all group-hover:ring-purple-300 dark:ring-purple-800/50 dark:group-hover:ring-purple-700/50">
+                                <AvatarImage
+                                  className="object-cover"
+                                  src={result.imageUrl || undefined}
+                                />
+                                <AvatarFallback className="bg-gradient-to-br from-purple-100 to-indigo-100 text-purple-700 dark:from-purple-900/50 dark:to-indigo-900/50 dark:text-purple-300">
+                                  {result.firstName[0]}
+                                  {result.lastName[0]}
+                                </AvatarFallback>
+                              </Avatar>
+
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2">
+                                  <Users className="h-3.5 w-3.5 text-purple-600" />
+                                  <p className="truncate text-sm font-semibold text-purple-900 dark:text-purple-100">
+                                    {result.firstName}{" "}
+                                    {result.middleName &&
+                                      result.middleName + " "}
+                                    {result.lastName}
+                                  </p>
+                                </div>
+                                <div className="mt-1 flex items-center gap-2 text-xs text-purple-600/80 dark:text-purple-400/80">
+                                  <span>
+                                    Born:{" "}
+                                    {new Date(
+                                      result.dateOfBirth
+                                    ).toLocaleDateString()}
+                                  </span>
+                                  {result.churchName && (
+                                    <>
+                                      <span>•</span>
+                                      <span className="truncate">
+                                        {result.churchName}
+                                      </span>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Hover indicator with gradient */}
+                              <div className="opacity-0 transition-opacity group-hover:opacity-100">
+                                <div className="h-2 w-2 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500"></div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {isSearchingMinisters && (
+                        <div className="flex items-center justify-center py-4">
+                          <div className="text-muted-foreground flex items-center gap-2 text-sm">
+                            <div className="border-primary h-4 w-4 animate-spin rounded-full border-2 border-r-transparent" />
+                            Searching ministers...
+                          </div>
                         </div>
                       )}
                     </div>
                   </div>
-                )}
-              </div>
-
-              {/* Upload QR Code */}
-              <Separator />
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">Upload QR Image</Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    accept="image/*"
-                    className="hidden"
-                    ref={fileInputRef}
-                    type="file"
-                    onChange={handleFileUpload}
-                  />
-                  <Button
-                    className="flex items-center gap-2"
-                    variant="outline"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <Upload className="h-4 w-4" />
-                    Upload QR
-                  </Button>
-                </div>
-              </div>
+                </>
+              )}
             </div>
           </div>
 
@@ -583,9 +871,38 @@ export function DashboardQRScanner({
           <div className="lg:col-span-2">
             {scannedData ? (
               <div className="space-y-6">
-                <div>
+                {/* Profile Header with Different Styling */}
+                <div
+                  className={`rounded-xl border p-6 ${
+                    scannedData.type === "member"
+                      ? "border-blue-200/50 bg-gradient-to-br from-blue-50/50 via-slate-50/30 to-blue-50/20 dark:border-blue-800/30 dark:from-blue-950/20 dark:via-slate-950/10 dark:to-blue-950/10"
+                      : "border-purple-200/50 bg-gradient-to-br from-purple-50/50 via-indigo-50/30 to-purple-50/20 dark:border-purple-800/30 dark:from-purple-950/20 dark:via-indigo-950/10 dark:to-purple-950/10"
+                  }`}
+                >
                   <div className="mb-4 flex items-center justify-between">
-                    <h3 className="text-lg font-semibold">Profile</h3>
+                    <div className="flex items-center gap-3">
+                      <h3
+                        className={`text-lg font-semibold ${
+                          scannedData.type === "member"
+                            ? "text-blue-900 dark:text-blue-100"
+                            : "text-purple-900 dark:text-purple-100"
+                        }`}
+                      >
+                        Profile
+                      </h3>
+                      {/* Role Badge */}
+                      <div
+                        className={`rounded-full px-3 py-1 text-xs font-medium ${
+                          scannedData.type === "member"
+                            ? "bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300"
+                            : "bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-700 dark:from-purple-900/50 dark:to-indigo-900/50 dark:text-purple-300"
+                        }`}
+                      >
+                        {scannedData.type === "member"
+                          ? "Church Member"
+                          : "Minister"}
+                      </div>
+                    </div>
                     <Button
                       className="flex items-center gap-2"
                       size="sm"
@@ -599,59 +916,150 @@ export function DashboardQRScanner({
 
                   {isLoadingProfile ? (
                     <div className="flex items-center gap-4">
-                      <div className="bg-muted h-16 w-16 animate-pulse rounded-full" />
-                      <div className="space-y-2">
-                        <div className="bg-muted h-5 w-32 animate-pulse rounded" />
-                        <div className="bg-muted h-4 w-24 animate-pulse rounded" />
+                      <div
+                        className={`h-20 w-20 animate-pulse rounded-full ring-4 ${
+                          scannedData.type === "member"
+                            ? "bg-blue-100 ring-blue-200/50 dark:bg-blue-900/30 dark:ring-blue-800/30"
+                            : "bg-gradient-to-br from-purple-100 to-indigo-100 ring-purple-200/50 dark:from-purple-900/30 dark:to-indigo-900/30 dark:ring-purple-800/30"
+                        }`}
+                      />
+                      <div className="space-y-3">
+                        <div
+                          className={`h-6 w-40 animate-pulse rounded ${
+                            scannedData.type === "member"
+                              ? "bg-blue-200 dark:bg-blue-800/50"
+                              : "bg-purple-200 dark:bg-purple-800/50"
+                          }`}
+                        />
+                        <div
+                          className={`h-4 w-28 animate-pulse rounded ${
+                            scannedData.type === "member"
+                              ? "bg-blue-100 dark:bg-blue-900/30"
+                              : "bg-purple-100 dark:bg-purple-900/30"
+                          }`}
+                        />
                         <div className="text-muted-foreground flex items-center gap-2 text-sm">
-                          <div className="border-primary h-4 w-4 animate-spin rounded-full border-2 border-r-transparent" />
+                          <div
+                            className={`h-4 w-4 animate-spin rounded-full border-2 border-r-transparent ${
+                              scannedData.type === "member"
+                                ? "border-blue-500"
+                                : "border-purple-500"
+                            }`}
+                          />
                           Loading profile data...
                         </div>
                       </div>
                     </div>
                   ) : (
                     <div className="flex items-center gap-4">
-                      <Avatar
-                        className="h-16 w-16 cursor-pointer transition-opacity hover:opacity-80"
-                        onClick={() => {
-                          const imageUrl =
-                            profileData && scannedData.type === "member"
-                              ? (profileData as Member)?.profilePicture
-                              : profileData && scannedData.type === "minister"
-                                ? (profileData as Minister)?.imageUrl
-                                : null;
-                          if (imageUrl) {
-                            setIsImageViewerOpen(true);
-                          }
-                        }}
-                      >
-                        <AvatarImage
-                          className="object-cover"
-                          src={
-                            profileData && scannedData.type === "member"
-                              ? (profileData as Member)?.profilePicture ||
-                                undefined
-                              : profileData && scannedData.type === "minister"
-                                ? (profileData as Minister)?.imageUrl ||
+                      <div className="relative">
+                        <Avatar
+                          className={`h-20 w-20 cursor-pointer ring-4 transition-all hover:opacity-80 hover:ring-8 ${
+                            scannedData.type === "member"
+                              ? "ring-blue-200/50 hover:ring-blue-300/50 dark:ring-blue-800/30 dark:hover:ring-blue-700/50"
+                              : "ring-purple-200/50 hover:ring-purple-300/50 dark:ring-purple-800/30 dark:hover:ring-purple-700/50"
+                          }`}
+                          onClick={() => {
+                            const imageUrl =
+                              profileData && scannedData.type === "member"
+                                ? (profileData as Member)?.profilePicture
+                                : profileData && scannedData.type === "minister"
+                                  ? (profileData as Minister)?.imageUrl
+                                  : null;
+                            if (imageUrl) {
+                              setIsImageViewerOpen(true);
+                            }
+                          }}
+                        >
+                          <AvatarImage
+                            className="object-cover"
+                            src={
+                              profileData && scannedData.type === "member"
+                                ? (profileData as Member)?.profilePicture ||
                                   undefined
-                                : undefined
-                          }
-                        />
-                        <AvatarFallback className="text-lg">
-                          {profileName
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")
-                            .toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <h4 className="text-xl font-semibold">{profileName}</h4>
-                        <p className="text-muted-foreground capitalize">
-                          {scannedData.type} #{scannedData.id}
-                        </p>
+                                : profileData && scannedData.type === "minister"
+                                  ? (profileData as Minister)?.imageUrl ||
+                                    undefined
+                                  : undefined
+                            }
+                          />
+                          <AvatarFallback
+                            className={`text-lg font-semibold ${
+                              scannedData.type === "member"
+                                ? "bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300"
+                                : "bg-gradient-to-br from-purple-100 to-indigo-100 text-purple-700 dark:from-purple-900/50 dark:to-indigo-900/50 dark:text-purple-300"
+                            }`}
+                          >
+                            {profileName
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")
+                              .toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+
+                        {/* Status Indicator */}
+                        <div
+                          className={`absolute -right-1 -bottom-1 h-6 w-6 rounded-full border-4 border-white shadow-sm dark:border-gray-800 ${
+                            scannedData.type === "member"
+                              ? "bg-blue-500"
+                              : "bg-gradient-to-r from-purple-500 to-indigo-500"
+                          }`}
+                        >
+                          {scannedData.type === "member" ? (
+                            <User className="h-3 w-3 p-0.5 text-white" />
+                          ) : (
+                            <Users className="h-3 w-3 p-0.5 text-white" />
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex-1">
+                        <div className="mb-1 flex items-center gap-2">
+                          {scannedData.type === "member" ? (
+                            <User className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                          ) : (
+                            <Users className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                          )}
+                          <h4
+                            className={`text-2xl font-bold ${
+                              scannedData.type === "member"
+                                ? "text-blue-900 dark:text-blue-100"
+                                : "text-purple-900 dark:text-purple-100"
+                            }`}
+                          >
+                            {profileName}
+                          </h4>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <p
+                            className={`text-sm font-medium ${
+                              scannedData.type === "member"
+                                ? "text-blue-600/80 dark:text-blue-400/80"
+                                : "text-purple-600/80 dark:text-purple-400/80"
+                            }`}
+                          >
+                            {scannedData.type === "member"
+                              ? "Member"
+                              : "Minister"}{" "}
+                            #{scannedData.id}
+                          </p>
+
+                          {/* ID Badge */}
+                          <div
+                            className={`rounded px-2 py-1 font-mono text-xs ${
+                              scannedData.type === "member"
+                                ? "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
+                                : "bg-purple-100/80 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300"
+                            }`}
+                          >
+                            ID: {scannedData.id}
+                          </div>
+                        </div>
+
                         {!profileData && !isLoadingProfile && (
-                          <p className="text-muted-foreground text-sm">
+                          <p className="text-muted-foreground mt-2 text-sm">
                             Profile not found in database
                           </p>
                         )}
@@ -662,102 +1070,242 @@ export function DashboardQRScanner({
 
                 {/* Profile Information Grid */}
                 {isLoadingProfile ? (
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {Array.from({ length: 4 }).map((_, i) => (
-                      <div className="space-y-2" key={i}>
-                        <div className="bg-muted h-4 w-16 animate-pulse rounded" />
-                        <div className="bg-muted h-10 w-full animate-pulse rounded-md" />
-                      </div>
-                    ))}
+                  <div
+                    className={`rounded-lg border p-4 ${
+                      scannedData.type === "member"
+                        ? "border-blue-200/30 bg-blue-50/20 dark:border-blue-800/20 dark:bg-blue-950/10"
+                        : "border-purple-200/30 bg-purple-50/20 dark:border-purple-800/20 dark:bg-purple-950/10"
+                    }`}
+                  >
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      {Array.from({ length: 4 }).map((_, i) => (
+                        <div className="space-y-2" key={i}>
+                          <div
+                            className={`h-4 w-16 animate-pulse rounded ${
+                              scannedData.type === "member"
+                                ? "bg-blue-200 dark:bg-blue-800/50"
+                                : "bg-purple-200 dark:bg-purple-800/50"
+                            }`}
+                          />
+                          <div
+                            className={`h-10 w-full animate-pulse rounded-md ${
+                              scannedData.type === "member"
+                                ? "bg-blue-100 dark:bg-blue-900/30"
+                                : "bg-purple-100 dark:bg-purple-900/30"
+                            }`}
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ) : profileData && !isLoadingProfile ? (
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label className="text-muted-foreground text-sm">
-                        Email
-                      </Label>
-                      <div className="border-input bg-muted h-10 rounded-md border px-3 py-2 text-sm">
-                        {(profileData as Minister | Member)?.email ||
-                          "Not provided"}
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-muted-foreground text-sm">
-                        Phone
-                      </Label>
-                      <div className="border-input bg-muted h-10 rounded-md border px-3 py-2 text-sm">
-                        {scannedData.type === "member"
-                          ? (profileData as Member)?.mobileNumber ||
-                            "Not provided"
-                          : (profileData as Minister)?.telephone ||
+                  <div
+                    className={`rounded-lg border p-4 ${
+                      scannedData.type === "member"
+                        ? "border-blue-200/30 bg-blue-50/20 dark:border-blue-800/20 dark:bg-blue-950/10"
+                        : "border-purple-200/30 bg-purple-50/20 dark:border-purple-800/20 dark:bg-purple-950/10"
+                    }`}
+                  >
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="space-y-2">
+                        <Label
+                          className={`text-sm font-medium ${
+                            scannedData.type === "member"
+                              ? "text-blue-700 dark:text-blue-300"
+                              : "text-purple-700 dark:text-purple-300"
+                          }`}
+                        >
+                          Email
+                        </Label>
+                        <div
+                          className={`h-10 rounded-md border px-3 py-2 text-sm ${
+                            scannedData.type === "member"
+                              ? "border-blue-200 bg-blue-50/50 text-blue-900 dark:border-blue-800/50 dark:bg-blue-950/30 dark:text-blue-100"
+                              : "border-purple-200 bg-purple-50/50 text-purple-900 dark:border-purple-800/50 dark:bg-purple-950/30 dark:text-purple-100"
+                          }`}
+                        >
+                          {(profileData as Minister | Member)?.email ||
                             "Not provided"}
+                        </div>
                       </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-muted-foreground text-sm">
-                        Gender
-                      </Label>
-                      <div className="border-input bg-muted h-10 rounded-md border px-3 py-2 text-sm capitalize">
-                        {(profileData as Minister | Member)?.gender ||
-                          "Not specified"}
+                      <div className="space-y-2">
+                        <Label
+                          className={`text-sm font-medium ${
+                            scannedData.type === "member"
+                              ? "text-blue-700 dark:text-blue-300"
+                              : "text-purple-700 dark:text-purple-300"
+                          }`}
+                        >
+                          Phone
+                        </Label>
+                        <div
+                          className={`h-10 rounded-md border px-3 py-2 text-sm ${
+                            scannedData.type === "member"
+                              ? "border-blue-200 bg-blue-50/50 text-blue-900 dark:border-blue-800/50 dark:bg-blue-950/30 dark:text-blue-100"
+                              : "border-purple-200 bg-purple-50/50 text-purple-900 dark:border-purple-800/50 dark:bg-purple-950/30 dark:text-purple-100"
+                          }`}
+                        >
+                          {scannedData.type === "member"
+                            ? (profileData as Member)?.mobileNumber ||
+                              "Not provided"
+                            : (profileData as Minister)?.telephone ||
+                              "Not provided"}
+                        </div>
                       </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-muted-foreground text-sm">
-                        {scannedData.type === "member"
-                          ? "Year Joined"
-                          : "Civil Status"}
-                      </Label>
-                      <div className="border-input bg-muted h-10 rounded-md border px-3 py-2 text-sm capitalize">
-                        {scannedData.type === "member"
-                          ? (profileData as Member)?.yearJoined ||
-                            "Not provided"
-                          : (profileData as Minister)?.civilStatus ||
-                            "Not provided"}
+                      <div className="space-y-2">
+                        <Label
+                          className={`text-sm font-medium ${
+                            scannedData.type === "member"
+                              ? "text-blue-700 dark:text-blue-300"
+                              : "text-purple-700 dark:text-purple-300"
+                          }`}
+                        >
+                          Gender
+                        </Label>
+                        <div
+                          className={`h-10 rounded-md border px-3 py-2 text-sm capitalize ${
+                            scannedData.type === "member"
+                              ? "border-blue-200 bg-blue-50/50 text-blue-900 dark:border-blue-800/50 dark:bg-blue-950/30 dark:text-blue-100"
+                              : "border-purple-200 bg-purple-50/50 text-purple-900 dark:border-purple-800/50 dark:bg-purple-950/30 dark:text-purple-100"
+                          }`}
+                        >
+                          {(profileData as Minister | Member)?.gender ||
+                            "Not specified"}
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label
+                          className={`text-sm font-medium ${
+                            scannedData.type === "member"
+                              ? "text-blue-700 dark:text-blue-300"
+                              : "text-purple-700 dark:text-purple-300"
+                          }`}
+                        >
+                          {scannedData.type === "member"
+                            ? "Year Joined"
+                            : "Civil Status"}
+                        </Label>
+                        <div
+                          className={`h-10 rounded-md border px-3 py-2 text-sm capitalize ${
+                            scannedData.type === "member"
+                              ? "border-blue-200 bg-blue-50/50 text-blue-900 dark:border-blue-800/50 dark:bg-blue-950/30 dark:text-blue-100"
+                              : "border-purple-200 bg-purple-50/50 text-purple-900 dark:border-purple-800/50 dark:bg-purple-950/30 dark:text-purple-100"
+                          }`}
+                        >
+                          {scannedData.type === "member"
+                            ? (profileData as Member)?.yearJoined ||
+                              "Not provided"
+                            : (profileData as Minister)?.civilStatus ||
+                              "Not provided"}
+                        </div>
                       </div>
                     </div>
                   </div>
                 ) : null}
 
                 {/* Actions */}
-                <div className="flex flex-wrap gap-3">
-                  {isLoadingProfile ? (
-                    <div className="flex gap-3">
-                      <div className="bg-muted h-10 w-20 animate-pulse rounded-md" />
-                      <div className="bg-muted h-10 w-20 animate-pulse rounded-md" />
-                      <div className="bg-muted h-10 w-32 animate-pulse rounded-md" />
-                    </div>
-                  ) : profileData && !isLoadingProfile ? (
-                    <>
-                      <Button onClick={handleView}>
-                        <Eye className="mr-2 h-4 w-4" />
-                        View
-                      </Button>
-                      <Button variant="outline" onClick={handleEdit}>
-                        <Edit className="mr-2 h-4 w-4" />
-                        Edit
-                      </Button>
-                      <Button
-                        disabled={isDownloadingPDF}
-                        variant="outline"
-                        onClick={handlePDFDownload}
-                      >
-                        <Download className="mr-2 h-4 w-4" />
-                        {isDownloadingPDF ? "Downloading..." : "Download PDF"}
-                      </Button>
-                    </>
-                  ) : null}
-                  <PersonQRCode
-                    id={scannedData.id}
-                    name={profileName}
-                    trigger={
-                      <Button variant="outline">
-                        <QrCode className="mr-2 h-4 w-4" />
-                        QR Code
-                      </Button>
-                    }
-                    type={scannedData.type}
-                  />
+                <div
+                  className={`rounded-lg border p-4 ${
+                    scannedData.type === "member"
+                      ? "border-blue-200/30 bg-gradient-to-r from-blue-50/30 to-slate-50/20 dark:border-blue-800/20 dark:from-blue-950/20 dark:to-slate-950/10"
+                      : "border-purple-200/30 bg-gradient-to-r from-purple-50/30 to-indigo-50/20 dark:border-purple-800/20 dark:from-purple-950/20 dark:to-indigo-950/10"
+                  }`}
+                >
+                  <div className="mb-3">
+                    <h4
+                      className={`text-sm font-semibold ${
+                        scannedData.type === "member"
+                          ? "text-blue-800 dark:text-blue-200"
+                          : "text-purple-800 dark:text-purple-200"
+                      }`}
+                    >
+                      Available Actions
+                    </h4>
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    {isLoadingProfile ? (
+                      <div className="flex gap-3">
+                        <div
+                          className={`h-10 w-20 animate-pulse rounded-md ${
+                            scannedData.type === "member"
+                              ? "bg-blue-200 dark:bg-blue-800/50"
+                              : "bg-purple-200 dark:bg-purple-800/50"
+                          }`}
+                        />
+                        <div
+                          className={`h-10 w-20 animate-pulse rounded-md ${
+                            scannedData.type === "member"
+                              ? "bg-blue-100 dark:bg-blue-900/30"
+                              : "bg-purple-100 dark:bg-purple-900/30"
+                          }`}
+                        />
+                        <div
+                          className={`h-10 w-32 animate-pulse rounded-md ${
+                            scannedData.type === "member"
+                              ? "bg-blue-200 dark:bg-blue-800/50"
+                              : "bg-purple-200 dark:bg-purple-800/50"
+                          }`}
+                        />
+                      </div>
+                    ) : profileData && !isLoadingProfile ? (
+                      <>
+                        <Button
+                          className={
+                            scannedData.type === "member"
+                              ? "bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
+                              : "bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700"
+                          }
+                          onClick={handleView}
+                        >
+                          <Eye className="mr-2 h-4 w-4" />
+                          View Details
+                        </Button>
+                        <Button
+                          className={
+                            scannedData.type === "member"
+                              ? "border-blue-300 text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-950/50"
+                              : "border-purple-300 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-950/50"
+                          }
+                          variant="outline"
+                          onClick={handleEdit}
+                        >
+                          <Edit className="mr-2 h-4 w-4" />
+                          Edit Profile
+                        </Button>
+                        <Button
+                          className={`${
+                            scannedData.type === "member"
+                              ? "border-blue-300 text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-950/50"
+                              : "border-purple-300 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-950/50"
+                          } ${isDownloadingPDF ? "cursor-not-allowed opacity-50" : ""}`}
+                          disabled={isDownloadingPDF}
+                          variant="outline"
+                          onClick={handlePDFDownload}
+                        >
+                          <Download className="mr-2 h-4 w-4" />
+                          {isDownloadingPDF ? "Downloading..." : "Download PDF"}
+                        </Button>
+                      </>
+                    ) : null}
+                    <PersonQRCode
+                      id={scannedData.id}
+                      name={profileName}
+                      trigger={
+                        <Button
+                          className={
+                            scannedData.type === "member"
+                              ? "border-blue-300 text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-950/50"
+                              : "border-purple-300 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-950/50"
+                          }
+                          variant="outline"
+                        >
+                          <QrCode className="mr-2 h-4 w-4" />
+                          Generate QR
+                        </Button>
+                      }
+                      type={scannedData.type}
+                    />
+                  </div>
                 </div>
               </div>
             ) : (

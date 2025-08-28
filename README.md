@@ -1,1 +1,3 @@
-- Minister Application Submitted Successfully!
+- can you add here new members for the last month.
+- create me api for new members for the past month please in order
+- show me each member with their specified church
