@@ -231,6 +231,11 @@ const ContactActions = ({ contact }: ContactActionsProps) => {
 // Define table columns
 const columns: ColumnDef<ContactSubmission>[] = [
   {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => <ContactActions contact={row.original} />,
+  },
+  {
     accessorKey: "id",
     header: ({ column }) => (
       <Button
@@ -349,11 +354,6 @@ const columns: ColumnDef<ContactSubmission>[] = [
         </div>
       );
     },
-  },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => <ContactActions contact={row.original} />,
   },
 ];
 
