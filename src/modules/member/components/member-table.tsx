@@ -49,6 +49,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { QRAction } from "@/components/ui/qr-action";
 import {
   Table,
   TableBody,
@@ -161,6 +162,7 @@ const MemberActions = ({ member }: MemberActionsProps) => {
             <FileTextIcon className="mr-2 h-4 w-4" />
             {isDownloadingPDF ? "Downloading..." : "PDF Download"}
           </DropdownMenuItem>
+          <QRAction id={member.id} name={getFullName()} type="member" />
           <DropdownMenuItem onClick={() => setIsViewDialogOpen(true)}>
             <Eye className="mr-2 h-4 w-4" />
             View

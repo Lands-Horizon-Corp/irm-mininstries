@@ -12,6 +12,7 @@ import {
   Mail,
   MoreHorizontal,
   Phone,
+  QrCode,
   Trash2,
 } from "lucide-react";
 
@@ -34,6 +35,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { PersonQRCode } from "@/components/ui/person-qr-code";
 import type { Member } from "@/modules/member/member-schema";
 
 interface MemberCardProps {
@@ -132,6 +134,17 @@ export function MemberCard({
                         Download PDF
                       </DropdownMenuItem>
                     )}
+                    <PersonQRCode
+                      id={member.id}
+                      name={fullName}
+                      trigger={
+                        <DropdownMenuItem>
+                          <QrCode className="mr-2 h-4 w-4" />
+                          Download QR
+                        </DropdownMenuItem>
+                      }
+                      type="member"
+                    />
                     <DropdownMenuSeparator />
                     {onDelete && (
                       <DropdownMenuItem

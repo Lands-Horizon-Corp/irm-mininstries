@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 import {
@@ -11,6 +13,7 @@ import {
 
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
+import { DashboardQRScanner } from "@/components/ui/dashboard-qr-scanner";
 
 const quickLinks = [
   {
@@ -77,32 +80,38 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Quick Links Grid */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {quickLinks.map((link) => {
-              const IconComponent = link.icon;
-              return (
-                <Link href={link.href} key={link.href}>
-                  <Card className="group cursor-pointer p-6 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg">
-                    <div className="flex items-start space-x-4">
-                      <div
-                        className={`${link.bgColor} flex h-12 w-12 items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-110`}
-                      >
-                        <IconComponent className={`h-6 w-6 ${link.color}`} />
+          {/* Content Grid */}
+          <div className="space-y-6">
+            {/* QR Scanner - Full Width */}
+            <DashboardQRScanner />
+
+            {/* Quick Links Grid */}
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {quickLinks.map((link) => {
+                const IconComponent = link.icon;
+                return (
+                  <Link href={link.href} key={link.href}>
+                    <Card className="group cursor-pointer p-6 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg">
+                      <div className="flex items-start space-x-4">
+                        <div
+                          className={`${link.bgColor} flex h-12 w-12 items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-110`}
+                        >
+                          <IconComponent className={`h-6 w-6 ${link.color}`} />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-foreground group-hover:text-primary mb-2 text-lg font-semibold transition-colors duration-200">
+                            {link.title}
+                          </h3>
+                          <p className="text-muted-foreground text-sm">
+                            {link.subtitle}
+                          </p>
+                        </div>
                       </div>
-                      <div className="flex-1">
-                        <h3 className="text-foreground group-hover:text-primary mb-2 text-lg font-semibold transition-colors duration-200">
-                          {link.title}
-                        </h3>
-                        <p className="text-muted-foreground text-sm">
-                          {link.subtitle}
-                        </p>
-                      </div>
-                    </div>
-                  </Card>
-                </Link>
-              );
-            })}
+                    </Card>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
 
           {/* Welcome Message */}

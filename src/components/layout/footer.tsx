@@ -68,20 +68,20 @@ export function Footer() {
             </h3>
             <ul className="mt-4 space-y-3">
               <li>
-                <a
+                <Link
                   className="text-muted-foreground hover:text-foreground text-sm transition-colors sm:text-base"
                   href="/privacy"
                 >
                   Privacy Policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   className="text-muted-foreground hover:text-foreground text-sm transition-colors sm:text-base"
                   href="/terms"
                 >
                   Terms of Service
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -101,12 +101,12 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a
+                <Link
                   className="text-muted-foreground hover:text-foreground text-sm transition-colors sm:text-base"
                   href="/contact"
                 >
                   Contact Us
-                </a>
+                </Link>
               </li>
               <li>
                 <div className="mt-4">

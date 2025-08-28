@@ -13,6 +13,7 @@ import {
   MapPin,
   MoreHorizontal,
   Phone,
+  QrCode,
   Trash2,
 } from "lucide-react";
 
@@ -34,6 +35,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { PersonQRCode } from "@/components/ui/person-qr-code";
 import type { ministers } from "@/modules/ministry/ministry-schema";
 
 type Minister = typeof ministers.$inferSelect;
@@ -148,6 +150,17 @@ export function MinisterCard({
                     Download PDF
                   </DropdownMenuItem>
                 )}
+                <PersonQRCode
+                  id={minister.id}
+                  name={fullName}
+                  trigger={
+                    <DropdownMenuItem>
+                      <QrCode className="mr-2 h-4 w-4" />
+                      Download QR
+                    </DropdownMenuItem>
+                  }
+                  type="minister"
+                />
                 <DropdownMenuSeparator />
                 {onDelete && (
                   <DropdownMenuItem

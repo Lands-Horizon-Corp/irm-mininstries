@@ -27,6 +27,8 @@ interface QRCodeDialogProps {
   filename?: string;
   size?: number;
   className?: string;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 export function QRCodeDialog({
@@ -37,10 +39,22 @@ export function QRCodeDialog({
   filename,
   size = 256,
   className = "",
+  isOpen,
+  onClose,
 }: QRCodeDialogProps) {
   const [copied, setCopied] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
   const qrRef = useRef<HTMLDivElement>(null);
+
+  // Use controlled state if provided, otherwise use internal state
+  const dialogIsOpen = isOpen !== undefined ? isOpen : internalIsOpen;
+  const handleOpenChange = (open: boolean) => {
+    if (onClose !== undefined) {
+      if (!open) onClose();
+    } else {
+      setInternalIsOpen(open);
+    }
+  };
 
   const handleCopyLink = async () => {
     try {
@@ -213,7 +227,7 @@ export function QRCodeDialog({
   );
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={dialogIsOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{trigger || defaultTrigger}</DialogTrigger>
       <DialogContent className="max-w-md">
         <DialogHeader>
