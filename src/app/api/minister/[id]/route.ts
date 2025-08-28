@@ -192,6 +192,7 @@ export async function PUT(
     const [updatedMinister] = await db
       .update(ministers)
       .set({
+        biography: validatedData.biography,
         firstName: validatedData.firstName,
         lastName: validatedData.lastName,
         middleName: validatedData.middleName,

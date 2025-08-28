@@ -25,10 +25,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
 
 import type { StepProps } from "../../ministry-validation";
 
 const personalInformationSchema = z.object({
+  biography: z.string().optional(),
   firstName: z.string().min(1, { message: "First name is required" }),
   lastName: z.string().min(1, { message: "Last name is required" }),
   middleName: z.string().optional(),
@@ -60,6 +62,7 @@ export function PersonalInformation({
   const form = useForm<FormValues>({
     resolver: zodResolver(personalInformationSchema),
     defaultValues: {
+      biography: formData.biography || "",
       firstName: formData.firstName || "",
       lastName: formData.lastName || "",
       middleName: formData.middleName || "",
@@ -123,6 +126,31 @@ export function PersonalInformation({
             </CardHeader>
 
             <CardContent className="space-y-3 px-3 pb-3 sm:space-y-6 sm:px-6 sm:pb-6">
+              {/* Biography Field */}
+              <FormField
+                control={form.control}
+                name="biography"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium sm:text-base">
+                      Biography
+                      <span className="ml-2 text-sm font-normal text-current/50">
+                        (Tell us something about yourself)
+                      </span>
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        className="min-h-[100px] text-sm sm:text-base"
+                        placeholder="Share your story, background, interests, or anything that helps us know you better..."
+                        value={field.value || ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
                 <FormField
                   control={form.control}

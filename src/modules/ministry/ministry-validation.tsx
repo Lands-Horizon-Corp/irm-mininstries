@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const ministerSchema = z.object({
   id: z.number().int().optional(),
+  biography: z.string().optional().nullable(),
 
   // ==================== STEP 1: PERSONAL INFORMATION ====================
   firstName: z.string(),

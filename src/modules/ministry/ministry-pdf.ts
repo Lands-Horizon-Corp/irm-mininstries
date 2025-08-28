@@ -4,6 +4,7 @@ import jsPDF from "jspdf";
 // Types for the PDF generation
 interface MinisterPDFData {
   // Personal Information
+  biography?: string | null;
   firstName: string;
   middleName?: string | null;
   lastName: string;
@@ -382,7 +383,15 @@ export async function generateMinisterPDF(
     addField("Date of Birth", formatDate(ministerData.dateOfBirth), true, dobY);
     addField("Place of Birth", ministerData.placeOfBirth, false, dobY);
 
-    const genderY = personalStartY + 24;
+    // Biography field (full width)
+    let biographyY = personalStartY + 24;
+    if (ministerData.biography) {
+      checkPageBreak(40);
+      addField("Biography", ministerData.biography, true, biographyY);
+      biographyY += 20;
+    }
+
+    const genderY = biographyY;
     addField("Gender", formatGender(ministerData.gender), true, genderY);
     addField(
       "Civil Status",
@@ -391,7 +400,7 @@ export async function generateMinisterPDF(
       genderY
     );
 
-    const physicalY = personalStartY + 36;
+    const physicalY = genderY + 12;
     addField(
       "Height",
       ministerData.heightFeet ? `${ministerData.heightFeet} ft` : null,
@@ -405,7 +414,7 @@ export async function generateMinisterPDF(
       physicalY
     );
 
-    yPosition = Math.max(personalStartY + 48, yPosition);
+    yPosition = Math.max(physicalY + 12, yPosition);
 
     // Contact & Government Information
     addSectionHeader("CONTACT & GOVERNMENT INFORMATION");

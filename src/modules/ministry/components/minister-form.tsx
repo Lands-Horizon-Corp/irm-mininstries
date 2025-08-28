@@ -118,6 +118,7 @@ export function MinisterForm({
 
     return {
       // Personal Information
+      biography: "",
       firstName: "",
       lastName: "",
       middleName: "",

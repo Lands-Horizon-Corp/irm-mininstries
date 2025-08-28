@@ -139,6 +139,7 @@ export async function POST(request: NextRequest) {
     const [newMinister] = await db
       .insert(ministers)
       .values({
+        biography: validatedData.biography,
         firstName: validatedData.firstName,
         lastName: validatedData.lastName,
         middleName: validatedData.middleName,
