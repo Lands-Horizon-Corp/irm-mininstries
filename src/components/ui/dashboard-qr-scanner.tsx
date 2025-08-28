@@ -19,6 +19,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { ImageViewer } from "@/components/ui/image-viewer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PersonQRCode } from "@/components/ui/person-qr-code";
@@ -58,6 +59,7 @@ export function DashboardQRScanner({
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
+  const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
 
   // Use hooks to fetch profile data based on scanned ID
   const { data: memberData, isLoading: memberLoading } = useMember(
@@ -414,7 +416,6 @@ export function DashboardQRScanner({
     };
   }, [stopCamera]);
 
-  // Get profile data
   const profileData =
     scannedData?.type === "member" ? memberData?.data : ministerData?.data;
 
@@ -427,6 +428,18 @@ export function DashboardQRScanner({
     : scannedData
       ? `${scannedData.type === "member" ? "Member" : "Minister"} #${scannedData.id}`
       : "Unknown";
+
+  useEffect(() => {
+    if (scannedData && profileData && !isLoadingProfile) {
+      const personType = scannedData.type === "member" ? "Member" : "Minister";
+      const personName = `${profileData.firstName} ${profileData.lastName}`;
+      toast.success(`${personType} profile loaded: ${personName}`, {
+        description: `Successfully scanned QR code for ${personType} #${scannedData.id}`,
+      });
+    }
+  }, [isLoadingProfile, profileData, scannedData]);
+
+  // Get profile data
 
   return (
     <Card className="col-span-full">
@@ -598,8 +611,22 @@ export function DashboardQRScanner({
                     </div>
                   ) : (
                     <div className="flex items-center gap-4">
-                      <Avatar className="h-16 w-16">
+                      <Avatar
+                        className="h-16 w-16 cursor-pointer transition-opacity hover:opacity-80"
+                        onClick={() => {
+                          const imageUrl =
+                            profileData && scannedData.type === "member"
+                              ? (profileData as Member)?.profilePicture
+                              : profileData && scannedData.type === "minister"
+                                ? (profileData as Minister)?.imageUrl
+                                : null;
+                          if (imageUrl) {
+                            setIsImageViewerOpen(true);
+                          }
+                        }}
+                      >
                         <AvatarImage
+                          className="object-cover"
                           src={
                             profileData && scannedData.type === "member"
                               ? (profileData as Member)?.profilePicture ||
@@ -788,6 +815,20 @@ export function DashboardQRScanner({
           onClose={() => setIsEditDialogOpen(false)}
         />
       )}
+
+      {/* Image Viewer for profile pictures */}
+      <ImageViewer
+        alt={`${profileName} profile picture`}
+        isOpen={isImageViewerOpen}
+        src={
+          profileData && scannedData?.type === "member"
+            ? (profileData as Member)?.profilePicture || null
+            : profileData && scannedData?.type === "minister"
+              ? (profileData as Minister)?.imageUrl || null
+              : null
+        }
+        onClose={() => setIsImageViewerOpen(false)}
+      />
     </Card>
   );
 }
