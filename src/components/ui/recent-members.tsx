@@ -13,6 +13,7 @@ import {
   Trash2,
   User,
 } from "lucide-react";
+import { format, formatDistanceToNow } from "date-fns";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -243,11 +244,11 @@ export function RecentMembers() {
   }, []);
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
+    return format(new Date(dateString), "MMM d, yyyy");
+  };
+
+  const getTimeAgo = (dateString: string) => {
+    return formatDistanceToNow(new Date(dateString), { addSuffix: true });
   };
 
   const getInitials = (firstName: string, lastName: string) => {
@@ -360,7 +361,8 @@ export function RecentMembers() {
                     <div className="mt-1 flex items-center gap-1">
                       <Calendar className="text-muted-foreground h-3 w-3" />
                       <span className="text-muted-foreground text-xs">
-                        Joined {formatDate(member.createdAt)}
+                        Joined {getTimeAgo(member.createdAt)} (
+                        {formatDate(member.createdAt)})
                       </span>
                     </div>
                   </div>
