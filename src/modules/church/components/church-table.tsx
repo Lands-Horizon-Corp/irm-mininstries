@@ -420,9 +420,12 @@ export default function ChurchTable() {
               {/* Church Information */}
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between gap-2">
-                  <h3 className="group-hover:text-primary line-clamp-2 text-lg leading-tight font-semibold transition-colors">
+                  <Link
+                    className="group-hover:text-primary line-clamp-2 text-lg leading-tight font-semibold transition-colors"
+                    href={`/admin/churches/view/${church.id}`}
+                  >
                     {church.name}
-                  </h3>
+                  </Link>
                   <Badge className="shrink-0 text-xs" variant="outline">
                     #{church.id}
                   </Badge>

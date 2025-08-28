@@ -11,6 +11,7 @@ import {
   Building2,
   Calendar,
   Edit,
+  ExternalLink,
   Mail,
   MapPin,
   QrCode,
@@ -331,9 +332,35 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
                     <MapPin className="text-muted-foreground h-4 w-4" />
                     <span className="font-medium">Address</span>
                   </div>
-                  <p className="text-muted-foreground text-sm">
-                    {church.address}
-                  </p>
+                  {church.latitude && church.longitude ? (
+                    <a
+                      className="group/map hover:bg-muted/50 -m-1 flex items-start gap-2 rounded p-1 transition-colors"
+                      href={`https://www.google.com/maps?q=${church.latitude},${church.longitude}`}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      title="Open in Google Maps"
+                    >
+                      <div className="flex items-start gap-2">
+                        <MapPin className="text-primary group-hover/map:text-primary/80 mt-0.5 h-4 w-4 shrink-0 transition-colors" />
+                        <div className="flex-1">
+                          <p className="text-muted-foreground group-hover/map:text-foreground line-clamp-2 text-sm transition-colors">
+                            {church.address}
+                          </p>
+                        </div>
+                        <ExternalLink className="text-muted-foreground group-hover/map:text-primary mt-0.5 h-3 w-3 shrink-0 transition-colors" />
+                      </div>
+                    </a>
+                  ) : (
+                    <div className="flex items-start gap-2">
+                      <MapPin className="text-muted-foreground mt-0.5 h-4 w-4 shrink-0" />
+                      <p
+                        className="text-muted-foreground line-clamp-2 text-sm"
+                        title={church.address || undefined}
+                      >
+                        {church.address}
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-2">
