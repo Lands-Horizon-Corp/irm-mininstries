@@ -7,6 +7,11 @@ import { z } from "zod";
 import { db } from "@/db/drizzle";
 import { churches } from "@/modules/church/church-schema";
 import { churchSchema } from "@/modules/church/church-validation";
+import { members } from "@/modules/member/member-schema";
+import {
+  ministerMinistryRecords,
+  ministers,
+} from "@/modules/ministry/ministry-schema";
 
 // GET - Get church by ID
 export async function GET(
@@ -205,23 +210,56 @@ export async function DELETE(
       );
     }
 
-    // TODO: Check if the church is being used by any ministers
-    // You might want to prevent deletion if it's in use
-    // const ministersInChurch = await db
-    //   .select()
-    //   .from(ministerMinistryRecords)
-    //   .where(eq(ministerMinistryRecords.churchLocationId, id));
+    // Check if the church has any members
+    const membersInChurch = await db
+      .select()
+      .from(members)
+      .where(eq(members.churchId, id));
 
-    // if (ministersInChurch.length > 0) {
-    //   return NextResponse.json(
-    //     {
-    //       success: false,
-    //       error: "Cannot delete",
-    //       message: "This church is being used by one or more ministers",
-    //     },
-    //     { status: 409 }
-    //   );
-    // }
+    if (membersInChurch.length > 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Cannot delete",
+          message: `This church cannot be deleted because it has ${membersInChurch.length} member${membersInChurch.length !== 1 ? "s" : ""} associated with it. Please reassign or remove the members first.`,
+        },
+        { status: 409 }
+      );
+    }
+
+    // Check if the church has any ministers
+    const ministersInChurch = await db
+      .select()
+      .from(ministers)
+      .where(eq(ministers.churchId, id));
+
+    if (ministersInChurch.length > 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Cannot delete",
+          message: `This church cannot be deleted because it has ${ministersInChurch.length} minister${ministersInChurch.length !== 1 ? "s" : ""} associated with it. Please reassign or remove the ministers first.`,
+        },
+        { status: 409 }
+      );
+    }
+
+    // Check if the church is being used in any ministry records
+    const ministryRecordsInChurch = await db
+      .select()
+      .from(ministerMinistryRecords)
+      .where(eq(ministerMinistryRecords.churchLocationId, id));
+
+    if (ministryRecordsInChurch.length > 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Cannot delete",
+          message: `This church cannot be deleted because it has ${ministryRecordsInChurch.length} ministry record${ministryRecordsInChurch.length !== 1 ? "s" : ""} associated with it. Please remove the ministry records first.`,
+        },
+        { status: 409 }
+      );
+    }
 
     // Delete the church
     await db.delete(churches).where(eq(churches.id, id));
