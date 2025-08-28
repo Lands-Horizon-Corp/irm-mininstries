@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import { Facebook, Youtube } from "lucide-react";
 
+import { ModeToggle } from "../ui/theme-toggle";
+
 export function Footer() {
   return (
     <footer className="bg-muted/30 border-t">
@@ -18,6 +20,9 @@ export function Footer() {
               <br />
               <span className="text-primary/80">NIV: 1 John 4:18</span>
             </p>
+            <div className="mt-4">
+              <ModeToggle />
+            </div>
           </div>
 
           {/* Links Section */}

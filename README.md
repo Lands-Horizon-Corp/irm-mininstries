@@ -1,1 +1,1 @@
-- Dark mode light mode in footer
+- Minister Application Submitted Successfully!
