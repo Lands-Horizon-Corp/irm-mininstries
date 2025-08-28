@@ -9,12 +9,13 @@ import { ministers } from "@/modules/ministry/ministry-schema";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const churchId = parseInt(params.id);
+    const { id: idString } = await params;
+    const id = parseInt(idString);
 
-    if (isNaN(churchId)) {
+    if (isNaN(id)) {
       return NextResponse.json(
         {
           success: false,
@@ -29,7 +30,7 @@ export async function GET(
     const church = await db
       .select({ name: churches.name })
       .from(churches)
-      .where(eq(churches.id, churchId))
+      .where(eq(churches.id, id))
       .limit(1);
 
     if (church.length === 0) {
@@ -90,7 +91,7 @@ export async function GET(
         updatedAt: ministers.updatedAt,
       })
       .from(ministers)
-      .where(eq(ministers.churchId, churchId))
+      .where(eq(ministers.churchId, id))
       .orderBy(asc(ministers.createdAt));
 
     // Transform data for Excel export
