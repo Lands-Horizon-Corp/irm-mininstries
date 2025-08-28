@@ -70,27 +70,27 @@ export function MinisterCard({
   return (
     <>
       <Card
-        className="group border-border/50 from-background relative overflow-hidden bg-gradient-to-br to-purple-50/30 transition-all duration-300 hover:scale-[1.02] hover:border-purple-200 hover:shadow-lg"
+        className="group border-border/50 from-background to-muted/30 hover:border-primary/20 relative overflow-hidden bg-gradient-to-br transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-purple-500 to-indigo-600" />
+        <div className="from-primary to-primary/80 absolute top-0 left-0 h-1 w-full bg-gradient-to-r" />
 
         <CardContent className="p-6">
           <div className="mb-4 flex items-start gap-4">
             <div className="relative">
-              <Avatar className="h-16 w-16 ring-2 ring-purple-100 ring-offset-2 transition-all duration-300 group-hover:ring-purple-200">
+              <Avatar className="ring-primary/20 group-hover:ring-primary/30 h-16 w-16 ring-2 ring-offset-2 transition-all duration-300">
                 <AvatarImage
                   alt={fullName}
                   className="object-cover"
                   src={minister.imageUrl || undefined}
                 />
-                <AvatarFallback className="bg-gradient-to-br from-purple-100 to-indigo-100 text-lg font-semibold text-purple-700">
+                <AvatarFallback className="from-primary/10 to-primary/20 text-primary bg-gradient-to-br text-lg font-semibold">
                   {initials}
                 </AvatarFallback>
               </Avatar>
-              <div className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 shadow-sm">
-                <Crown className="h-3 w-3 text-white" />
+              <div className="from-primary to-primary/80 absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br shadow-sm">
+                <Crown className="text-primary-foreground h-3 w-3" />
               </div>
             </div>
 
@@ -100,14 +100,14 @@ export function MinisterCard({
               </h3>
 
               <div className="mb-2 flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-800 capitalize">
+                <span className="bg-primary/10 text-primary inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium capitalize">
                   {minister.gender}
                 </span>
-                <span className="inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800 capitalize">
+                <span className="bg-secondary/80 text-secondary-foreground inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium capitalize">
                   {minister.civilStatus}
                 </span>
                 {minister.nickname && (
-                  <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700 italic">
+                  <span className="bg-muted text-muted-foreground inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium italic">
                     &quot;{minister.nickname}&quot;
                   </span>
                 )}
@@ -179,8 +179,8 @@ export function MinisterCard({
             <div className="mb-4 flex flex-wrap gap-3">
               {minister.email && (
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100">
-                    <Mail className="h-4 w-4 text-purple-600" />
+                  <div className="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full">
+                    <Mail className="text-primary h-4 w-4" />
                   </div>
                   <span className="text-muted-foreground max-w-[180px] truncate text-sm">
                     {minister.email}
@@ -189,8 +189,8 @@ export function MinisterCard({
               )}
               {minister.telephone && (
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100">
-                    <Phone className="h-4 w-4 text-indigo-600" />
+                  <div className="bg-secondary/60 flex h-8 w-8 items-center justify-center rounded-full">
+                    <Phone className="text-secondary-foreground h-4 w-4" />
                   </div>
                   <span className="text-muted-foreground text-sm">
                     {minister.telephone}
@@ -202,16 +202,16 @@ export function MinisterCard({
 
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100">
-                <Calendar className="h-4 w-4 text-slate-600" />
+              <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-full">
+                <Calendar className="text-muted-foreground h-4 w-4" />
               </div>
               <span className="text-muted-foreground text-sm">
                 Born {format(new Date(minister.dateOfBirth), "MMMM yyyy")}
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100">
-                <MapPin className="h-4 w-4 text-slate-600" />
+              <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-full">
+                <MapPin className="text-muted-foreground h-4 w-4" />
               </div>
               <span className="text-muted-foreground text-sm">
                 {minister.placeOfBirth}

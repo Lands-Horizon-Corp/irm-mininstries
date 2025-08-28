@@ -283,6 +283,81 @@ export function MinisterForm({
         const result = await createMinister.mutateAsync(formData);
 
         if (result.success && result.data) {
+          // Reset form data to initial state on successful creation
+          setMinister({
+            // Personal Information
+            churchId: 0,
+            biography: "",
+            firstName: "",
+            lastName: "",
+            middleName: "",
+            suffix: "",
+            nickname: "",
+            dateOfBirth: new Date(),
+            placeOfBirth: "",
+            gender: "male",
+            heightFeet: "",
+            weightKg: "",
+            civilStatus: "single",
+            imageUrl: "",
+
+            // Contact Information
+            email: "",
+            telephone: "",
+            address: "",
+            presentAddress: "",
+            permanentAddress: "",
+
+            // Government & Identification
+            passportNumber: "",
+            sssNumber: "",
+            philhealth: "",
+            tin: "",
+
+            // Family Information
+            fatherName: "",
+            fatherProvince: "",
+            fatherBirthday: new Date(),
+            fatherOccupation: "",
+            motherName: "",
+            motherProvince: "",
+            motherBirthday: new Date(),
+            motherOccupation: "",
+
+            // Spouse Information
+            spouseName: "",
+            spouseProvince: "",
+            spouseBirthday: undefined,
+            spouseOccupation: "",
+            weddingDate: undefined,
+
+            // Skills & Interests
+            skills: "",
+            hobbies: "",
+            sports: "",
+            otherReligiousSecularTraining: "",
+
+            // Certification & Signatures
+            certifiedBy: "",
+            signatureImageUrl: "",
+            signatureByCertifiedImageUrl: "",
+
+            // Relations (initially empty arrays)
+            children: [],
+            emergencyContacts: [],
+            educationBackgrounds: [],
+            ministryExperiences: [],
+            ministrySkills: [],
+            ministryRecords: [],
+            awardsRecognitions: [],
+            employmentRecords: [],
+            seminarsConferences: [],
+            caseReports: [],
+          });
+
+          // Reset to first step
+          setCurrentStep(FormStep.PERSONAL_INFORMATION);
+
           if (onSuccess) {
             onSuccess();
           } else if (isDialog && onClose) {
