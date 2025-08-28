@@ -19,17 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-import type { Minister } from "../../ministry-validation";
-
-interface StepProps {
-  formData: Minister;
-  updateMinisterData: (
-    field: keyof Minister,
-    value: string | boolean | Date | string[] | File | null
-  ) => void;
-  onNext: () => void;
-  onBack: () => void;
-}
+import type { Minister, StepProps } from "../../ministry-validation";
 
 const seminarConferenceSchema = z.object({
   id: z.number().int().optional(),
@@ -41,8 +31,8 @@ const seminarConferenceSchema = z.object({
     .number()
     .int()
     .min(1, { message: "Number of hours must be at least 1" }),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  createdAt: z.any().optional(),
+  updatedAt: z.any().optional(),
 });
 
 const seminarsConferencesSchema = z.object({

@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
@@ -11,6 +13,7 @@ import { Base64ImageUpload } from "@/components/ui/base64-image-upload";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChurchSelect } from "@/components/ui/church-select";
 import {
   Form,
   FormControl,
@@ -25,20 +28,20 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
-import type { Minister } from "../../ministry-validation";
-
-interface StepProps {
-  formData: Minister;
-  updateMinisterData: (
-    field: keyof Minister,
-    value: string | boolean | Date | string[] | File | null
-  ) => void;
-  onNext: () => void;
-  onBack: () => void;
-}
+import type { StepProps } from "../../ministry-validation";
 
 const personalInformationSchema = z.object({
+  churchId: z.number().min(1, { message: "Church designation is required" }),
+  biography: z.string().optional(),
   firstName: z.string().min(1, { message: "First name is required" }),
   lastName: z.string().min(1, { message: "Last name is required" }),
   middleName: z.string().optional(),
@@ -67,9 +70,18 @@ export function PersonalInformation({
   onNext,
   onBack,
 }: StepProps) {
+  const searchParams = useSearchParams();
+  const urlChurchId = searchParams.get("churchId");
+
+  // Parse the church ID from URL params if available
+  const churchIdFromUrl = urlChurchId ? parseInt(urlChurchId, 10) : null;
+  const initialChurchId = churchIdFromUrl || formData.churchId || 0;
+
   const form = useForm<FormValues>({
     resolver: zodResolver(personalInformationSchema),
     defaultValues: {
+      churchId: initialChurchId,
+      biography: formData.biography || "",
       firstName: formData.firstName || "",
       lastName: formData.lastName || "",
       middleName: formData.middleName || "",
@@ -85,6 +97,13 @@ export function PersonalInformation({
     },
     mode: "onBlur",
   });
+
+  // Update form when URL church ID changes
+  useEffect(() => {
+    if (churchIdFromUrl && churchIdFromUrl !== form.getValues("churchId")) {
+      form.setValue("churchId", churchIdFromUrl);
+    }
+  }, [churchIdFromUrl, form]);
 
   const onSubmit = async (values: FormValues) => {
     const valid = await form.trigger();
@@ -106,7 +125,16 @@ export function PersonalInformation({
     Object.keys(values).forEach((key) => {
       const value = values[key as keyof FormValues];
       if (value !== undefined) {
-        updateMinisterData(key as keyof FormValues, value);
+        // Handle different value types
+        if (typeof value === "number") {
+          updateMinisterData(key as keyof FormValues, value.toString());
+        } else if (
+          typeof value === "string" ||
+          typeof value === "boolean" ||
+          value instanceof Date
+        ) {
+          updateMinisterData(key as keyof FormValues, value);
+        }
       }
     });
 
@@ -133,6 +161,57 @@ export function PersonalInformation({
             </CardHeader>
 
             <CardContent className="space-y-3 px-3 pb-3 sm:space-y-6 sm:px-6 sm:pb-6">
+              {/* Biography Field */}
+              <FormField
+                control={form.control}
+                name="biography"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium sm:text-base">
+                      Biography
+                      <span className="ml-2 text-sm font-normal text-current/50">
+                        (Tell us something about yourself)
+                      </span>
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        className="min-h-[100px] text-sm sm:text-base"
+                        placeholder="Share your story, background, interests, or anything that helps us know you better..."
+                        value={field.value || ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Church Designation */}
+              <FormField
+                control={form.control}
+                name="churchId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium sm:text-base">
+                      Church Designation
+                      <span className="text-destructive ml-1">*</span>
+                      <span className="ml-2 text-sm font-normal text-current/50">
+                        (Select the church you are currently assigned to)
+                      </span>
+                    </FormLabel>
+                    <FormControl>
+                      <ChurchSelect
+                        className="h-10 text-sm sm:h-11 sm:text-base"
+                        placeholder="Select your designated church"
+                        value={field.value || null}
+                        onValueChange={(value) => field.onChange(value || 0)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
                 <FormField
                   control={form.control}
@@ -318,13 +397,18 @@ export function PersonalInformation({
                         <span className="text-destructive ml-1">*</span>
                       </FormLabel>
                       <FormControl>
-                        <select
-                          {...field}
-                          className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:text-base"
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
                         >
-                          <option value="male">Male</option>
-                          <option value="female">Female</option>
-                        </select>
+                          <SelectTrigger className="h-10 text-sm sm:h-11 sm:text-base">
+                            <SelectValue placeholder="Select gender" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="male">Male</SelectItem>
+                            <SelectItem value="female">Female</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -383,16 +467,21 @@ export function PersonalInformation({
                         <span className="text-destructive ml-1">*</span>
                       </FormLabel>
                       <FormControl>
-                        <select
-                          {...field}
-                          className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:text-base"
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
                         >
-                          <option value="single">Single</option>
-                          <option value="married">Married</option>
-                          <option value="widowed">Widowed</option>
-                          <option value="separated">Separated</option>
-                          <option value="divorced">Divorced</option>
-                        </select>
+                          <SelectTrigger className="h-10 text-sm sm:h-11 sm:text-base">
+                            <SelectValue placeholder="Select civil status" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="single">Single</SelectItem>
+                            <SelectItem value="married">Married</SelectItem>
+                            <SelectItem value="widowed">Widowed</SelectItem>
+                            <SelectItem value="separated">Separated</SelectItem>
+                            <SelectItem value="divorced">Divorced</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>

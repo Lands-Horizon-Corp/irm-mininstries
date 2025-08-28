@@ -25,7 +25,7 @@ bun run db:seed
 
 - Volunteer Worker / M.T./ GNMB
 - Missionary
-- Pastor / Deaconess (Probationary)
+- Pastor / Deaconess (Provisionary)
 - Ordained Pastor / Ordained Deaconess
 
 ### Ministry Skills (161 entries)

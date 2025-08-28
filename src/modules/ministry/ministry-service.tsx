@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import { generateMinisterPDF } from "./ministry-pdf";
 import type { Minister } from "./ministry-validation";
 
 // Types
@@ -38,6 +39,7 @@ interface GetMinistersParams {
 // Simplified Minister type for list view
 interface MinisterSummary {
   id: number;
+  churchId: number;
   firstName: string;
   lastName: string;
   middleName: string | null;
@@ -252,3 +254,41 @@ export const useDeleteMinister = () => {
 
 // Legacy hook for backwards compatibility
 export const useSubmitMinister = useCreateMinister;
+
+// PDF Download functionality
+export const downloadMinisterPDF = async (ministerId: number) => {
+  try {
+    // Fetch minister data with full details
+    const ministerResponse = await getMinisterById(ministerId);
+
+    if (!ministerResponse.success || !ministerResponse.data) {
+      throw new Error("Failed to fetch minister data");
+    }
+
+    const ministerData = ministerResponse.data;
+
+    // Fetch lookup data for churches, ministry ranks, and skills
+    const [churchesResponse, ranksResponse, skillsResponse] = await Promise.all(
+      [
+        fetch("/api/churches?limit=100").then((res) => res.json()),
+        fetch("/api/ministry-ranks?limit=100").then((res) => res.json()),
+        fetch("/api/ministry-skills?limit=200").then((res) => res.json()),
+      ]
+    );
+
+    const lookupData = {
+      churches: churchesResponse.success ? churchesResponse.data : [],
+      ministryRanks: ranksResponse.success ? ranksResponse.data : [],
+      ministrySkills: skillsResponse.success ? skillsResponse.data : [],
+    };
+
+    // Generate and download PDF
+    await generateMinisterPDF(ministerData, lookupData);
+
+    toast.success("PDF downloaded successfully");
+  } catch (error) {
+    console.error("Error downloading PDF:", error);
+    toast.error("Failed to download PDF");
+    throw error;
+  }
+};

@@ -11,6 +11,13 @@ export const civilStatusEnum = text("civil_status", {
 
 export const ministers = pgTable("ministers", {
   id: serial("id").primaryKey(),
+
+  // Church Association
+  churchId: integer("church_id")
+    .references(() => churches.id)
+    .notNull(),
+
+  biography: text("biography"),
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
   middleName: text("middle_name"),
@@ -197,3 +204,14 @@ export const ministerSeminarsConferences = pgTable(
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   }
 );
+
+export const ministerCaseReports = pgTable("minister_case_reports", {
+  id: serial("id").primaryKey(),
+  ministerId: integer("minister_id")
+    .notNull()
+    .references(() => ministers.id),
+  description: text("description").notNull(),
+  year: text("year").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});

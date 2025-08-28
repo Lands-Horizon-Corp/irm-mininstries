@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   description:
-    "Join IRM Ministries as a minister and be part of our mission to spread God's word and serve communities worldwide. Submit your application and begin your ministry journey with us.",
+    "Join IRM Ministries and be part of our mission to spread God's word and serve communities worldwide. Choose to become a member or worker and begin your spiritual journey with us.",
   openGraph: {
     description:
-      "Become a minister with IRM Ministries. Apply to join our ministry team and help us serve God's people around the world.",
-    title: "Minister FOrm – IRM Ministries",
+      "Join IRM Ministries as a member or worker. Become part of our community and help us serve God's people around the world.",
+    title: "Join IRM Ministries",
     url: "https://irmministries.org/join",
   },
-  title: "Minister Form – IRM Ministries",
+  title: "Join IRM Ministries",
 };
 
 export default function JoinLayout({

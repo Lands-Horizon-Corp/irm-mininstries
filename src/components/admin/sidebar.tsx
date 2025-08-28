@@ -14,6 +14,7 @@ import {
   LayoutDashboard,
   LogOut,
   MessageCircle,
+  UserCheck,
   Users,
 } from "lucide-react";
 
@@ -55,6 +56,11 @@ const sidebarItems = [
     href: "/admin/ministers",
     icon: Users,
     title: "Ministers",
+  },
+  {
+    href: "/admin/members",
+    icon: UserCheck,
+    title: "Members",
   },
 ];
 

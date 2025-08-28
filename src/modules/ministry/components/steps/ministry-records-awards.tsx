@@ -20,17 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-import type { Minister } from "../../ministry-validation";
-
-interface StepProps {
-  formData: Minister;
-  updateMinisterData: (
-    field: keyof Minister,
-    value: string | boolean | Date | string[] | File | null
-  ) => void;
-  onNext: () => void;
-  onBack: () => void;
-}
+import type { Minister, StepProps } from "../../ministry-validation";
 
 const ministryRecordSchema = z.object({
   id: z.number().int().optional(),
@@ -41,16 +31,16 @@ const ministryRecordSchema = z.object({
   fromYear: z.string().min(1, { message: "From year is required" }),
   toYear: z.string().optional().nullable(),
   contribution: z.string().optional().nullable(),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  createdAt: z.any().optional(),
+  updatedAt: z.any().optional(),
 });
 
 const awardRecognitionSchema = z.object({
   id: z.number().int().optional(),
   year: z.string().min(1, { message: "Year is required" }),
   description: z.string().min(1, { message: "Description is required" }),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  createdAt: z.any().optional(),
+  updatedAt: z.any().optional(),
 });
 
 const ministryRecordsAwardsSchema = z.object({
