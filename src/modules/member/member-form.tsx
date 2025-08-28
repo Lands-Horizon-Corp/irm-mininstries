@@ -208,6 +208,31 @@ export default function MemberForm({
       // Create new member
       createMember.mutate(memberData, {
         onSuccess: (result) => {
+          // Reset form on successful creation
+          form.reset({
+            churchId: churchIdFromUrl || 0,
+            profilePicture: null,
+            firstName: "",
+            lastName: "",
+            middleName: null,
+            gender: "male",
+            birthdate: "",
+            yearJoined: new Date().getFullYear(),
+            ministryInvolvement: null,
+            occupation: null,
+            educationalAttainment: null,
+            school: null,
+            degree: null,
+            mobileNumber: null,
+            email: null,
+            homeAddress: null,
+            facebookLink: null,
+            xLink: null,
+            instagramLink: null,
+            notes: null,
+            privacyConsent: false,
+          });
+
           if (isDialog && onClose) {
             onClose();
           } else {
