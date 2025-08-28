@@ -118,6 +118,7 @@ export function MinisterForm({
 
     return {
       // Personal Information
+      churchId: 0,
       biography: "",
       firstName: "",
       lastName: "",
@@ -321,7 +322,7 @@ export function MinisterForm({
           if (isDialog && onClose) {
             onClose();
           } else {
-            router.push("/form");
+            router.push("/join");
           }
         },
         onCancel: handleCancel,

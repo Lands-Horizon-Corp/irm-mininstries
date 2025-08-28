@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -15,6 +15,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ChurchSelect } from "@/components/ui/church-select";
+import { EducationalAttainmentSelect } from "@/components/ui/educational-attainment-select";
 import {
   Form,
   FormControl,
@@ -38,35 +39,48 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
+import { MemberSuccessDialog } from "./components/member-success-dialog";
 import { generateMemberPDF } from "./member-pdf";
 import { useCreateMember, useMember, useUpdateMember } from "./member-service";
 
-const memberSchema = z.object({
-  churchId: z.number().min(1, "Church is required"),
-  profilePicture: z.string().optional(),
+// Create a form-specific schema that properly handles form input types
+const memberFormSchema = z.object({
+  churchId: z.number().int().min(1, "Please select a church"),
+  profilePicture: z.string().optional().nullable(),
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
-  middleName: z.string().optional(),
+  middleName: z.string().optional().nullable(),
   gender: z.enum(["male", "female"]),
   birthdate: z.string().min(1, "Birthdate is required"),
-  yearJoined: z.number().min(1900, "Year joined must be at least 1900"),
-  ministryInvolvement: z.string().optional(),
-  occupation: z.string().optional(),
-  educationalAttainment: z.string().optional(),
-  school: z.string().optional(),
-  degree: z.string().optional(),
-  mobileNumber: z.string().optional(),
-  email: z.string().email("Invalid email address").optional().or(z.literal("")),
-  homeAddress: z.string().optional(),
-  facebookLink: z.string().optional(),
-  xLink: z.string().optional(),
-  instagramLink: z.string().optional(),
-  notes: z.string().optional(),
+  yearJoined: z
+    .number()
+    .int()
+    .min(1900, "Invalid year")
+    .max(new Date().getFullYear(), "Year cannot be in the future"),
+  ministryInvolvement: z.string().optional().nullable(),
+  occupation: z.string().optional().nullable(),
+  educationalAttainment: z.string().optional().nullable(),
+  school: z.string().optional().nullable(),
+  degree: z.string().optional().nullable(),
+  mobileNumber: z.string().optional().nullable(),
+  email: z
+    .string()
+    .optional()
+    .nullable()
+    .refine(
+      (val) => !val || val === "" || z.string().email().safeParse(val).success,
+      {
+        message: "Invalid email format",
+      }
+    ),
+  homeAddress: z.string().optional().nullable(),
+  facebookLink: z.string().optional().nullable(),
+  xLink: z.string().optional().nullable(),
+  instagramLink: z.string().optional().nullable(),
+  notes: z.string().optional().nullable(),
   privacyConsent: z.boolean().refine((val) => val === true, {
     message: "You must accept the privacy declaration to proceed",
   }),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
 });
 
 interface MemberFormProps {
@@ -94,31 +108,35 @@ export default function MemberForm({
     memberId || 0
   );
 
+  // State for success dialog
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [createdMemberId, setCreatedMemberId] = useState<number | null>(null);
+
   const isEditMode = !!memberId;
 
-  const form = useForm<z.infer<typeof memberSchema>>({
-    resolver: zodResolver(memberSchema),
+  const form = useForm<z.infer<typeof memberFormSchema>>({
+    resolver: zodResolver(memberFormSchema),
     defaultValues: {
       churchId: churchIdFromUrl || 0,
-      profilePicture: "",
+      profilePicture: null,
       firstName: "",
       lastName: "",
-      middleName: "",
+      middleName: null,
       gender: "male",
       birthdate: "",
       yearJoined: new Date().getFullYear(),
-      ministryInvolvement: "",
-      occupation: "",
-      educationalAttainment: "",
-      school: "",
-      degree: "",
-      mobileNumber: "",
-      email: "",
-      homeAddress: "",
-      facebookLink: "",
-      xLink: "",
-      instagramLink: "",
-      notes: "",
+      ministryInvolvement: null,
+      occupation: null,
+      educationalAttainment: null,
+      school: null,
+      degree: null,
+      mobileNumber: null,
+      email: null,
+      homeAddress: null,
+      facebookLink: null,
+      xLink: null,
+      instagramLink: null,
+      notes: null,
       privacyConsent: false,
     },
     mode: "onChange",
@@ -132,25 +150,25 @@ export default function MemberForm({
     if (isEditMode && member && !isMemberLoading) {
       form.reset({
         churchId: member.churchId || 0,
-        profilePicture: member.profilePicture || "",
+        profilePicture: member.profilePicture || null,
         firstName: member.firstName || "",
         lastName: member.lastName || "",
-        middleName: member.middleName || "",
+        middleName: member.middleName || null,
         gender: member.gender || "male",
         birthdate: member.birthdate || "",
         yearJoined: member.yearJoined || new Date().getFullYear(),
-        ministryInvolvement: member.ministryInvolvement || "",
-        occupation: member.occupation || "",
-        educationalAttainment: member.educationalAttainment || "",
-        school: member.school || "",
-        degree: member.degree || "",
-        mobileNumber: member.mobileNumber || "",
-        email: member.email || "",
-        homeAddress: member.homeAddress || "",
-        facebookLink: member.facebookLink || "",
-        xLink: member.xLink || "",
-        instagramLink: member.instagramLink || "",
-        notes: member.notes || "",
+        ministryInvolvement: member.ministryInvolvement || null,
+        occupation: member.occupation || null,
+        educationalAttainment: member.educationalAttainment || null,
+        school: member.school || null,
+        degree: member.degree || null,
+        mobileNumber: member.mobileNumber || null,
+        email: member.email || null,
+        homeAddress: member.homeAddress || null,
+        facebookLink: member.facebookLink || null,
+        xLink: member.xLink || null,
+        instagramLink: member.instagramLink || null,
+        notes: member.notes || null,
         privacyConsent: true, // In edit mode, assume consent was already given
       });
     }
@@ -167,7 +185,7 @@ export default function MemberForm({
     }
   }, [churchIdFromUrl, form, isEditMode]);
 
-  const onSubmit = async (values: z.infer<typeof memberSchema>) => {
+  const onSubmit = async (values: z.infer<typeof memberFormSchema>) => {
     // Remove privacyConsent from the data before sending to API
     const { privacyConsent: _privacyConsent, ...memberData } = values;
 
@@ -180,7 +198,8 @@ export default function MemberForm({
             if (isDialog && onClose) {
               onClose();
             } else {
-              router.push("/admin/members");
+              setCreatedMemberId(memberId);
+              setShowSuccessDialog(true);
             }
           },
         }
@@ -188,13 +207,12 @@ export default function MemberForm({
     } else {
       // Create new member
       createMember.mutate(memberData, {
-        onSuccess: () => {
+        onSuccess: (result) => {
           if (isDialog && onClose) {
             onClose();
           } else {
-            setTimeout(() => {
-              router.push("/admin/members");
-            }, 2000);
+            setCreatedMemberId(result?.data?.id || null);
+            setShowSuccessDialog(true);
           }
         },
       });
@@ -285,7 +303,9 @@ export default function MemberForm({
                           className="h-10 text-sm sm:h-11 sm:text-base"
                           placeholder="Select a church"
                           value={field.value || null}
-                          onValueChange={(value) => field.onChange(value || 0)}
+                          onValueChange={(value) =>
+                            field.onChange(Number(value) || 0)
+                          }
                         />
                       </FormControl>
                       <FormMessage />
@@ -573,11 +593,11 @@ export default function MemberForm({
                           Highest Educational Attainment
                         </FormLabel>
                         <FormControl>
-                          <Input
-                            {...field}
+                          <EducationalAttainmentSelect
                             className="h-10 text-sm sm:h-11 sm:text-base"
-                            placeholder="e.g., Bachelor's Degree, Master's Degree"
+                            placeholder="Select educational attainment"
                             value={field.value || ""}
+                            onChange={field.onChange}
                           />
                         </FormControl>
                         <FormMessage />
@@ -907,6 +927,15 @@ export default function MemberForm({
           </form>
         </Form>
       )}
+
+      {/* Success Dialog */}
+      <MemberSuccessDialog
+        isOpen={showSuccessDialog}
+        memberId={createdMemberId}
+        memberName={`${form.getValues("firstName")} ${form.getValues("lastName")}`}
+        mode={isEditMode ? "edit" : "create"}
+        onClose={() => setShowSuccessDialog(false)}
+      />
     </div>
   );
 }

@@ -7,7 +7,7 @@ import MemberTable from "@/modules/member/components/member-table";
 export default function MembersPage() {
   return (
     <Container>
-      <div className="space-y-6">
+      <div className="min-h-screen space-y-6">
         <MemberHeading />
         <MemberTable />
       </div>

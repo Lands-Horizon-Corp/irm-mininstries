@@ -1,8 +1,14 @@
 "use client";
 
+import { Suspense } from "react";
+
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import MemberForm from "@/modules/member/member-form";
+
+function MemberFormWrapper() {
+  return <MemberForm />;
+}
 
 export default function NewMemberPage() {
   return (
@@ -13,7 +19,17 @@ export default function NewMemberPage() {
           description="Add a new member to the church directory with their personal, contact, and ministry information."
           title="Add New Member"
         />
-        <MemberForm />
+        <Suspense
+          fallback={
+            <div className="flex h-32 items-center justify-center">
+              <p className="text-muted-foreground text-sm">
+                Loading member form...
+              </p>
+            </div>
+          }
+        >
+          <MemberFormWrapper />
+        </Suspense>
       </div>
     </Container>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import { ArrowRight, Share2, UserCheck, Users } from "lucide-react";
@@ -17,6 +18,15 @@ import { Heading } from "@/components/ui/heading";
 import { QRCodeDialog } from "@/components/ui/qr-code";
 
 export default function JoinPage() {
+  const [baseUrl, setBaseUrl] = useState("");
+
+  useEffect(() => {
+    // Only access window on the client side
+    if (typeof window !== "undefined") {
+      setBaseUrl(window.location.origin);
+    }
+  }, []);
+
   return (
     <div className="join_selection__container my-16 flex min-h-screen flex-col justify-center">
       <div className="to-background/0 via-background/0 from-primary/20 absolute right-0 -z-10 h-screen w-full bg-radial-[ellipse_at_0%_50%] to-100%" />
@@ -135,7 +145,7 @@ export default function JoinPage() {
                   Share Worker Join Link
                 </Button>
               }
-              value={`${window.location.origin}/join/worker`}
+              value={`${baseUrl}/join/worker`}
             />
 
             <QRCodeDialog
@@ -148,7 +158,7 @@ export default function JoinPage() {
                   Share Member Join Link
                 </Button>
               }
-              value={`${window.location.origin}/join/member`}
+              value={`${baseUrl}/join/member`}
             />
           </div>
         </div>

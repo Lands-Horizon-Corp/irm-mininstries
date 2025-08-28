@@ -50,6 +50,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { QRAction } from "@/components/ui/qr-action";
 import {
   Table,
   TableBody,
@@ -143,6 +144,7 @@ const MinisterActions = ({ minister }: MinisterActionsProps) => {
             <FileTextIcon className="mr-2 h-4 w-4" />
             {isDownloadingPDF ? "Downloading..." : "PDF Download"}
           </DropdownMenuItem>
+          <QRAction id={minister.id} name={getFullName()} type="minister" />
           <DropdownMenuItem onClick={() => setIsViewDialogOpen(true)}>
             <Eye className="mr-2 h-4 w-4" />
             View
