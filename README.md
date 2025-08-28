@@ -35,12 +35,6 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
-// I AM REDEEMER AND MASTER EVANGELICAL CHURCH
-
-// Worker's Profile
-
-// Provisionary
-
 // Church and Church Members
 
 // Case Reports: Desqcription and year

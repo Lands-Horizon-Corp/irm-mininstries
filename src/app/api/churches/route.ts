@@ -29,6 +29,7 @@ export async function GET(request: NextRequest) {
     const whereClause = search
       ? or(
           ilike(churches.address, `%${search}%`),
+          ilike(churches.name, `%${search}%`),
           ilike(churches.email, `%${search}%`),
           ilike(churches.description, `%${search}%`)
         )

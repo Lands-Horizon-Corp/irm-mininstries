@@ -28,8 +28,8 @@ const emergencyContactSchema = z.object({
   relationship: z.string().min(1, { message: "Relationship is required" }),
   address: z.string().min(1, { message: "Address is required" }),
   contactNumber: z.string().min(1, { message: "Contact number is required" }),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  createdAt: z.any().optional(),
+  updatedAt: z.any().optional(),
 });
 
 const emergencyContactsSkillsSchema = z.object({

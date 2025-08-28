@@ -233,6 +233,11 @@ const MinistrySkillActions = ({ ministrySkill }: MinistrySkillActionsProps) => {
 // Define table columns
 const columns: ColumnDef<MinistrySkill>[] = [
   {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => <MinistrySkillActions ministrySkill={row.original} />,
+  },
+  {
     accessorKey: "id",
     header: ({ column }) => (
       <Button
@@ -338,11 +343,6 @@ const columns: ColumnDef<MinistrySkill>[] = [
         </div>
       );
     },
-  },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => <MinistrySkillActions ministrySkill={row.original} />,
   },
 ];
 

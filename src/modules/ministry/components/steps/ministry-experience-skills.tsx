@@ -32,8 +32,8 @@ const ministryExperienceSchema = z.object({
   description: z.string().optional().nullable(),
   fromYear: z.string().min(1, { message: "From year is required" }),
   toYear: z.string().optional().nullable(),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  createdAt: z.any().optional(),
+  updatedAt: z.any().optional(),
 });
 
 const ministrySkillSchema = z.object({
@@ -42,8 +42,8 @@ const ministrySkillSchema = z.object({
     .number()
     .int()
     .min(1, { message: "Please select a ministry skill" }),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  createdAt: z.any().optional(),
+  updatedAt: z.any().optional(),
 });
 
 const ministryExperienceSkillsSchema = z.object({

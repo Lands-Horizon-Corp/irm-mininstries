@@ -31,8 +31,8 @@ const seminarConferenceSchema = z.object({
     .number()
     .int()
     .min(1, { message: "Number of hours must be at least 1" }),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  createdAt: z.any().optional(),
+  updatedAt: z.any().optional(),
 });
 
 const seminarsConferencesSchema = z.object({

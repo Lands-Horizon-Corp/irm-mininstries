@@ -38,8 +38,8 @@ const educationBackgroundSchema = z.object({
   dateGraduated: z.date().optional().nullable(),
   description: z.string().optional().nullable(),
   course: z.string().optional().nullable(),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  createdAt: z.any().optional(),
+  updatedAt: z.any().optional(),
 });
 
 const employmentRecordSchema = z.object({
@@ -48,8 +48,8 @@ const employmentRecordSchema = z.object({
   fromYear: z.string().min(1, { message: "From year is required" }),
   toYear: z.string().optional().nullable(),
   position: z.string().min(1, { message: "Position is required" }),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  createdAt: z.any().optional(),
+  updatedAt: z.any().optional(),
 });
 
 const educationEmploymentSchema = z.object({

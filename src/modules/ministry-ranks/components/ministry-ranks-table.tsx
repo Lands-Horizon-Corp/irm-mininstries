@@ -242,6 +242,11 @@ const MinistryRankActions = ({ ministryRank }: MinistryRankActionsProps) => {
 // Define table columns
 const columns: ColumnDef<MinistryRank>[] = [
   {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => <MinistryRankActions ministryRank={row.original} />,
+  },
+  {
     accessorKey: "id",
     header: ({ column }) => (
       <Button
@@ -347,11 +352,6 @@ const columns: ColumnDef<MinistryRank>[] = [
         </div>
       );
     },
-  },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => <MinistryRankActions ministryRank={row.original} />,
   },
 ];
 

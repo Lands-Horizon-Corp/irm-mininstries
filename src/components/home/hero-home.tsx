@@ -176,9 +176,10 @@ const HeroHome = () => {
               </div>
 
               <h1 className="text-foreground text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-                Intentional Redeeming{" "}
+                I AM REDEEMER
+                <br />
                 <span className="bg-gradient-hero text-primary bg-clip-text">
-                  Ministries
+                  AND MASTER EVANGELICAL CHURCH
                 </span>
               </h1>
 
