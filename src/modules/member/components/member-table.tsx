@@ -58,8 +58,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import MemberForm from "../member-form";
 import { generateMemberPDF } from "../member-pdf";
 import { useDeleteMember, useMembers } from "../member-service";
+
+import { ViewMemberDialog } from "./view-member-dialog";
 
 // Member interface for table display
 interface Member {
@@ -85,6 +88,8 @@ interface MemberActionsProps {
 
 const MemberActions = ({ member }: MemberActionsProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
   const deleteMemberMutation = useDeleteMember();
 
@@ -156,11 +161,11 @@ const MemberActions = ({ member }: MemberActionsProps) => {
             <FileTextIcon className="mr-2 h-4 w-4" />
             {isDownloadingPDF ? "Downloading..." : "PDF Download"}
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsViewDialogOpen(true)}>
             <Eye className="mr-2 h-4 w-4" />
             View
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
             <Edit className="mr-2 h-4 w-4" />
             Edit
           </DropdownMenuItem>
@@ -202,6 +207,24 @@ const MemberActions = ({ member }: MemberActionsProps) => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Edit Member Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-h-[90vh] w-full max-w-4xl overflow-y-auto">
+          <MemberForm
+            isDialog={true}
+            memberId={member.id}
+            onClose={() => setIsEditDialogOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* View Member Dialog */}
+      <ViewMemberDialog
+        isOpen={isViewDialogOpen}
+        memberId={member.id}
+        onClose={() => setIsViewDialogOpen(false)}
+      />
     </>
   );
 };
