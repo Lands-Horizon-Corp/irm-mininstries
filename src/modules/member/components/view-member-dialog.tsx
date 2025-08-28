@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 
 import { format } from "date-fns";
@@ -15,6 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ImageViewer } from "@/components/ui/image-viewer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
@@ -33,6 +35,8 @@ export function ViewMemberDialog({
   memberId,
   onClose,
 }: ViewMemberDialogProps) {
+  const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
+
   const { data: memberResponse, isLoading } = useMember(memberId);
   const { data: churchResponse } = useChurch(
     memberResponse?.data?.churchId || 0
@@ -95,12 +99,18 @@ export function ViewMemberDialog({
             {/* Profile Picture */}
             <div className="relative h-12 w-12 overflow-hidden rounded-full">
               {member.profilePicture ? (
-                <Image
-                  fill
-                  alt={fullName}
-                  className="object-cover"
-                  src={member.profilePicture}
-                />
+                <button
+                  className="h-full w-full rounded-full focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+                  type="button"
+                  onClick={() => setIsImageViewerOpen(true)}
+                >
+                  <Image
+                    fill
+                    alt={fullName}
+                    className="cursor-pointer object-cover transition-opacity hover:opacity-90"
+                    src={member.profilePicture}
+                  />
+                </button>
               ) : (
                 <div className="flex h-full w-full items-center justify-center bg-blue-100 dark:bg-blue-900">
                   <User className="h-6 w-6 text-blue-600 dark:text-blue-400" />
@@ -495,6 +505,16 @@ export function ViewMemberDialog({
             Close
           </Button>
         </div>
+
+        {/* Image Viewer */}
+        {member.profilePicture && (
+          <ImageViewer
+            alt={`${fullName} - Profile Picture`}
+            isOpen={isImageViewerOpen}
+            src={member.profilePicture}
+            onClose={() => setIsImageViewerOpen(false)}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );

@@ -20,32 +20,32 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-interface SuccessDialogProps {
+interface MemberSuccessDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  ministerName: string;
-  ministerId: number | null;
+  memberName: string;
+  memberId: number | null;
   mode?: "create" | "edit";
 }
 
-export function SuccessDialog({
+export function MemberSuccessDialog({
   isOpen,
   onClose,
-  ministerName,
-  ministerId,
+  memberName,
+  memberId,
   mode = "create",
-}: SuccessDialogProps) {
+}: MemberSuccessDialogProps) {
   const router = useRouter();
   const [copied, setCopied] = useState(false);
   const qrRef = useRef<HTMLDivElement>(null);
 
   // Generate QR code data
   const qrData = JSON.stringify({
-    id: ministerId,
-    type: "minister",
+    id: memberId,
+    type: "member",
   });
 
-  const handleGoHome = () => {
+  const handleReturnHome = () => {
     router.push("/");
     onClose();
   };
@@ -138,15 +138,15 @@ export function SuccessDialog({
         function renderTextAndDownload() {
           if (!ctx) return;
 
-          // Add minister name and ID below QR code
+          // Add member name and ID below QR code
           ctx.fillStyle = "#000000";
           ctx.font = "16px Arial, sans-serif";
           ctx.textAlign = "center";
 
           const textY = size + padding + 30;
-          ctx.fillText(`Minister: ${ministerName}`, canvas.width / 2, textY);
+          ctx.fillText(`Member: ${memberName}`, canvas.width / 2, textY);
           ctx.font = "12px Arial, sans-serif";
-          ctx.fillText(`ID: ${ministerId}`, canvas.width / 2, textY + 25);
+          ctx.fillText(`ID: ${memberId}`, canvas.width / 2, textY + 25);
 
           // Download the canvas as PNG
           canvas.toBlob((blob) => {
@@ -154,7 +154,7 @@ export function SuccessDialog({
               const url = URL.createObjectURL(blob);
               const a = document.createElement("a");
               a.href = url;
-              a.download = `minister-qr-${ministerId}-${ministerName
+              a.download = `member-qr-${memberId}-${memberName
                 .toLowerCase()
                 .replace(/\s+/g, "-")}.png`;
               document.body.appendChild(a);
@@ -187,30 +187,30 @@ export function SuccessDialog({
         className="max-w-lg"
         onInteractOutside={(e) => e.preventDefault()}
       >
-        <DialogHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+        <DialogHeader className="my-0 text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
             <CheckCircle className="h-6 w-6 text-green-600" />
           </div>
-          <DialogTitle className="text-xl font-semibold text-gray-900">
-            Minister Application {mode === "edit" ? "Updated" : "Submitted"}{" "}
+          <DialogTitle className="!my-0 text-xl font-semibold text-gray-900">
+            Member Registration {mode === "edit" ? "Updated" : "Completed"}{" "}
             Successfully!
           </DialogTitle>
           <DialogDescription className="mt-2 text-gray-500">
-            The application for <strong>{ministerName}</strong> has been
-            successfully {mode === "edit" ? "updated" : "submitted"} and saved
-            to the ministry database.
+            The registration for <strong>{memberName}</strong> has been
+            successfully {mode === "edit" ? "updated" : "completed"} and saved
+            to the member database.
           </DialogDescription>
         </DialogHeader>
 
         {/* QR Code Section */}
-        {ministerId && (
+        {memberId && (
           <div className="space-y-4">
             <div className="text-center">
               <h3 className="mb-2 text-lg font-medium text-gray-900">
-                Minister QR Code
+                Member QR Code
               </h3>
               <p className="mb-4 text-sm text-gray-500">
-                Use this QR code to quickly access minister information
+                Use this QR code to quickly access member information
               </p>
             </div>
 
@@ -289,7 +289,7 @@ export function SuccessDialog({
         )}
 
         <DialogFooter className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-center">
-          <Button className="w-full sm:w-auto" onClick={handleGoHome}>
+          <Button className="w-full sm:w-auto" onClick={handleReturnHome}>
             Return Home
           </Button>
         </DialogFooter>

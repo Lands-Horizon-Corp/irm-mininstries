@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
+import { MemberSuccessDialog } from "./components/member-success-dialog";
 import { generateMemberPDF } from "./member-pdf";
 import { useCreateMember, useMember, useUpdateMember } from "./member-service";
 
@@ -106,6 +107,10 @@ export default function MemberForm({
   const { data: memberData, isLoading: isMemberLoading } = useMember(
     memberId || 0
   );
+
+  // State for success dialog
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [createdMemberId, setCreatedMemberId] = useState<number | null>(null);
 
   const isEditMode = !!memberId;
 
@@ -193,7 +198,8 @@ export default function MemberForm({
             if (isDialog && onClose) {
               onClose();
             } else {
-              router.push("/admin/members");
+              setCreatedMemberId(memberId);
+              setShowSuccessDialog(true);
             }
           },
         }
@@ -201,13 +207,12 @@ export default function MemberForm({
     } else {
       // Create new member
       createMember.mutate(memberData, {
-        onSuccess: () => {
+        onSuccess: (result) => {
           if (isDialog && onClose) {
             onClose();
           } else {
-            setTimeout(() => {
-              router.push("/admin/members");
-            }, 2000);
+            setCreatedMemberId(result?.data?.id || null);
+            setShowSuccessDialog(true);
           }
         },
       });
@@ -922,6 +927,15 @@ export default function MemberForm({
           </form>
         </Form>
       )}
+
+      {/* Success Dialog */}
+      <MemberSuccessDialog
+        isOpen={showSuccessDialog}
+        memberId={createdMemberId}
+        memberName={`${form.getValues("firstName")} ${form.getValues("lastName")}`}
+        mode={isEditMode ? "edit" : "create"}
+        onClose={() => setShowSuccessDialog(false)}
+      />
     </div>
   );
 }
