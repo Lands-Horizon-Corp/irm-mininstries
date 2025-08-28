@@ -1,23 +1,26 @@
-# Use the official Bun image
-FROM oven/bun:1.2.20 as base
+# Use the official Node.js image
+FROM node:20-alpine as base
+
+# Enable corepack for pnpm
+RUN corepack enable
 
 # Set working directory
 WORKDIR /app
 
 # Copy package files
-COPY package.json bun.lock ./
+COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
-RUN bun install
+RUN pnpm install --frozen-lockfile
 
 # Copy source code
 COPY . .
 
 # Build the application
-RUN bun run build
+RUN pnpm run build
 
 # Expose port
 EXPOSE 3000
 
 # Start the application
-CMD ["bun", "run", "start"]
+CMD ["pnpm", "run", "start"]
