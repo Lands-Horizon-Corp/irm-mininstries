@@ -18,6 +18,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
+import { useChurch } from "../../church/church-service";
 import { generateMemberPDF } from "../member-pdf";
 import { useMember } from "../member-service";
 
@@ -33,33 +34,20 @@ export function ViewMemberDialog({
   onClose,
 }: ViewMemberDialogProps) {
   const { data: memberResponse, isLoading } = useMember(memberId);
+  const { data: churchResponse } = useChurch(
+    memberResponse?.data?.churchId || 0
+  );
 
   const handlePDFDownload = async () => {
     if (memberResponse?.success && memberResponse.data) {
       const member = memberResponse.data;
+      const church = churchResponse?.data;
+
       try {
         await generateMemberPDF({
-          profilePicture: member.profilePicture,
-          firstName: member.firstName,
-          lastName: member.lastName,
-          middleName: member.middleName,
-          gender: member.gender,
-          birthdate: member.birthdate,
-          yearJoined: member.yearJoined,
-          ministryInvolvement: member.ministryInvolvement,
-          occupation: member.occupation,
-          educationalAttainment: member.educationalAttainment,
-          school: member.school,
-          degree: member.degree,
-          mobileNumber: member.mobileNumber,
-          email: member.email,
-          homeAddress: member.homeAddress,
-          facebookLink: member.facebookLink,
-          xLink: member.xLink,
-          instagramLink: member.instagramLink,
-          notes: member.notes,
-          createdAt: member.createdAt,
-          updatedAt: member.updatedAt,
+          ...member,
+          churchName: church?.name || undefined,
+          churchAddress: church?.address || undefined,
         });
       } catch (error) {
         console.error("Failed to download PDF:", error);
@@ -142,6 +130,60 @@ export function ViewMemberDialog({
 
         <ScrollArea className="max-h-[70vh]">
           <div className="space-y-6 px-1">
+            {/* Church Information */}
+            {churchResponse?.data && (
+              <Card>
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-lg">Church Information</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div>
+                      <label className="text-muted-foreground text-sm font-medium">
+                        Church Name
+                      </label>
+                      <p className="mt-1 font-medium">
+                        {churchResponse.data.name}
+                      </p>
+                    </div>
+
+                    {churchResponse.data.address && (
+                      <div>
+                        <label className="text-muted-foreground text-sm font-medium">
+                          Address
+                        </label>
+                        <p className="text-muted-foreground mt-1 text-sm">
+                          {churchResponse.data.address}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {churchResponse.data.email && (
+                    <div>
+                      <label className="text-muted-foreground text-sm font-medium">
+                        Church Email
+                      </label>
+                      <p className="mt-1 font-medium">
+                        {churchResponse.data.email}
+                      </p>
+                    </div>
+                  )}
+
+                  {churchResponse.data.description && (
+                    <div>
+                      <label className="text-muted-foreground text-sm font-medium">
+                        Description
+                      </label>
+                      <p className="text-muted-foreground mt-1 text-sm">
+                        {churchResponse.data.description}
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
             {/* Basic Information */}
             <Card>
               <CardHeader className="pb-4">

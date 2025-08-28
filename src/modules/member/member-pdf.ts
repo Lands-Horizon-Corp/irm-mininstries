@@ -3,6 +3,11 @@ import jsPDF from "jspdf";
 
 // Types for the PDF generation
 interface MemberPDFData {
+  // Church Information
+  churchId?: number;
+  churchName?: string;
+  churchAddress?: string;
+
   // Personal Information
   profilePicture?: string | null;
   firstName: string;
@@ -278,6 +283,34 @@ export async function generateMemberPDF(
     const dateWidth = pdf.getTextWidth(dateText);
     pdf.text(dateText, (pageWidth - dateWidth) / 2, yPosition);
     yPosition += 15;
+
+    // Church Information Section
+    if (memberData.churchName) {
+      addSectionHeader("CHURCH INFORMATION");
+
+      const churchStartY = yPosition;
+      let maxHeight = 0;
+
+      const churchNameFieldHeight = addField(
+        "Church Name",
+        memberData.churchName,
+        true,
+        churchStartY
+      );
+      const churchAddressFieldHeight = addField(
+        "Church Address",
+        memberData.churchAddress,
+        false,
+        churchStartY
+      );
+      maxHeight = Math.max(
+        maxHeight,
+        churchNameFieldHeight,
+        churchAddressFieldHeight
+      );
+
+      yPosition = churchStartY + maxHeight + 10;
+    }
 
     // Personal Information Section
     addSectionHeader("PERSONAL INFORMATION");

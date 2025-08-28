@@ -3,6 +3,9 @@ import { z } from "zod";
 export const memberSchema = z.object({
   id: z.number().int().optional(),
 
+  // Church Association
+  churchId: z.number().int().min(1, { message: "Church is required" }),
+
   // Profile Information
   profilePicture: z.string().optional().nullable(),
   firstName: z.string().min(1, { message: "First name is required" }),

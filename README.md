@@ -37,25 +37,26 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 // Church and Church Members
 
-// Add member table
+- can you change the church table to instead of cards with image
+- use shadcn for deisng and lucide icons for icons
+- have pagination as well as church
+- add the api count of members and count of ministers on that specific church and put it
+  on the cards please
+- of course there will be filters the same as the table but different design
+- make design shadcn and colored.
+- just make this page changed
 
-- profile picture
-- First name: string
-- Last name: string
-- Middle name: string
-- Gender: male, female
-- Birthdate: date
-- Year joined: number
-- Ministry involvement: description
-- Occupation: string
-  (Highest Educational Attainment)
-- Education attianment
-- School
-- Degree
-- mobile number: optional
-- facebook link: optional or string name
-- x link: optional or string name
-- instagram link: optional or string name or url
-- email addresss: optional
-- home address: optional
-- notes: text
+// adding church id on minister
+-can you add here as well please the church id opn below biography please. and make it on step one personal details where the label of this is (currently destined on this church please improve this sentence) you can use church select on ui. edit the api, pdf, service, and the form on 1st step please and the view as well and overview
+
+create link and QR code component on join links
+
+Create me reusable QR link
+
+- make it reusable UI
+- it accepts string and it was a dialog when clicked it will pop up
+- it will show the qr code with download button (download as png)
+- it will show the string and you can copy the link with click
+- make sure use react-qr as it was already installed
+- when i download it it would also have the string on the image
+- make it beautiful and reusable. i want to put title on this and description as well

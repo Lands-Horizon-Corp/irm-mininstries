@@ -62,6 +62,7 @@ export async function GET(request: NextRequest) {
     const results = await db
       .select({
         id: members.id,
+        churchId: members.churchId,
         firstName: members.firstName,
         lastName: members.lastName,
         middleName: members.middleName,
@@ -127,6 +128,7 @@ export async function POST(request: NextRequest) {
     const [newMember] = await db
       .insert(members)
       .values({
+        churchId: validatedData.churchId,
         profilePicture: validatedData.profilePicture,
         firstName: validatedData.firstName,
         lastName: validatedData.lastName,

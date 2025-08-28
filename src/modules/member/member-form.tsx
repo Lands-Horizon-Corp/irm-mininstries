@@ -13,6 +13,8 @@ import { Base64ImageUpload } from "@/components/ui/base64-image-upload";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ChurchSelect } from "@/components/ui/church-select";
 import {
   Form,
   FormControl,
@@ -40,6 +42,7 @@ import { generateMemberPDF } from "./member-pdf";
 import { useCreateMember, useMember, useUpdateMember } from "./member-service";
 
 const memberSchema = z.object({
+  churchId: z.number().min(1, "Church is required"),
   profilePicture: z.string().optional(),
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
@@ -59,6 +62,9 @@ const memberSchema = z.object({
   xLink: z.string().optional(),
   instagramLink: z.string().optional(),
   notes: z.string().optional(),
+  privacyConsent: z.boolean().refine((val) => val === true, {
+    message: "You must accept the privacy declaration to proceed",
+  }),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
@@ -88,6 +94,7 @@ export default function MemberForm({
   const form = useForm<z.infer<typeof memberSchema>>({
     resolver: zodResolver(memberSchema),
     defaultValues: {
+      churchId: 0,
       profilePicture: "",
       firstName: "",
       lastName: "",
@@ -107,6 +114,7 @@ export default function MemberForm({
       xLink: "",
       instagramLink: "",
       notes: "",
+      privacyConsent: false,
     },
     mode: "onChange",
   });
@@ -118,6 +126,7 @@ export default function MemberForm({
   useEffect(() => {
     if (isEditMode && member && !isMemberLoading) {
       form.reset({
+        churchId: member.churchId || 0,
         profilePicture: member.profilePicture || "",
         firstName: member.firstName || "",
         lastName: member.lastName || "",
@@ -137,15 +146,19 @@ export default function MemberForm({
         xLink: member.xLink || "",
         instagramLink: member.instagramLink || "",
         notes: member.notes || "",
+        privacyConsent: true, // In edit mode, assume consent was already given
       });
     }
   }, [isEditMode, member, isMemberLoading, form]);
 
   const onSubmit = async (values: z.infer<typeof memberSchema>) => {
+    // Remove privacyConsent from the data before sending to API
+    const { privacyConsent: _privacyConsent, ...memberData } = values;
+
     if (isEditMode && memberId) {
       // Update existing member
       updateMember.mutate(
-        { id: memberId, data: values },
+        { id: memberId, data: memberData },
         {
           onSuccess: () => {
             if (isDialog && onClose) {
@@ -158,7 +171,7 @@ export default function MemberForm({
       );
     } else {
       // Create new member
-      createMember.mutate(values, {
+      createMember.mutate(memberData, {
         onSuccess: () => {
           if (isDialog && onClose) {
             onClose();
@@ -187,8 +200,23 @@ export default function MemberForm({
     }
 
     try {
+      // Fetch church information if church is selected
+      let churchData = null;
+      if (formValues.churchId) {
+        const response = await fetch(`/api/churches/${formValues.churchId}`);
+        if (response.ok) {
+          const result = await response.json();
+          churchData = result.data;
+        }
+      }
+
+      // Remove privacyConsent from form values before PDF generation
+      const { privacyConsent: _privacyConsent, ...pdfData } = formValues;
+
       await generateMemberPDF({
-        ...formValues,
+        ...pdfData,
+        churchName: churchData?.name,
+        churchAddress: churchData?.address,
         createdAt: new Date(),
         updatedAt: new Date(),
       });
@@ -226,6 +254,29 @@ export default function MemberForm({
               </CardHeader>
 
               <CardContent className="space-y-3 px-3 pb-3 sm:space-y-6 sm:px-6 sm:pb-6">
+                {/* Church Selection */}
+                <FormField
+                  control={form.control}
+                  name="churchId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium sm:text-base">
+                        Church
+                        <span className="text-destructive ml-1">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <ChurchSelect
+                          className="h-10 text-sm sm:h-11 sm:text-base"
+                          placeholder="Select a church"
+                          value={field.value || null}
+                          onValueChange={(value) => field.onChange(value || 0)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 {/* Profile Picture */}
                 <FormField
                   control={form.control}
@@ -749,6 +800,61 @@ export default function MemberForm({
                 />
               </CardContent>
             </Card>
+
+            {/* Privacy Declaration Section - Only show in create mode */}
+            {!isEditMode && (
+              <Card className="relative overflow-hidden border-orange-200 bg-orange-50/50 dark:border-orange-800 dark:bg-orange-950/20">
+                <CardHeader className="px-3 pt-3 pb-2 sm:px-6 sm:pt-4 sm:pb-3">
+                  <CardTitle className="flex items-center gap-2 text-base text-orange-800 sm:text-lg dark:text-orange-200">
+                    <span className="leading-tight">Privacy Declaration</span>
+                    <span className="text-destructive text-sm">*</span>
+                  </CardTitle>
+                </CardHeader>
+
+                <CardContent className="space-y-4 px-3 pb-3 sm:space-y-6 sm:px-6 sm:pb-6">
+                  <div className="rounded-md border border-orange-200 bg-white/60 p-4 text-sm dark:border-orange-800 dark:bg-orange-950/30">
+                    <div className="space-y-3 text-gray-700 dark:text-gray-300">
+                      <p className="font-medium text-orange-800 dark:text-orange-200">
+                        Data Protection Declaration:
+                      </p>
+                      <p>
+                        I hereby declare that all information provided in this
+                        application is accurate and complete to the best of my
+                        knowledge. We will ensure your data is protected
+                        according to our privacy policy and will only be used
+                        for ministry registration purposes. Your personal
+                        information will be handled with the utmost
+                        confidentiality and security measures in place.
+                      </p>
+                    </div>
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name="privacyConsent"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-y-0 space-x-3">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel className="cursor-pointer text-sm font-medium sm:text-base">
+                            I accept the declaration above and consent to the
+                            processing of my personal data for ministry
+                            registration purposes.
+                            <span className="text-destructive ml-1">*</span>
+                          </FormLabel>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </CardContent>
+              </Card>
+            )}
 
             {/* Submit Button */}
             <div className="flex flex-col gap-3 border-t px-3 pt-4 sm:flex-row sm:justify-between sm:gap-4 sm:px-0 sm:pt-6">

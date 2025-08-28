@@ -107,6 +107,7 @@ export async function PUT(
     const [updatedMember] = await db
       .update(members)
       .set({
+        churchId: validatedData.churchId,
         profilePicture: validatedData.profilePicture,
         firstName: validatedData.firstName,
         lastName: validatedData.lastName,

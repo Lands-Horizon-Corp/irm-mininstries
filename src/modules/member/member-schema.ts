@@ -1,7 +1,14 @@
 import { date, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
+import { churches } from "../church/church-schema";
+
 export const members = pgTable("members", {
   id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+
+  // Church Association
+  churchId: integer("church_id")
+    .references(() => churches.id)
+    .notNull(),
 
   // Profile Information
   profilePicture: text("profile_picture"), // URL to profile image

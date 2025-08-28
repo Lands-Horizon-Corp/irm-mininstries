@@ -38,6 +38,7 @@ interface GetMembersParams {
 // Simplified Member type for list view
 interface MemberSummary {
   id: number;
+  churchId: number;
   firstName: string;
   lastName: string;
   middleName: string | null;
