@@ -322,7 +322,7 @@ export function MinisterForm({
           if (isDialog && onClose) {
             onClose();
           } else {
-            router.push("/form");
+            router.push("/join");
           }
         },
         onCancel: handleCancel,
