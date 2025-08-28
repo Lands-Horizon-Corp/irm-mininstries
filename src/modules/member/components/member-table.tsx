@@ -210,7 +210,8 @@ const MemberActions = ({ member }: MemberActionsProps) => {
 
       {/* Edit Member Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-h-[90vh] w-full max-w-4xl overflow-y-auto">
+        <DialogContent className="max-h-[90vh] w-full min-w-4xl overflow-y-auto">
+          <DialogTitle>Edit Member</DialogTitle>
           <MemberForm
             isDialog={true}
             memberId={member.id}

@@ -44,6 +44,11 @@ import {
   useChurchStats,
   useDeleteChurch,
 } from "@/modules/church/church-service";
+import { ViewMemberDialog } from "@/modules/member/components/view-member-dialog";
+import MemberForm from "@/modules/member/member-form";
+import { generateMemberPDF } from "@/modules/member/member-pdf";
+import { useDeleteMember } from "@/modules/member/member-service";
+import type { Member } from "@/modules/member/member-validation";
 
 interface ChurchViewPageProps {
   churchId: number;
@@ -52,11 +57,19 @@ interface ChurchViewPageProps {
 export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("members");
   const [membersSearch, setMembersSearch] = useState("");
   const [ministersSearch, setMinistersSearch] = useState("");
   const [membersPage, setMembersPage] = useState(1);
   const [ministersPage, setMinistersPage] = useState(1);
+
+  // Member action states
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [isEditMemberDialogOpen, setIsEditMemberDialogOpen] = useState(false);
+  const [isViewMemberDialogOpen, setIsViewMemberDialogOpen] = useState(false);
+  const [isDeleteMemberDialogOpen, setIsDeleteMemberDialogOpen] =
+    useState(false);
+  const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
 
   const { data: churchResponse, isLoading, error } = useChurch(churchId);
   const { data: statsResponse, isLoading: statsLoading } =
@@ -84,6 +97,7 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
     });
 
   const deleteChurchMutation = useDeleteChurch();
+  const deleteMemberMutation = useDeleteMember();
 
   const church = churchResponse?.data;
   const stats = statsResponse?.data;
@@ -105,6 +119,67 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
 
   const handleEditSuccess = () => {
     setIsEditDialogOpen(false);
+  };
+
+  // Member action handlers
+  const handleMemberView = (member: Member) => {
+    setSelectedMember(member);
+    setIsViewMemberDialogOpen(true);
+  };
+
+  const handleMemberEdit = (member: Member) => {
+    setSelectedMember(member);
+    setIsEditMemberDialogOpen(true);
+  };
+
+  const handleMemberDelete = (member: Member) => {
+    setSelectedMember(member);
+    setIsDeleteMemberDialogOpen(true);
+  };
+
+  const handleMemberDeleteConfirm = async () => {
+    if (selectedMember && selectedMember.id) {
+      try {
+        await deleteMemberMutation.mutateAsync(selectedMember.id);
+        setIsDeleteMemberDialogOpen(false);
+        setSelectedMember(null);
+      } catch (error) {
+        console.error("Failed to delete member:", error);
+      }
+    }
+  };
+
+  const handleMemberPDFDownload = async (member: Member) => {
+    setIsDownloadingPDF(true);
+    try {
+      await generateMemberPDF({
+        profilePicture: member.profilePicture,
+        firstName: member.firstName,
+        lastName: member.lastName,
+        middleName: member.middleName,
+        gender: member.gender,
+        birthdate: member.birthdate,
+        yearJoined: member.yearJoined,
+        ministryInvolvement: member.ministryInvolvement,
+        occupation: member.occupation,
+        educationalAttainment: member.educationalAttainment,
+        school: member.school,
+        degree: member.degree,
+        mobileNumber: member.mobileNumber,
+        email: member.email,
+        homeAddress: member.homeAddress,
+        facebookLink: member.facebookLink,
+        xLink: member.xLink,
+        instagramLink: member.instagramLink,
+        notes: member.notes,
+        createdAt: member.createdAt,
+        updatedAt: member.updatedAt,
+      });
+    } catch (error) {
+      console.error("Failed to download PDF:", error);
+    } finally {
+      setIsDownloadingPDF(false);
+    }
   };
 
   if (isLoading) {
@@ -329,7 +404,6 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
       {/* Members and Ministers Section */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="members">
             Members ({stats?.memberCount || 0})
           </TabsTrigger>
@@ -337,19 +411,6 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
             Ministers ({stats?.ministerCount || 0})
           </TabsTrigger>
         </TabsList>
-
-        <TabsContent className="mt-6" value="overview">
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-center">
-                <p className="text-muted-foreground">
-                  Switch to Members or Ministers tab to view church personnel.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
         <TabsContent className="mt-6 space-y-4" value="members">
           {/* Members Search */}
           <Card>
@@ -370,6 +431,20 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
               </div>
             </CardContent>
           </Card>
+
+          {/* PDF Download Loading Notification */}
+          {isDownloadingPDF && (
+            <Card className="border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="border-primary h-4 w-4 animate-spin rounded-full border-b-2" />
+                  <span className="text-sm text-blue-700 dark:text-blue-300">
+                    Generating PDF, please wait...
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Members Grid */}
           {membersLoading ? (
@@ -408,22 +483,10 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
                 <MemberCard
                   key={member.id}
                   member={member}
-                  onDelete={(memberId) => {
-                    // TODO: Implement delete member
-                    console.log("Delete member:", memberId);
-                  }}
-                  onDownloadPdf={(member) => {
-                    // TODO: Implement PDF download
-                    console.log("Download PDF for member:", member);
-                  }}
-                  onEdit={(member) => {
-                    // TODO: Implement edit member
-                    console.log("Edit member:", member);
-                  }}
-                  onView={(member) => {
-                    // TODO: Implement view member details
-                    console.log("View member:", member);
-                  }}
+                  onDelete={() => handleMemberDelete(member)}
+                  onDownloadPdf={() => handleMemberPDFDownload(member)}
+                  onEdit={() => handleMemberEdit(member)}
+                  onView={() => handleMemberView(member)}
                 />
               ))}
             </div>
@@ -605,6 +668,78 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Member Action Dialogs */}
+      {selectedMember && (
+        <>
+          {/* Edit Member Dialog */}
+          <Dialog
+            open={isEditMemberDialogOpen}
+            onOpenChange={setIsEditMemberDialogOpen}
+          >
+            <DialogContent className="max-h-[90vh] w-full min-w-4xl overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Edit Member</DialogTitle>
+              </DialogHeader>
+              <MemberForm
+                isDialog={true}
+                memberId={selectedMember.id}
+                onClose={() => {
+                  setIsEditMemberDialogOpen(false);
+                  setSelectedMember(null);
+                }}
+              />
+            </DialogContent>
+          </Dialog>
+
+          {/* View Member Dialog */}
+          {selectedMember && selectedMember?.id && (
+            <ViewMemberDialog
+              isOpen={isViewMemberDialogOpen}
+              memberId={selectedMember.id}
+              onClose={() => {
+                setIsViewMemberDialogOpen(false);
+                setSelectedMember(null);
+              }}
+            />
+          )}
+
+          {/* Delete Member Confirmation Dialog */}
+          <Dialog
+            open={isDeleteMemberDialogOpen}
+            onOpenChange={setIsDeleteMemberDialogOpen}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you sure?</DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. This will permanently delete the
+                  member &quot;{selectedMember.firstName}{" "}
+                  {selectedMember.lastName}&quot; and all associated data.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex justify-end space-x-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setIsDeleteMemberDialogOpen(false);
+                    setSelectedMember(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  disabled={deleteMemberMutation.isPending}
+                  variant="destructive"
+                  onClick={handleMemberDeleteConfirm}
+                >
+                  {deleteMemberMutation.isPending ? "Deleting..." : "Delete"}
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </>
+      )}
     </div>
   );
 }

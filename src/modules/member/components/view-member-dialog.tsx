@@ -89,7 +89,7 @@ export function ViewMemberDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] max-w-4xl">
+      <DialogContent className="max-h-[90vh] min-w-4xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3">
             {/* Profile Picture */}

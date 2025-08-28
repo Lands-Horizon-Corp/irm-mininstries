@@ -4,10 +4,13 @@ import { useState } from "react";
 
 import { format } from "date-fns";
 import {
+  Calendar,
+  Crown,
   Download,
   Edit,
   Eye,
   Mail,
+  MapPin,
   MoreHorizontal,
   Phone,
   Trash2,
@@ -15,7 +18,7 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -51,6 +54,7 @@ export function MinisterCard({
   onDownloadPdf,
 }: MinisterCardProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleDelete = () => {
     onDelete?.(minister.id);
@@ -63,41 +67,67 @@ export function MinisterCard({
 
   return (
     <>
-      <Card className="group hover:border-primary/20 overflow-hidden transition-all duration-200 hover:shadow-lg">
-        <CardHeader className="pb-3">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <Avatar className="h-12 w-12">
+      <Card
+        className="group border-border/50 from-background relative overflow-hidden bg-gradient-to-br to-purple-50/30 transition-all duration-300 hover:scale-[1.02] hover:border-purple-200 hover:shadow-lg"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-purple-500 to-indigo-600" />
+
+        <CardContent className="p-6">
+          <div className="mb-4 flex items-start gap-4">
+            <div className="relative">
+              <Avatar className="h-16 w-16 ring-2 ring-purple-100 ring-offset-2 transition-all duration-300 group-hover:ring-purple-200">
                 <AvatarImage
                   alt={fullName}
+                  className="object-cover"
                   src={minister.imageUrl || undefined}
                 />
-                <AvatarFallback className="bg-primary/10 text-primary">
+                <AvatarFallback className="bg-gradient-to-br from-purple-100 to-indigo-100 text-lg font-semibold text-purple-700">
                   {initials}
                 </AvatarFallback>
               </Avatar>
-              <div className="min-w-0 flex-1">
-                <h3 className="text-sm leading-tight font-semibold">
-                  {fullName}
-                </h3>
-                <p className="text-muted-foreground text-xs">
-                  Minister #{minister.id}
-                </p>
+              <div className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 shadow-sm">
+                <Crown className="h-3 w-3 text-white" />
+              </div>
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <h3 className="text-foreground mb-1 text-lg font-semibold text-balance">
+                {fullName}
+              </h3>
+
+              <div className="mb-2 flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-800 capitalize">
+                  {minister.gender}
+                </span>
+                <span className="inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800 capitalize">
+                  {minister.civilStatus}
+                </span>
                 {minister.nickname && (
-                  <p className="text-muted-foreground text-xs italic">
-                    &ldquo;{minister.nickname}&rdquo;
-                  </p>
+                  <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700 italic">
+                    &quot;{minister.nickname}&quot;
+                  </span>
                 )}
               </div>
             </div>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className="h-8 w-8 p-0" size="sm" variant="ghost">
+                <Button
+                  className={`h-8 w-8 p-0 transition-opacity duration-200 ${
+                    isHovered
+                      ? "opacity-100"
+                      : "opacity-0 group-hover:opacity-100"
+                  }`}
+                  size="sm"
+                  variant="ghost"
+                >
                   <span className="sr-only">Open menu</span>
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {onView && (
@@ -121,7 +151,7 @@ export function MinisterCard({
                 <DropdownMenuSeparator />
                 {onDelete && (
                   <DropdownMenuItem
-                    className="text-destructive"
+                    className="text-destructive focus:text-destructive"
                     onClick={() => setIsDeleteDialogOpen(true)}
                   >
                     <Trash2 className="mr-2 h-4 w-4" />
@@ -131,36 +161,25 @@ export function MinisterCard({
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-        </CardHeader>
 
-        <CardContent className="space-y-3 pt-0">
-          {/* Basic Info */}
-          <div className="grid grid-cols-2 gap-2 text-sm">
-            <div>
-              <span className="text-muted-foreground text-xs">Gender:</span>
-              <p className="capitalize">{minister.gender}</p>
-            </div>
-            <div>
-              <span className="text-muted-foreground text-xs">Status:</span>
-              <p className="capitalize">{minister.civilStatus}</p>
-            </div>
-          </div>
-
-          {/* Contact Info */}
           {(minister.email || minister.telephone) && (
-            <div className="space-y-2">
+            <div className="mb-4 flex flex-wrap gap-3">
               {minister.email && (
                 <div className="flex items-center gap-2">
-                  <Mail className="text-muted-foreground h-3 w-3" />
-                  <span className="text-muted-foreground truncate text-xs">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100">
+                    <Mail className="h-4 w-4 text-purple-600" />
+                  </div>
+                  <span className="text-muted-foreground max-w-[180px] truncate text-sm">
                     {minister.email}
                   </span>
                 </div>
               )}
               {minister.telephone && (
                 <div className="flex items-center gap-2">
-                  <Phone className="text-muted-foreground h-3 w-3" />
-                  <span className="text-muted-foreground text-xs">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100">
+                    <Phone className="h-4 w-4 text-indigo-600" />
+                  </div>
+                  <span className="text-muted-foreground text-sm">
                     {minister.telephone}
                   </span>
                 </div>
@@ -168,38 +187,21 @@ export function MinisterCard({
             </div>
           )}
 
-          {/* Birth Info */}
-          <div className="space-y-1">
-            <div className="text-xs">
-              <span className="text-muted-foreground">Birth:</span>{" "}
-              <span className="text-muted-foreground">
-                {format(new Date(minister.dateOfBirth), "MMM d, yyyy")}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100">
+                <Calendar className="h-4 w-4 text-slate-600" />
+              </div>
+              <span className="text-muted-foreground text-sm">
+                Born {format(new Date(minister.dateOfBirth), "MMMM yyyy")}
               </span>
             </div>
-            <div className="text-xs">
-              <span className="text-muted-foreground">Place:</span>{" "}
-              <span className="text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100">
+                <MapPin className="h-4 w-4 text-slate-600" />
+              </div>
+              <span className="text-muted-foreground text-sm">
                 {minister.placeOfBirth}
-              </span>
-            </div>
-          </div>
-
-          {/* Address */}
-          {minister.presentAddress && (
-            <div className="text-xs">
-              <span className="text-muted-foreground">Address:</span>{" "}
-              <span className="text-muted-foreground line-clamp-2">
-                {minister.presentAddress}
-              </span>
-            </div>
-          )}
-
-          {/* Created Date */}
-          <div className="border-border border-t pt-2">
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-muted-foreground">Registered:</span>
-              <span className="text-muted-foreground">
-                {format(new Date(minister.createdAt), "MMM d, yyyy")}
               </span>
             </div>
           </div>
