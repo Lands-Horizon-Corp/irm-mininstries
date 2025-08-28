@@ -127,7 +127,7 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
           {/* Church Image */}
           <Card>
             <CardContent className="p-0">
-              <div className="relative h-64 w-full overflow-hidden rounded-t-lg bg-gradient-to-br from-blue-50 to-indigo-100">
+              <div className="from-primary/5 to-primary/10 relative h-64 w-full overflow-hidden rounded-t-lg bg-gradient-to-br">
                 {church.imageUrl ? (
                   <Image
                     fill
@@ -137,7 +137,7 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center">
-                    <Building2 className="h-16 w-16 text-gray-400" />
+                    <Building2 className="text-muted-foreground h-16 w-16" />
                   </div>
                 )}
               </div>
@@ -153,25 +153,29 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-gray-500" />
+                    <MapPin className="text-muted-foreground h-4 w-4" />
                     <span className="font-medium">Address</span>
                   </div>
-                  <p className="text-sm text-gray-600">{church.address}</p>
+                  <p className="text-muted-foreground text-sm">
+                    {church.address}
+                  </p>
                 </div>
 
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-gray-500" />
+                    <Mail className="text-muted-foreground h-4 w-4" />
                     <span className="font-medium">Email</span>
                   </div>
-                  <p className="text-sm text-gray-600">{church.email}</p>
+                  <p className="text-muted-foreground text-sm">
+                    {church.email}
+                  </p>
                 </div>
               </div>
 
               {church.latitude && church.longitude && (
                 <div className="space-y-2">
                   <span className="font-medium">Coordinates</span>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-muted-foreground text-sm">
                     Lat: {church.latitude}, Lng: {church.longitude}
                   </p>
                 </div>
@@ -180,15 +184,17 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
               {church.description && (
                 <div className="space-y-2">
                   <span className="font-medium">Description</span>
-                  <p className="text-sm text-gray-600">{church.description}</p>
+                  <p className="text-muted-foreground text-sm">
+                    {church.description}
+                  </p>
                 </div>
               )}
 
               <Separator />
 
               <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-gray-400" />
-                <span className="text-sm text-gray-500">
+                <Calendar className="text-muted-foreground h-4 w-4" />
+                <span className="text-muted-foreground text-sm">
                   Created {format(new Date(church.createdAt), "PPP")}
                 </span>
               </div>
@@ -206,13 +212,15 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
             <CardContent className="space-y-4">
               {statsLoading ? (
                 <div className="py-4 text-center">
-                  <p className="text-sm text-gray-500">Loading statistics...</p>
+                  <p className="text-muted-foreground text-sm">
+                    Loading statistics...
+                  </p>
                 </div>
               ) : stats ? (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4 text-blue-600" />
+                      <Users className="text-primary h-4 w-4" />
                       <span className="text-sm">Members</span>
                     </div>
                     <Badge variant="secondary">{stats.memberCount}</Badge>
@@ -220,7 +228,7 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <UserCheck className="h-4 w-4 text-green-600" />
+                      <UserCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                       <span className="text-sm">Ministers</span>
                     </div>
                     <Badge variant="secondary">{stats.ministerCount}</Badge>
@@ -234,7 +242,9 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
                   </div>
                 </div>
               ) : (
-                <p className="text-sm text-gray-500">No statistics available</p>
+                <p className="text-muted-foreground text-sm">
+                  No statistics available
+                </p>
               )}
             </CardContent>
           </Card>

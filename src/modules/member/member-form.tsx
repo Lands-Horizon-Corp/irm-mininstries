@@ -15,6 +15,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ChurchSelect } from "@/components/ui/church-select";
+import { EducationalAttainmentSelect } from "@/components/ui/educational-attainment-select";
 import {
   Form,
   FormControl,
@@ -573,11 +574,11 @@ export default function MemberForm({
                           Highest Educational Attainment
                         </FormLabel>
                         <FormControl>
-                          <Input
-                            {...field}
+                          <EducationalAttainmentSelect
                             className="h-10 text-sm sm:h-11 sm:text-base"
-                            placeholder="e.g., Bachelor's Degree, Master's Degree"
+                            placeholder="Select educational attainment"
                             value={field.value || ""}
+                            onChange={field.onChange}
                           />
                         </FormControl>
                         <FormMessage />

@@ -9,6 +9,7 @@ import {
   Building2,
   Calendar,
   Edit,
+  ExternalLink,
   Eye,
   Filter,
   Mail,
@@ -70,12 +71,12 @@ const ChurchStatsComponent = ({ churchId }: ChurchStatsProps) => {
     return (
       <div className="flex gap-4">
         <div className="flex items-center gap-2">
-          <div className="h-4 w-4 animate-pulse rounded bg-gray-300" />
-          <span className="text-sm text-gray-400">Loading...</span>
+          <div className="bg-muted h-4 w-4 animate-pulse rounded" />
+          <span className="text-muted-foreground text-sm">Loading...</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-4 w-4 animate-pulse rounded bg-gray-300" />
-          <span className="text-sm text-gray-400">Loading...</span>
+          <div className="bg-muted h-4 w-4 animate-pulse rounded" />
+          <span className="text-muted-foreground text-sm">Loading...</span>
         </div>
       </div>
     );
@@ -88,14 +89,14 @@ const ChurchStatsComponent = ({ churchId }: ChurchStatsProps) => {
   return (
     <div className="flex gap-4">
       <div className="flex items-center gap-2">
-        <Users className="h-4 w-4 text-blue-600" />
+        <Users className="text-primary h-4 w-4" />
         <span className="text-sm font-medium">{stats.memberCount}</span>
-        <span className="text-xs text-gray-500">Members</span>
+        <span className="text-muted-foreground text-xs">Members</span>
       </div>
       <div className="flex items-center gap-2">
-        <UserCheck className="h-4 w-4 text-green-600" />
+        <UserCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
         <span className="text-sm font-medium">{stats.ministerCount}</span>
-        <span className="text-xs text-gray-500">Ministers</span>
+        <span className="text-muted-foreground text-xs">Ministers</span>
       </div>
     </div>
   );
@@ -179,7 +180,7 @@ const ChurchActions = ({ church }: ChurchActionsProps) => {
           />
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            className="text-red-600"
+            className="text-destructive"
             onClick={() => setIsDeleteDialogOpen(true)}
           >
             <Trash2 className="mr-2 h-4 w-4" />
@@ -324,7 +325,7 @@ export default function ChurchTable() {
 
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-gray-500" />
+            <Filter className="text-muted-foreground h-4 w-4" />
             <Select
               value={`${sortBy}-${sortOrder}`}
               onValueChange={handleSortChange}
@@ -365,12 +366,12 @@ export default function ChurchTable() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {Array.from({ length: 8 }).map((_, i) => (
             <Card className="overflow-hidden" key={i}>
-              <div className="h-48 w-full animate-pulse bg-gray-200" />
+              <div className="bg-muted h-48 w-full animate-pulse" />
               <CardContent className="p-4">
                 <div className="space-y-2">
-                  <div className="h-4 w-3/4 animate-pulse rounded bg-gray-200" />
-                  <div className="h-3 w-full animate-pulse rounded bg-gray-200" />
-                  <div className="h-3 w-2/3 animate-pulse rounded bg-gray-200" />
+                  <div className="bg-muted h-4 w-3/4 animate-pulse rounded" />
+                  <div className="bg-muted h-3 w-full animate-pulse rounded" />
+                  <div className="bg-muted h-3 w-2/3 animate-pulse rounded" />
                 </div>
               </CardContent>
             </Card>
@@ -378,11 +379,11 @@ export default function ChurchTable() {
         </div>
       ) : churches.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16">
-          <Building2 className="mb-4 h-16 w-16 text-gray-400" />
-          <h3 className="mb-2 text-lg font-semibold text-gray-900">
+          <Building2 className="text-muted-foreground mb-4 h-16 w-16" />
+          <h3 className="mb-2 text-lg font-semibold">
             {searchQuery ? "No churches found" : "No churches yet"}
           </h3>
-          <p className="max-w-md text-center text-gray-500">
+          <p className="text-muted-foreground max-w-md text-center">
             {searchQuery
               ? `No churches match your search "${searchQuery}". Try adjusting your search terms.`
               : "Get started by adding your first church location."}
@@ -396,7 +397,7 @@ export default function ChurchTable() {
               key={church.id}
             >
               {/* Church Image */}
-              <div className="relative h-48 w-full overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100">
+              <div className="from-primary/5 to-primary/10 relative h-48 w-full overflow-hidden bg-gradient-to-br">
                 {church.imageUrl ? (
                   <Image
                     fill
@@ -406,7 +407,7 @@ export default function ChurchTable() {
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center">
-                    <Building2 className="h-12 w-12 text-gray-400" />
+                    <Building2 className="text-muted-foreground h-12 w-12" />
                   </div>
                 )}
 
@@ -430,21 +431,41 @@ export default function ChurchTable() {
 
               <CardContent className="space-y-3 pt-0">
                 {/* Address */}
-                <div className="flex items-start gap-2">
-                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gray-500" />
-                  <p
-                    className="line-clamp-2 text-sm text-gray-600"
-                    title={church.address || undefined}
+                {church.latitude && church.longitude ? (
+                  <a
+                    className="group/map hover:bg-muted/50 -m-1 flex items-start gap-2 rounded p-1 transition-colors"
+                    href={`https://www.google.com/maps?q=${church.latitude},${church.longitude}`}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    title="Open in Google Maps"
                   >
-                    {church.address}
-                  </p>
-                </div>
+                    <div className="flex items-start gap-2">
+                      <MapPin className="text-primary group-hover/map:text-primary/80 mt-0.5 h-4 w-4 shrink-0 transition-colors" />
+                      <div className="flex-1">
+                        <p className="text-muted-foreground group-hover/map:text-foreground line-clamp-2 text-sm transition-colors">
+                          {church.address}
+                        </p>
+                      </div>
+                      <ExternalLink className="text-muted-foreground group-hover/map:text-primary mt-0.5 h-3 w-3 shrink-0 transition-colors" />
+                    </div>
+                  </a>
+                ) : (
+                  <div className="flex items-start gap-2">
+                    <MapPin className="text-muted-foreground mt-0.5 h-4 w-4 shrink-0" />
+                    <p
+                      className="text-muted-foreground line-clamp-2 text-sm"
+                      title={church.address || undefined}
+                    >
+                      {church.address}
+                    </p>
+                  </div>
+                )}
 
                 {/* Email */}
                 <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 shrink-0 text-gray-500" />
+                  <Mail className="text-muted-foreground h-4 w-4 shrink-0" />
                   <p
-                    className="truncate text-sm text-gray-600"
+                    className="text-muted-foreground truncate text-sm"
                     title={church.email || undefined}
                   >
                     {church.email}
@@ -452,14 +473,14 @@ export default function ChurchTable() {
                 </div>
 
                 {/* Stats */}
-                <div className="border-t border-gray-100 pt-2">
+                <div className="border-border border-t pt-2">
                   <ChurchStatsComponent churchId={church.id} />
                 </div>
 
                 {/* Creation Date */}
                 <div className="flex items-center gap-2 pt-1">
-                  <Calendar className="h-4 w-4 text-gray-400" />
-                  <span className="text-xs text-gray-500">
+                  <Calendar className="text-muted-foreground h-4 w-4" />
+                  <span className="text-muted-foreground text-xs">
                     Created {format(new Date(church.createdAt), "MMM d, yyyy")}
                   </span>
                 </div>
