@@ -1,8 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import type { Member } from "@/modules/member/member-schema";
+import type { ministers } from "@/modules/ministry/ministry-schema";
+
 import type { Church } from "./church-schema";
 import type { ChurchFormData } from "./church-validation";
+
+type Minister = typeof ministers.$inferSelect;
 
 // Types
 interface ApiResponse<T = unknown> {
@@ -41,6 +46,23 @@ interface GetChurchesParams {
   search?: string;
   sortBy?: string;
   sortOrder?: "asc" | "desc";
+}
+
+interface GetChurchPeopleParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+}
+
+interface PaginationInfo {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
 }
 
 // API service functions
@@ -106,6 +128,54 @@ const getChurchStats = async (
   }
 
   return result;
+};
+
+// Get church members
+const getChurchMembers = async (
+  churchId: number,
+  params: GetChurchPeopleParams = {}
+): Promise<{ data: Member[]; pagination: PaginationInfo }> => {
+  const searchParams = new URLSearchParams();
+
+  if (params.page) searchParams.set("page", params.page.toString());
+  if (params.limit) searchParams.set("limit", params.limit.toString());
+  if (params.search) searchParams.set("search", params.search);
+  if (params.sortBy) searchParams.set("sortBy", params.sortBy);
+  if (params.sortOrder) searchParams.set("sortOrder", params.sortOrder);
+
+  const response = await fetch(
+    `/api/churches/${churchId}/members?${searchParams.toString()}`
+  );
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
+};
+
+// Get church ministers
+const getChurchMinisters = async (
+  churchId: number,
+  params: GetChurchPeopleParams = {}
+): Promise<{ data: Minister[]; pagination: PaginationInfo }> => {
+  const searchParams = new URLSearchParams();
+
+  if (params.page) searchParams.set("page", params.page.toString());
+  if (params.limit) searchParams.set("limit", params.limit.toString());
+  if (params.search) searchParams.set("search", params.search);
+  if (params.sortBy) searchParams.set("sortBy", params.sortBy);
+  if (params.sortOrder) searchParams.set("sortOrder", params.sortOrder);
+
+  const response = await fetch(
+    `/api/churches/${churchId}/ministers?${searchParams.toString()}`
+  );
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
 };
 
 // Create church
@@ -204,6 +274,32 @@ export const useChurchStats = (id: number) => {
     queryKey: ["church-stats", id],
     queryFn: () => getChurchStats(id),
     enabled: !!id,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+};
+
+// Get church members
+export const useChurchMembers = (
+  churchId: number,
+  params: GetChurchPeopleParams = {}
+) => {
+  return useQuery({
+    queryKey: ["church-members", churchId, params],
+    queryFn: () => getChurchMembers(churchId, params),
+    enabled: !!churchId,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+};
+
+// Get church ministers
+export const useChurchMinisters = (
+  churchId: number,
+  params: GetChurchPeopleParams = {}
+) => {
+  return useQuery({
+    queryKey: ["church-ministers", churchId, params],
+    queryFn: () => getChurchMinisters(churchId, params),
+    enabled: !!churchId,
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 };

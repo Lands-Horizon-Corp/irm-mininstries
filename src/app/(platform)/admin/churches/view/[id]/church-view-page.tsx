@@ -14,6 +14,7 @@ import {
   Mail,
   MapPin,
   QrCode,
+  Search,
   Trash2,
   UserCheck,
   Users,
@@ -29,11 +30,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { MemberCard } from "@/components/ui/member-card";
+import { MinisterCard } from "@/components/ui/minister-card";
 import { QRCodeDialog } from "@/components/ui/qr-code";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ChurchForm from "@/modules/church/church-form";
 import {
   useChurch,
+  useChurchMembers,
+  useChurchMinisters,
   useChurchStats,
   useDeleteChurch,
 } from "@/modules/church/church-service";
@@ -45,14 +52,45 @@ interface ChurchViewPageProps {
 export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("overview");
+  const [membersSearch, setMembersSearch] = useState("");
+  const [ministersSearch, setMinistersSearch] = useState("");
+  const [membersPage, setMembersPage] = useState(1);
+  const [ministersPage, setMinistersPage] = useState(1);
 
   const { data: churchResponse, isLoading, error } = useChurch(churchId);
   const { data: statsResponse, isLoading: statsLoading } =
     useChurchStats(churchId);
+
+  // Fetch members and ministers
+  const { data: membersResponse, isLoading: membersLoading } = useChurchMembers(
+    churchId,
+    {
+      page: membersPage,
+      limit: 12,
+      search: membersSearch || undefined,
+      sortBy: "firstName",
+      sortOrder: "asc",
+    }
+  );
+
+  const { data: ministersResponse, isLoading: ministersLoading } =
+    useChurchMinisters(churchId, {
+      page: ministersPage,
+      limit: 12,
+      search: ministersSearch || undefined,
+      sortBy: "firstName",
+      sortOrder: "asc",
+    });
+
   const deleteChurchMutation = useDeleteChurch();
 
   const church = churchResponse?.data;
   const stats = statsResponse?.data;
+  const members = membersResponse?.data || [];
+  const membersPagination = membersResponse?.pagination;
+  const ministers = ministersResponse?.data || [];
+  const ministersPagination = ministersResponse?.pagination;
 
   const handleDelete = async () => {
     try {
@@ -287,6 +325,242 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
           </Card>
         </div>
       </div>
+
+      {/* Members and Ministers Section */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="members">
+            Members ({stats?.memberCount || 0})
+          </TabsTrigger>
+          <TabsTrigger value="ministers">
+            Ministers ({stats?.ministerCount || 0})
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent className="mt-6" value="overview">
+          <Card>
+            <CardContent className="p-6">
+              <div className="text-center">
+                <p className="text-muted-foreground">
+                  Switch to Members or Ministers tab to view church personnel.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent className="mt-6 space-y-4" value="members">
+          {/* Members Search */}
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1">
+                  <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+                  <Input
+                    className="pl-9"
+                    placeholder="Search members..."
+                    value={membersSearch}
+                    onChange={(e) => {
+                      setMembersSearch(e.target.value);
+                      setMembersPage(1);
+                    }}
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Members Grid */}
+          {membersLoading ? (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Card className="overflow-hidden" key={i}>
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-muted h-12 w-12 animate-pulse rounded-full" />
+                      <div className="space-y-2">
+                        <div className="bg-muted h-4 w-32 animate-pulse rounded" />
+                        <div className="bg-muted h-3 w-20 animate-pulse rounded" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : members.length === 0 ? (
+            <Card>
+              <CardContent className="p-8 text-center">
+                <Users className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
+                <h3 className="mb-2 text-lg font-semibold">
+                  {membersSearch ? "No members found" : "No members yet"}
+                </h3>
+                <p className="text-muted-foreground">
+                  {membersSearch
+                    ? `No members match "${membersSearch}"`
+                    : "This church doesn't have any members yet."}
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {members.map((member) => (
+                <MemberCard
+                  key={member.id}
+                  member={member}
+                  onDelete={(memberId) => {
+                    // TODO: Implement delete member
+                    console.log("Delete member:", memberId);
+                  }}
+                  onDownloadPdf={(member) => {
+                    // TODO: Implement PDF download
+                    console.log("Download PDF for member:", member);
+                  }}
+                  onEdit={(member) => {
+                    // TODO: Implement edit member
+                    console.log("Edit member:", member);
+                  }}
+                  onView={(member) => {
+                    // TODO: Implement view member details
+                    console.log("View member:", member);
+                  }}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Members Pagination */}
+          {membersPagination && membersPagination.totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2">
+              <Button
+                disabled={!membersPagination.hasPrev}
+                size="sm"
+                variant="outline"
+                onClick={() => setMembersPage(membersPage - 1)}
+              >
+                Previous
+              </Button>
+              <span className="text-muted-foreground text-sm">
+                Page {membersPagination.page} of {membersPagination.totalPages}
+              </span>
+              <Button
+                disabled={!membersPagination.hasNext}
+                size="sm"
+                variant="outline"
+                onClick={() => setMembersPage(membersPage + 1)}
+              >
+                Next
+              </Button>
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent className="mt-6 space-y-4" value="ministers">
+          {/* Ministers Search */}
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1">
+                  <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+                  <Input
+                    className="pl-9"
+                    placeholder="Search ministers..."
+                    value={ministersSearch}
+                    onChange={(e) => {
+                      setMinistersSearch(e.target.value);
+                      setMinistersPage(1);
+                    }}
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Ministers Grid */}
+          {ministersLoading ? (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Card className="overflow-hidden" key={i}>
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-muted h-12 w-12 animate-pulse rounded-full" />
+                      <div className="space-y-2">
+                        <div className="bg-muted h-4 w-32 animate-pulse rounded" />
+                        <div className="bg-muted h-3 w-20 animate-pulse rounded" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : ministers.length === 0 ? (
+            <Card>
+              <CardContent className="p-8 text-center">
+                <UserCheck className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
+                <h3 className="mb-2 text-lg font-semibold">
+                  {ministersSearch ? "No ministers found" : "No ministers yet"}
+                </h3>
+                <p className="text-muted-foreground">
+                  {ministersSearch
+                    ? `No ministers match "${ministersSearch}"`
+                    : "This church doesn't have any ministers yet."}
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {ministers.map((minister) => (
+                <MinisterCard
+                  key={minister.id}
+                  minister={minister}
+                  onDelete={(ministerId) => {
+                    // TODO: Implement delete minister
+                    console.log("Delete minister:", ministerId);
+                  }}
+                  onDownloadPdf={(minister) => {
+                    // TODO: Implement PDF download
+                    console.log("Download PDF for minister:", minister);
+                  }}
+                  onEdit={(minister) => {
+                    // TODO: Implement edit minister
+                    console.log("Edit minister:", minister);
+                  }}
+                  onView={(minister) => {
+                    // TODO: Implement view minister details
+                    console.log("View minister:", minister);
+                  }}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Ministers Pagination */}
+          {ministersPagination && ministersPagination.totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2">
+              <Button
+                disabled={!ministersPagination.hasPrev}
+                size="sm"
+                variant="outline"
+                onClick={() => setMinistersPage(ministersPage - 1)}
+              >
+                Previous
+              </Button>
+              <span className="text-muted-foreground text-sm">
+                Page {ministersPagination.page} of{" "}
+                {ministersPagination.totalPages}
+              </span>
+              <Button
+                disabled={!ministersPagination.hasNext}
+                size="sm"
+                variant="outline"
+                onClick={() => setMinistersPage(ministersPage + 1)}
+              >
+                Next
+              </Button>
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>

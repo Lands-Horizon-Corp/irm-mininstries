@@ -40,10 +40,10 @@ import { Textarea } from "@/components/ui/textarea";
 import type { StepProps } from "../../ministry-validation";
 
 const personalInformationSchema = z.object({
-  churchId: z.number().min(1, { message: "Church designation is required" }),
+  churchId: z.number().min(1, "Please select a church"),
   biography: z.string().optional(),
-  firstName: z.string().min(1, { message: "First name is required" }),
-  lastName: z.string().min(1, { message: "Last name is required" }),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
   middleName: z.string().optional(),
   suffix: z.string().optional(),
   nickname: z.string().optional(),
