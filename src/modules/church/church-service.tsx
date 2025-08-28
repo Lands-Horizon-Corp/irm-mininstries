@@ -12,6 +12,13 @@ interface ApiResponse<T = unknown> {
   data?: T;
 }
 
+interface ChurchStats {
+  churchId: number;
+  memberCount: number;
+  ministerCount: number;
+  totalPeople: number;
+}
+
 interface PaginatedResponse<T> extends ApiResponse<T[]> {
   pagination: {
     page: number;
@@ -77,6 +84,25 @@ const getChurchById = async (id: number): Promise<ApiResponse<Church>> => {
 
   if (!result.success) {
     throw new Error(result.error || "Failed to fetch church");
+  }
+
+  return result;
+};
+
+// Get church statistics (member and minister counts)
+const getChurchStats = async (
+  id: number
+): Promise<ApiResponse<ChurchStats>> => {
+  const response = await fetch(`/api/churches/${id}/stats`);
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const result = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.error || "Failed to fetch church statistics");
   }
 
   return result;
@@ -169,6 +195,16 @@ export const useChurch = (id: number) => {
     queryKey: ["church", id],
     queryFn: () => getChurchById(id),
     enabled: !!id,
+  });
+};
+
+// Get church statistics
+export const useChurchStats = (id: number) => {
+  return useQuery({
+    queryKey: ["church-stats", id],
+    queryFn: () => getChurchStats(id),
+    enabled: !!id,
+    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 };
 

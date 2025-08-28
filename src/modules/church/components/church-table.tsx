@@ -2,35 +2,28 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
-import type {
-  ColumnDef,
-  SortingState,
-  VisibilityState,
-} from "@tanstack/react-table";
-import {
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
 import { format } from "date-fns";
 import {
-  ArrowUpDown,
+  Building2,
   Calendar,
-  ChevronDown,
   Edit,
   Eye,
+  Filter,
   Mail,
   MapPin,
   MoreHorizontal,
+  QrCode,
   Search,
   Trash2,
+  UserCheck,
+  Users,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -47,18 +40,66 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { QRCodeDialog } from "@/components/ui/qr-code";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import ChurchForm from "../church-form";
 import type { Church } from "../church-schema";
-import { useChurches, useDeleteChurch } from "../church-service";
+import {
+  useChurches,
+  useChurchStats,
+  useDeleteChurch,
+} from "../church-service";
+
+// Church Stats Component
+interface ChurchStatsProps {
+  churchId: number;
+}
+
+const ChurchStatsComponent = ({ churchId }: ChurchStatsProps) => {
+  const { data: statsResponse, isLoading } = useChurchStats(churchId);
+  const stats = statsResponse?.data;
+
+  if (isLoading) {
+    return (
+      <div className="flex gap-4">
+        <div className="flex items-center gap-2">
+          <div className="h-4 w-4 animate-pulse rounded bg-gray-300" />
+          <span className="text-sm text-gray-400">Loading...</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="h-4 w-4 animate-pulse rounded bg-gray-300" />
+          <span className="text-sm text-gray-400">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!stats) {
+    return null;
+  }
+
+  return (
+    <div className="flex gap-4">
+      <div className="flex items-center gap-2">
+        <Users className="h-4 w-4 text-blue-600" />
+        <span className="text-sm font-medium">{stats.memberCount}</span>
+        <span className="text-xs text-gray-500">Members</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <UserCheck className="h-4 w-4 text-green-600" />
+        <span className="text-sm font-medium">{stats.ministerCount}</span>
+        <span className="text-xs text-gray-500">Ministers</span>
+      </div>
+    </div>
+  );
+};
 
 // Church Actions Component
 interface ChurchActionsProps {
@@ -66,7 +107,6 @@ interface ChurchActionsProps {
 }
 
 const ChurchActions = ({ church }: ChurchActionsProps) => {
-  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const deleteChurchMutation = useDeleteChurch();
@@ -84,6 +124,8 @@ const ChurchActions = ({ church }: ChurchActionsProps) => {
     setIsEditDialogOpen(false);
   };
 
+  const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+
   return (
     <>
       <DropdownMenu>
@@ -96,14 +138,45 @@ const ChurchActions = ({ church }: ChurchActionsProps) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => setIsViewDialogOpen(true)}>
-            <Eye className="mr-2 h-4 w-4" />
-            View
+          <DropdownMenuItem asChild>
+            <Link href={`/admin/churches/view/${church.id}`}>
+              <Eye className="mr-2 h-4 w-4" />
+              View
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
             <Edit className="mr-2 h-4 w-4" />
             Edit
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel>
+            <QrCode className="mr-2 inline h-4 w-4" />
+            QR Join Links
+          </DropdownMenuLabel>
+          <QRCodeDialog
+            description="Share this QR code for members to join this church."
+            filename={`join-member-${church.name.toLowerCase().replace(/\s+/g, "-")}`}
+            title={`Join ${church.name} as Member`}
+            trigger={
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                <Users className="mr-2 h-4 w-4" />
+                Member Join Link
+              </DropdownMenuItem>
+            }
+            value={`${baseUrl}/join/member?churchId=${church.id}`}
+          />
+          <QRCodeDialog
+            description="Share this QR code for workers to join this church."
+            filename={`join-worker-${church.name.toLowerCase().replace(/\s+/g, "-")}`}
+            title={`Join ${church.name} as Worker`}
+            trigger={
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                <UserCheck className="mr-2 h-4 w-4" />
+                Worker Join Link
+              </DropdownMenuItem>
+            }
+            value={`${baseUrl}/join/worker?churchId=${church.id}`}
+          />
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="text-red-600"
@@ -114,80 +187,6 @@ const ChurchActions = ({ church }: ChurchActionsProps) => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      {/* View Dialog */}
-      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-        <DialogContent className="min-w-4xl">
-          <DialogHeader>
-            <DialogTitle>Church Details</DialogTitle>
-            <DialogDescription>
-              View church information and location details.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-6">
-            {/* Church Image */}
-            {church.imageUrl && (
-              <div className="relative h-48 w-full overflow-hidden rounded-lg">
-                <Image
-                  fill
-                  alt="Church"
-                  className="h-full w-full object-cover"
-                  src={church.imageUrl}
-                />
-              </div>
-            )}
-
-            {/* Church Information */}
-            <div className="grid gap-4">
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold">Name</h3>
-                <p className="text-muted-foreground text-sm">{church.name}</p>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <MapPin className="text-muted-foreground h-4 w-4" />
-                    <span className="text-sm font-medium">Address</span>
-                  </div>
-                  <p className="text-muted-foreground text-sm">
-                    {church.address}
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Mail className="text-muted-foreground h-4 w-4" />
-                    <span className="text-sm font-medium">Email</span>
-                  </div>
-                  <p className="text-muted-foreground text-sm">
-                    {church.email}
-                  </p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <span className="text-sm font-medium">Coordinates</span>
-                  <p className="text-muted-foreground text-sm">
-                    Lat: {church.latitude}, Lng: {church.longitude}
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="text-muted-foreground h-4 w-4" />
-                    <span className="text-sm font-medium">Created</span>
-                  </div>
-                  <p className="text-muted-foreground text-sm">
-                    {format(new Date(church.createdAt), "PPP")}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
@@ -236,109 +235,13 @@ const ChurchActions = ({ church }: ChurchActionsProps) => {
   );
 };
 
-// Define table columns
-const columns: ColumnDef<Church>[] = [
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => <ChurchActions church={row.original} />,
-  },
-  {
-    accessorKey: "id",
-    header: ({ column }) => (
-      <Button
-        className="h-8 px-2"
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        ID
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <div className="font-mono text-sm">{row.getValue("id")}</div>
-    ),
-  },
-
-  {
-    accessorKey: "name",
-    header: ({ column }) => (
-      <Button
-        className="h-8 px-2"
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Name
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const name = row.getValue("name") as string;
-      return (
-        <div className="max-w-[300px] truncate" title={name}>
-          {name}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "address",
-    header: "Address",
-    cell: ({ row }) => {
-      const address = row.getValue("address") as string;
-      return (
-        <div className="flex items-center gap-2">
-          <MapPin className="text-muted-foreground h-4 w-4" />
-          <span className="max-w-[200px] truncate" title={address}>
-            {address}
-          </span>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-    cell: ({ row }) => {
-      const email = row.getValue("email") as string;
-      return (
-        <div className="flex items-center gap-2">
-          <Mail className="text-muted-foreground h-4 w-4" />
-          <span className="font-mono text-sm">{email}</span>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "createdAt",
-    header: ({ column }) => (
-      <Button
-        className="h-8 px-2"
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Created
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const createdAt = row.getValue("createdAt") as string;
-      return (
-        <div className="flex items-center gap-2">
-          <Calendar className="text-muted-foreground h-4 w-4" />
-          <span className="text-sm">{format(new Date(createdAt), "PPP")}</span>
-        </div>
-      );
-    },
-  },
-];
-
-// Main Church Table Component
+// Main Church Cards Component
 export default function ChurchTable() {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState("createdAt");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [limitPerPage, setLimitPerPage] = useState(12);
 
   // Fetch churches with current filters
   const {
@@ -347,32 +250,25 @@ export default function ChurchTable() {
     error,
   } = useChurches({
     page: currentPage,
-    limit: 10,
+    limit: limitPerPage,
     search: searchQuery || undefined,
-    sortBy: sorting[0]?.id,
-    sortOrder: sorting[0]?.desc ? "desc" : "asc",
+    sortBy,
+    sortOrder,
   });
 
   const churches = churchesResponse?.data || [];
   const pagination = churchesResponse?.pagination;
 
-  const table = useReactTable({
-    data: churches,
-    columns,
-    onSortingChange: setSorting,
-    onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    state: {
-      sorting,
-      columnVisibility,
-    },
-  });
-
   const handleSearch = (value: string) => {
     setSearchQuery(value);
     setCurrentPage(1); // Reset to first page when searching
+  };
+
+  const handleSortChange = (value: string) => {
+    const [field, order] = value.split("-");
+    setSortBy(field);
+    setSortOrder(order as "asc" | "desc");
+    setCurrentPage(1);
   };
 
   if (error) {
@@ -396,18 +292,18 @@ export default function ChurchTable() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Header Section */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Churches</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Churches</h2>
           <p className="text-muted-foreground">
             Manage church locations and information
           </p>
         </div>
         <div className="flex items-center gap-2">
           {pagination && (
-            <Badge variant="secondary">
+            <Badge className="text-sm" variant="secondary">
               {pagination.total} church{pagination.total !== 1 ? "es" : ""}
             </Badge>
           )}
@@ -415,8 +311,8 @@ export default function ChurchTable() {
       </div>
 
       {/* Search and Filters */}
-      <div className="flex items-center space-x-2">
-        <div className="relative flex-1">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative max-w-md flex-1">
           <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <Input
             className="pl-9"
@@ -425,96 +321,157 @@ export default function ChurchTable() {
             onChange={(e) => handleSearch(e.target.value)}
           />
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuItem
-                    className="capitalize"
-                    key={column.id}
-                    onClick={() =>
-                      column.toggleVisibility(!column.getIsVisible())
-                    }
-                  >
-                    {column.getIsVisible() ? "✓ " : ""}
-                    {column.id}
-                  </DropdownMenuItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
+            <Filter className="h-4 w-4 text-gray-500" />
+            <Select
+              value={`${sortBy}-${sortOrder}`}
+              onValueChange={handleSortChange}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Sort by..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="name-asc">Name (A-Z)</SelectItem>
+                <SelectItem value="name-desc">Name (Z-A)</SelectItem>
+                <SelectItem value="createdAt-desc">Newest First</SelectItem>
+                <SelectItem value="createdAt-asc">Oldest First</SelectItem>
+                <SelectItem value="address-asc">Location (A-Z)</SelectItem>
+                <SelectItem value="address-desc">Location (Z-A)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Select
+            value={limitPerPage.toString()}
+            onValueChange={(value) => setLimitPerPage(parseInt(value))}
+          >
+            <SelectTrigger className="w-[120px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="6">6 per page</SelectItem>
+              <SelectItem value="12">12 per page</SelectItem>
+              <SelectItem value="24">24 per page</SelectItem>
+              <SelectItem value="48">48 per page</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      {/* Table */}
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell
-                  className="h-24 text-center"
-                  colSpan={columns.length}
-                >
-                  Loading...
-                </TableCell>
-              </TableRow>
-            ) : churches.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  className="h-24 text-center"
-                  colSpan={columns.length}
-                >
-                  {searchQuery ? "No churches found." : "No churches yet."}
-                </TableCell>
-              </TableRow>
-            ) : (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  data-state={row.getIsSelected() && "selected"}
-                  key={row.id}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+      {/* Churches Grid */}
+      {isLoading ? (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <Card className="overflow-hidden" key={i}>
+              <div className="h-48 w-full animate-pulse bg-gray-200" />
+              <CardContent className="p-4">
+                <div className="space-y-2">
+                  <div className="h-4 w-3/4 animate-pulse rounded bg-gray-200" />
+                  <div className="h-3 w-full animate-pulse rounded bg-gray-200" />
+                  <div className="h-3 w-2/3 animate-pulse rounded bg-gray-200" />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : churches.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16">
+          <Building2 className="mb-4 h-16 w-16 text-gray-400" />
+          <h3 className="mb-2 text-lg font-semibold text-gray-900">
+            {searchQuery ? "No churches found" : "No churches yet"}
+          </h3>
+          <p className="max-w-md text-center text-gray-500">
+            {searchQuery
+              ? `No churches match your search "${searchQuery}". Try adjusting your search terms.`
+              : "Get started by adding your first church location."}
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {churches.map((church) => (
+            <Card
+              className="group hover:border-primary/20 overflow-hidden transition-all duration-200 hover:shadow-lg"
+              key={church.id}
+            >
+              {/* Church Image */}
+              <div className="relative h-48 w-full overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100">
+                {church.imageUrl ? (
+                  <Image
+                    fill
+                    alt={`${church.name} church`}
+                    className="object-cover transition-transform duration-200 group-hover:scale-105"
+                    src={church.imageUrl}
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center">
+                    <Building2 className="h-12 w-12 text-gray-400" />
+                  </div>
+                )}
+
+                {/* Action Button Overlay */}
+                <div className="absolute top-2 right-2">
+                  <ChurchActions church={church} />
+                </div>
+              </div>
+
+              {/* Church Information */}
+              <CardHeader className="pb-2">
+                <div className="flex items-start justify-between gap-2">
+                  <h3 className="group-hover:text-primary line-clamp-2 text-lg leading-tight font-semibold transition-colors">
+                    {church.name}
+                  </h3>
+                  <Badge className="shrink-0 text-xs" variant="outline">
+                    #{church.id}
+                  </Badge>
+                </div>
+              </CardHeader>
+
+              <CardContent className="space-y-3 pt-0">
+                {/* Address */}
+                <div className="flex items-start gap-2">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gray-500" />
+                  <p
+                    className="line-clamp-2 text-sm text-gray-600"
+                    title={church.address || undefined}
+                  >
+                    {church.address}
+                  </p>
+                </div>
+
+                {/* Email */}
+                <div className="flex items-center gap-2">
+                  <Mail className="h-4 w-4 shrink-0 text-gray-500" />
+                  <p
+                    className="truncate text-sm text-gray-600"
+                    title={church.email || undefined}
+                  >
+                    {church.email}
+                  </p>
+                </div>
+
+                {/* Stats */}
+                <div className="border-t border-gray-100 pt-2">
+                  <ChurchStatsComponent churchId={church.id} />
+                </div>
+
+                {/* Creation Date */}
+                <div className="flex items-center gap-2 pt-1">
+                  <Calendar className="h-4 w-4 text-gray-400" />
+                  <span className="text-xs text-gray-500">
+                    Created {format(new Date(church.createdAt), "MMM d, yyyy")}
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
 
       {/* Pagination */}
       {pagination && pagination.totalPages > 1 && (
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between pt-6">
           <div className="text-muted-foreground text-sm">
             Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
             {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
