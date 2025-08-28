@@ -11,8 +11,10 @@ import {
   ArrowLeft,
   Building2,
   Calendar,
+  Download,
   Edit,
   ExternalLink,
+  FileSpreadsheet,
   Mail,
   MapPin,
   Navigation,
@@ -93,6 +95,8 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
     useState(false);
   const [isDownloadingMinisterPDF, setIsDownloadingMinisterPDF] =
     useState(false);
+  const [isExportingMembers, setIsExportingMembers] = useState(false);
+  const [isExportingMinisters, setIsExportingMinisters] = useState(false);
 
   const { data: churchResponse, isLoading, error } = useChurch(churchId);
   const { data: statsResponse, isLoading: statsLoading } =
@@ -251,6 +255,70 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
       console.error("Failed to download PDF:", error);
     } finally {
       setIsDownloadingMinisterPDF(false);
+    }
+  };
+
+  // Export handler functions
+  const handleExportMembers = async () => {
+    try {
+      setIsExportingMembers(true);
+      const response = await fetch(`/api/churches/${churchId}/members/export`, {
+        method: "GET",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to export members");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      const churchName =
+        church?.name.toLowerCase().replace(/[^a-z0-9]/g, "-") || "church";
+      link.download = `${churchName}-members-${new Date().toISOString().split("T")[0]}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Export members failed:", error);
+      // You could add a toast notification here
+    } finally {
+      setIsExportingMembers(false);
+    }
+  };
+
+  const handleExportMinisters = async () => {
+    try {
+      setIsExportingMinisters(true);
+      const response = await fetch(
+        `/api/churches/${churchId}/ministers/export`,
+        {
+          method: "GET",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to export ministers");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      const churchName =
+        church?.name.toLowerCase().replace(/[^a-z0-9]/g, "-") || "church";
+      link.download = `${churchName}-ministers-${new Date().toISOString().split("T")[0]}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Export ministers failed:", error);
+      // You could add a toast notification here
+    } finally {
+      setIsExportingMinisters(false);
     }
   };
 
@@ -625,6 +693,22 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
                     }}
                   />
                 </div>
+                <Button
+                  className="gap-2"
+                  disabled={isExportingMembers || members.length === 0}
+                  variant="outline"
+                  onClick={handleExportMembers}
+                >
+                  <FileSpreadsheet className="h-4 w-4" />
+                  {isExportingMembers ? (
+                    <>
+                      <Download className="h-4 w-4 animate-spin" />
+                      Exporting...
+                    </>
+                  ) : (
+                    "Export Excel"
+                  )}
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -732,6 +816,22 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
                     }}
                   />
                 </div>
+                <Button
+                  className="gap-2"
+                  disabled={isExportingMinisters || ministers.length === 0}
+                  variant="outline"
+                  onClick={handleExportMinisters}
+                >
+                  <FileSpreadsheet className="h-4 w-4" />
+                  {isExportingMinisters ? (
+                    <>
+                      <Download className="h-4 w-4 animate-spin" />
+                      Exporting...
+                    </>
+                  ) : (
+                    "Export Excel"
+                  )}
+                </Button>
               </div>
             </CardContent>
           </Card>
