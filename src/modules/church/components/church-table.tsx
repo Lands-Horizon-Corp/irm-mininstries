@@ -8,9 +8,11 @@ import { format } from "date-fns";
 import {
   Building2,
   Calendar,
+  Download,
   Edit,
   ExternalLink,
   Eye,
+  FileSpreadsheet,
   Filter,
   Mail,
   MapPin,
@@ -243,6 +245,7 @@ export default function ChurchTable() {
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [limitPerPage, setLimitPerPage] = useState(12);
+  const [isExporting, setIsExporting] = useState(false);
 
   // Fetch churches with current filters
   const {
@@ -270,6 +273,36 @@ export default function ChurchTable() {
     setSortBy(field);
     setSortOrder(order as "asc" | "desc");
     setCurrentPage(1);
+  };
+
+  const handleExportToExcel = async () => {
+    try {
+      setIsExporting(true);
+
+      const response = await fetch("/api/churches/export");
+
+      if (!response.ok) {
+        throw new Error("Failed to export churches");
+      }
+
+      // Get the blob and create download link
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `churches-export-${new Date().toISOString().split("T")[0]}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error exporting to Excel:", error);
+      // You could add a toast notification here
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   if (error) {
@@ -548,6 +581,28 @@ export default function ChurchTable() {
           </div>
         </div>
       )}
+
+      {/* Export Section */}
+      <div className="flex items-center justify-center border-t pt-6">
+        <Button
+          className="gap-2"
+          disabled={isExporting || churches.length === 0}
+          variant="outline"
+          onClick={handleExportToExcel}
+        >
+          {isExporting ? (
+            <>
+              <Download className="h-4 w-4 animate-spin" />
+              Exporting...
+            </>
+          ) : (
+            <>
+              <FileSpreadsheet className="h-4 w-4" />
+              Export All Churches to Excel
+            </>
+          )}
+        </Button>
+      </div>
     </div>
   );
 }

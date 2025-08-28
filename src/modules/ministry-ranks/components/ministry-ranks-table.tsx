@@ -20,8 +20,10 @@ import {
   Calendar,
   ChevronDown,
   Crown,
+  Download,
   Edit,
   Eye,
+  FileSpreadsheet,
   FileText,
   MoreHorizontal,
   Search,
@@ -361,6 +363,7 @@ export default function MinistryRanksTable() {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isExporting, setIsExporting] = useState(false);
 
   // Fetch ministry ranks with current filters
   const {
@@ -395,6 +398,34 @@ export default function MinistryRanksTable() {
   const handleSearch = (value: string) => {
     setSearchQuery(value);
     setCurrentPage(1); // Reset to first page when searching
+  };
+
+  const handleExportToExcel = async () => {
+    try {
+      setIsExporting(true);
+      const response = await fetch("/api/ministry-ranks/export", {
+        method: "GET",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to export ministry ranks");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `ministry-ranks-${new Date().toISOString().split("T")[0]}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Export failed:", error);
+      // You could add a toast notification here
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   if (error) {
@@ -591,6 +622,26 @@ export default function MinistryRanksTable() {
           </div>
         </div>
       )}
+
+      {/* Export Section */}
+      <div className="flex items-center justify-center border-t pt-4">
+        <Button
+          className="gap-2"
+          disabled={isExporting || ministryRanks.length === 0}
+          variant="outline"
+          onClick={handleExportToExcel}
+        >
+          <FileSpreadsheet className="h-4 w-4" />
+          {isExporting ? (
+            <>
+              <Download className="h-4 w-4 animate-spin" />
+              Exporting...
+            </>
+          ) : (
+            "Export to Excel"
+          )}
+        </Button>
+      </div>
     </div>
   );
 }
