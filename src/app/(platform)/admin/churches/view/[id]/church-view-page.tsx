@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { format } from "date-fns";
 import {
   ArrowLeft,
@@ -14,6 +15,7 @@ import {
   ExternalLink,
   Mail,
   MapPin,
+  Navigation,
   QrCode,
   Search,
   Trash2,
@@ -120,6 +122,13 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
   const deleteChurchMutation = useDeleteChurch();
   const deleteMemberMutation = useDeleteMember();
   const deleteMinisterMutation = useDeleteMinister();
+
+  // Google Maps setup
+  const { isLoaded: isMapLoaded } = useJsApiLoader({
+    id: "google-maps-script",
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
+    libraries: ["places", "geometry"],
+  });
 
   const church = churchResponse?.data;
   const stats = statsResponse?.data;
@@ -487,6 +496,105 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
               />
             </CardContent>
           </Card>
+
+          {/* Location Map */}
+          {church.latitude && church.longitude && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Navigation className="h-5 w-5" />
+                  Location
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="h-48 w-full overflow-hidden rounded-lg border">
+                  {isMapLoaded ? (
+                    <GoogleMap
+                      center={{
+                        lat: parseFloat(church.latitude),
+                        lng: parseFloat(church.longitude),
+                      }}
+                      mapContainerStyle={{
+                        width: "100%",
+                        height: "100%",
+                      }}
+                      options={{
+                        disableDefaultUI: true,
+                        zoomControl: true,
+                        gestureHandling: "cooperative",
+                        clickableIcons: false,
+                      }}
+                      zoom={15}
+                    >
+                      <Marker
+                        position={{
+                          lat: parseFloat(church.latitude),
+                          lng: parseFloat(church.longitude),
+                        }}
+                        title={church.name}
+                      />
+                    </GoogleMap>
+                  ) : (
+                    <div className="bg-muted text-muted-foreground flex h-full w-full items-center justify-center text-sm">
+                      Loading map...
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-start gap-2">
+                    <MapPin className="text-muted-foreground mt-0.5 h-4 w-4 shrink-0" />
+                    <div className="text-sm">
+                      <p className="font-medium">{church.name}</p>
+                      {church.address && (
+                        <p className="text-muted-foreground text-xs">
+                          {church.address}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="text-muted-foreground font-mono text-xs">
+                    {parseFloat(church.latitude).toFixed(6)},{" "}
+                    {parseFloat(church.longitude).toFixed(6)}
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <Button
+                    asChild
+                    className="flex-1"
+                    size="sm"
+                    variant="outline"
+                  >
+                    <a
+                      href={`https://www.google.com/maps?q=${church.latitude},${church.longitude}`}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <ExternalLink className="mr-2 h-4 w-4" />
+                      Open in Maps
+                    </a>
+                  </Button>
+                  <Button
+                    asChild
+                    className="flex-1"
+                    size="sm"
+                    variant="outline"
+                  >
+                    <a
+                      href={`https://www.google.com/maps/dir/?api=1&destination=${church.latitude},${church.longitude}`}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <Navigation className="mr-2 h-4 w-4" />
+                      Get Directions
+                    </a>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
 

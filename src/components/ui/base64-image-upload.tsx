@@ -42,6 +42,7 @@ export const Base64ImageUpload: React.FC<Base64ImageUploadProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [availableDevices, setAvailableDevices] = useState<MediaDeviceInfo[]>(
     []
   );
@@ -98,21 +99,39 @@ export const Base64ImageUpload: React.FC<Base64ImageUploadProps> = ({
   };
 
   const handleFileSelect = useCallback(async (file: File) => {
-    if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
-      try {
-        const base64 = await fileToBase64(file);
-        setTempBase64(base64);
-        setPreviewUrl(base64);
-        setIsEditing(true);
-      } catch (error) {
-        console.error("Error converting file to base64:", error);
-      }
+    setUploadError(null); // Clear any previous errors
+
+    // Check if file type is valid
+    if (!file || (file.type !== "image/jpeg" && file.type !== "image/png")) {
+      setUploadError("Please select a valid image file (JPEG or PNG).");
+      return;
+    }
+
+    // Check file size (1.5MB = 1.5 * 1024 * 1024 bytes = 1,572,864 bytes)
+    const maxSizeInBytes = 1.5 * 1024 * 1024; // 1.5MB
+    if (file.size > maxSizeInBytes) {
+      const fileSizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+      setUploadError(
+        `File size (${fileSizeInMB}MB) exceeds the maximum limit of 1.5MB. Please choose a smaller image.`
+      );
+      return;
+    }
+
+    try {
+      const base64 = await fileToBase64(file);
+      setTempBase64(base64);
+      setPreviewUrl(base64);
+      setIsEditing(true);
+    } catch (error) {
+      console.error("Error converting file to base64:", error);
+      setUploadError("Failed to process the image. Please try again.");
     }
   }, []);
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setUploadError(null); // Clear any previous errors when selecting new file
       handleFileSelect(file);
     }
   };
@@ -121,6 +140,7 @@ export const Base64ImageUpload: React.FC<Base64ImageUploadProps> = ({
     (e: React.DragEvent) => {
       e.preventDefault();
       setIsDragging(false);
+      setUploadError(null); // Clear any previous errors when dropping new file
       const file = e.dataTransfer.files?.[0];
       if (file) {
         handleFileSelect(file);
@@ -245,6 +265,7 @@ export const Base64ImageUpload: React.FC<Base64ImageUploadProps> = ({
     setIsEditing(false);
     setTempBase64(null);
     setRotation(0);
+    setUploadError(null); // Clear upload errors
     stopCamera();
     if (!value) {
       setPreviewUrl(null);
@@ -297,6 +318,17 @@ export const Base64ImageUpload: React.FC<Base64ImageUploadProps> = ({
                 </TabsList>
 
                 <TabsContent className="space-y-4" value="upload">
+                  {uploadError && (
+                    <div className="border-destructive/20 bg-destructive/10 rounded-lg border p-4">
+                      <p className="text-destructive text-sm font-medium">
+                        Upload Error
+                      </p>
+                      <p className="text-destructive/80 mt-1 text-sm">
+                        {uploadError}
+                      </p>
+                    </div>
+                  )}
+
                   <div
                     className={cn(
                       "group rounded-xl border-2 border-dashed p-12 text-center transition-all duration-300",
@@ -319,6 +351,9 @@ export const Base64ImageUpload: React.FC<Base64ImageUploadProps> = ({
                         </p>
                         <p className="text-muted-foreground text-sm">
                           or click to select files
+                        </p>
+                        <p className="text-muted-foreground text-xs">
+                          Maximum file size: 1.5MB (JPEG, PNG)
                         </p>
                       </div>
                       <Button
