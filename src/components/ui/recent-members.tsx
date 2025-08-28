@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { format, formatDistanceToNow } from "date-fns";
 import {
   Calendar,
   Church,
@@ -13,7 +14,6 @@ import {
   Trash2,
   User,
 } from "lucide-react";
-import { format, formatDistanceToNow } from "date-fns";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -34,6 +34,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ImageViewer } from "@/components/ui/image-viewer";
 import { QRAction } from "@/components/ui/qr-action";
 import { ViewMemberDialog } from "@/modules/member/components/view-member-dialog";
 // Import member-related components and services
@@ -215,6 +216,106 @@ const MemberActions = ({ member, onRefresh }: MemberActionsProps) => {
   );
 };
 
+// Member Item Component
+interface MemberItemProps {
+  member: RecentMember;
+  onRefresh: () => void;
+  formatDate: (dateString: string) => string;
+  getTimeAgo: (dateString: string) => string;
+  getInitials: (firstName: string, lastName: string) => string;
+}
+
+const MemberItem = ({
+  member,
+  onRefresh,
+  formatDate,
+  getTimeAgo,
+  getInitials,
+}: MemberItemProps) => {
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
+
+  const handleNameClick = () => {
+    setIsViewDialogOpen(true);
+  };
+
+  const handleImageClick = () => {
+    if (member.profilePicture) {
+      setIsImageViewerOpen(true);
+    }
+  };
+
+  return (
+    <>
+      <div className="bg-card/50 hover:bg-card flex items-start space-x-3 rounded-lg border p-3 transition-colors">
+        <Avatar
+          className={`h-10 w-10 ${member.profilePicture ? "cursor-pointer hover:opacity-80" : ""}`}
+          onClick={handleImageClick}
+        >
+          <AvatarImage src={member.profilePicture || undefined} />
+          <AvatarFallback className="text-xs">
+            {getInitials(member.firstName, member.lastName)}
+          </AvatarFallback>
+        </Avatar>
+
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between">
+            <div className="min-w-0 flex-1">
+              <h4
+                className="text-foreground hover:text-primary cursor-pointer truncate text-sm font-semibold transition-colors"
+                onClick={handleNameClick}
+              >
+                {member.firstName} {member.lastName}
+              </h4>
+
+              <div className="mt-1 flex items-center gap-1">
+                <Church className="text-muted-foreground h-3 w-3" />
+                <span className="text-muted-foreground truncate text-xs">
+                  {member.churchName || "No Church"}
+                </span>
+              </div>
+
+              {member.email && (
+                <div className="mt-1 flex items-center gap-1">
+                  <Mail className="text-muted-foreground h-3 w-3" />
+                  <span className="text-muted-foreground truncate text-xs">
+                    {member.email}
+                  </span>
+                </div>
+              )}
+
+              <div className="mt-1 flex items-center gap-1">
+                <Calendar className="text-muted-foreground h-3 w-3" />
+                <span className="text-muted-foreground text-xs">
+                  Joined {getTimeAgo(member.createdAt)} (
+                  {formatDate(member.createdAt)})
+                </span>
+              </div>
+            </div>
+
+            <MemberActions member={member} onRefresh={onRefresh} />
+          </div>
+        </div>
+      </div>
+
+      {/* View Member Dialog */}
+      <ViewMemberDialog
+        isOpen={isViewDialogOpen}
+        memberId={member.id}
+        onClose={() => setIsViewDialogOpen(false)}
+      />
+
+      {/* Image Viewer for profile pictures */}
+      <ImageViewer
+        alt={`${member.firstName} ${member.lastName} profile picture`}
+        isOpen={isImageViewerOpen}
+        src={member.profilePicture}
+        onClose={() => setIsImageViewerOpen(false)}
+      />
+    </>
+  );
+};
+
 export function RecentMembers() {
   const [members, setMembers] = useState<RecentMember[]>([]);
   const [loading, setLoading] = useState(true);
@@ -324,56 +425,14 @@ export function RecentMembers() {
           </div>
         ) : (
           members.map((member) => (
-            <div
-              className="bg-card/50 hover:bg-card flex items-start space-x-3 rounded-lg border p-3 transition-colors"
+            <MemberItem
+              formatDate={formatDate}
+              getInitials={getInitials}
+              getTimeAgo={getTimeAgo}
               key={member.id}
-            >
-              <Avatar className="h-10 w-10">
-                <AvatarImage src={member.profilePicture || undefined} />
-                <AvatarFallback className="text-xs">
-                  {getInitials(member.firstName, member.lastName)}
-                </AvatarFallback>
-              </Avatar>
-
-              <div className="min-w-0 flex-1">
-                <div className="flex items-start justify-between">
-                  <div className="min-w-0 flex-1">
-                    <h4 className="text-foreground truncate text-sm font-semibold">
-                      {member.firstName} {member.lastName}
-                    </h4>
-
-                    <div className="mt-1 flex items-center gap-1">
-                      <Church className="text-muted-foreground h-3 w-3" />
-                      <span className="text-muted-foreground truncate text-xs">
-                        {member.churchName || "No Church"}
-                      </span>
-                    </div>
-
-                    {member.email && (
-                      <div className="mt-1 flex items-center gap-1">
-                        <Mail className="text-muted-foreground h-3 w-3" />
-                        <span className="text-muted-foreground truncate text-xs">
-                          {member.email}
-                        </span>
-                      </div>
-                    )}
-
-                    <div className="mt-1 flex items-center gap-1">
-                      <Calendar className="text-muted-foreground h-3 w-3" />
-                      <span className="text-muted-foreground text-xs">
-                        Joined {getTimeAgo(member.createdAt)} (
-                        {formatDate(member.createdAt)})
-                      </span>
-                    </div>
-                  </div>
-
-                  <MemberActions
-                    member={member}
-                    onRefresh={fetchRecentMembers}
-                  />
-                </div>
-              </div>
-            </div>
+              member={member}
+              onRefresh={fetchRecentMembers}
+            />
           ))
         )}
       </CardContent>
