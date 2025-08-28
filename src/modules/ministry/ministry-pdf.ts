@@ -159,11 +159,15 @@ export async function generateMinisterPDF(
   lookupData: LookupData = {}
 ): Promise<void> {
   const pdf = new jsPDF("p", "mm", "a4");
-  let yPosition = 25;
+  let yPosition = 30;
   const pageHeight = pdf.internal.pageSize.height;
   const pageWidth = pdf.internal.pageSize.width;
   const margin = 20;
   const contentWidth = pageWidth - 2 * margin;
+  const primaryColor = [65, 105, 225]; // Royal blue
+  const accentColor = [220, 220, 250]; // Light lavender
+  const textColor = [50, 50, 50];
+  const lightTextColor = [100, 100, 100];
 
   // Helper function to convert image URL to base64
   const getImageAsBase64 = async (imageUrl: string): Promise<string> => {
@@ -187,7 +191,28 @@ export async function generateMinisterPDF(
     const footerSpace = 30;
     if (yPosition + requiredSpace > pageHeight - margin - footerSpace) {
       pdf.addPage();
-      yPosition = 25;
+      yPosition = 30;
+
+      // Add header to new page
+      pdf.setFillColor(accentColor[0], accentColor[1], accentColor[2]);
+      pdf.rect(0, 0, pageWidth, 20, "F");
+
+      pdf.setFontSize(16);
+      pdf.setFont("helvetica", "bold");
+      pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+      pdf.text(
+        "I AM REDEEMER AND MASTER EVANGELICAL CHURCH",
+        pageWidth / 2,
+        15,
+        {
+          align: "center",
+        }
+      );
+
+      pdf.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+      pdf.setLineWidth(0.5);
+      pdf.line(margin, 22, pageWidth - margin, 22);
+
       return true;
     }
     return false;
@@ -198,12 +223,12 @@ export async function generateMinisterPDF(
     checkPageBreak(30);
     pdf.setFontSize(fontSize);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(50, 50, 150);
+    pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
     const textWidth = pdf.getTextWidth(text);
     const centerX = (pageWidth - textWidth) / 2;
     pdf.text(text, centerX, yPosition);
 
-    pdf.setDrawColor(50, 50, 150);
+    pdf.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
     pdf.setLineWidth(0.3);
     pdf.line(centerX, yPosition + 2, centerX + textWidth, yPosition + 2);
 
@@ -212,22 +237,18 @@ export async function generateMinisterPDF(
 
   // Helper function to add section header
   const addSectionHeader = (title: string) => {
-    checkPageBreak(45);
+    checkPageBreak(15);
     yPosition += 10;
 
-    pdf.setFillColor(240, 240, 250);
-    pdf.rect(margin, yPosition - 8, contentWidth, 12, "F");
+    pdf.setFillColor(accentColor[0], accentColor[1], accentColor[2]);
+    pdf.rect(margin, yPosition - 5, contentWidth, 10, "F");
 
-    pdf.setFontSize(14);
+    pdf.setFontSize(12);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(50, 50, 150);
-    pdf.text(title, margin + 5, yPosition);
+    pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    pdf.text(title, margin + 5, yPosition + 2);
 
-    pdf.setDrawColor(50, 50, 150);
-    pdf.setLineWidth(0.2);
-    pdf.line(margin, yPosition + 2, pageWidth - margin, yPosition + 2);
-
-    yPosition += 15;
+    yPosition += 12;
   };
 
   // Helper function to add field in two columns
@@ -237,27 +258,29 @@ export async function generateMinisterPDF(
     isLeftColumn = true,
     customY?: number
   ) => {
-    if (!value) return;
+    if (!value) return 0;
 
     const currentY = customY || yPosition;
     const columnWidth = contentWidth / 2 - 5;
-    const xPosition = isLeftColumn ? margin + 10 : margin + columnWidth + 15;
+    const xPosition = isLeftColumn ? margin + 5 : margin + columnWidth + 10;
 
-    pdf.setFontSize(9);
+    pdf.setFontSize(10);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(80, 80, 80);
-    pdf.text(label + ":", xPosition, currentY);
+    pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+    pdf.text(`${label}:`, xPosition, currentY);
 
     pdf.setFont("helvetica", "normal");
-    pdf.setTextColor(40, 40, 40);
-    const lines = pdf.splitTextToSize(value, columnWidth - 10);
-    pdf.text(lines, xPosition, currentY + 4);
+    pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+    const lines = pdf.splitTextToSize(value, columnWidth - 15);
+    pdf.text(lines, xPosition + 2, currentY + 5);
+
+    const fieldHeight = Math.max(10, lines.length * 5 + 5);
 
     if (!customY) {
-      yPosition += Math.max(8, lines.length * 4 + 4);
+      yPosition += fieldHeight;
     }
 
-    return lines.length * 4 + 8;
+    return fieldHeight;
   };
 
   // Helper function to add image
@@ -271,7 +294,7 @@ export async function generateMinisterPDF(
     try {
       const base64Image = await getImageAsBase64(imageUrl);
       if (base64Image) {
-        checkPageBreak(height + 10);
+        checkPageBreak(height + 15);
         const x = centered ? (pageWidth - width) / 2 : margin + 10;
 
         pdf.setDrawColor(200, 200, 200);
@@ -282,7 +305,11 @@ export async function generateMinisterPDF(
 
         pdf.setFontSize(8);
         pdf.setFont("helvetica", "italic");
-        pdf.setTextColor(100, 100, 100);
+        pdf.setTextColor(
+          lightTextColor[0],
+          lightTextColor[1],
+          lightTextColor[2]
+        );
         const captionX = centered ? (pageWidth - pdf.getTextWidth(alt)) / 2 : x;
         pdf.text(alt, captionX, yPosition + height + 5);
 
@@ -304,7 +331,14 @@ export async function generateMinisterPDF(
   };
 
   const formatCivilStatus = (status: string) => {
-    return status.charAt(0).toUpperCase() + status.slice(1);
+    const statusMap: Record<string, string> = {
+      single: "Single",
+      married: "Married",
+      widowed: "Widowed",
+      separated: "Separated",
+      divorced: "Divorced",
+    };
+    return statusMap[status] || status;
   };
 
   const _getChurchName = (id: number) => {
@@ -332,13 +366,23 @@ export async function generateMinisterPDF(
   };
 
   try {
-    // Add decorative header line
-    pdf.setDrawColor(50, 50, 150);
+    // Add header
+    pdf.setFillColor(accentColor[0], accentColor[1], accentColor[2]);
+    pdf.rect(0, 0, pageWidth, 20, "F");
+
+    pdf.setFontSize(16);
+    pdf.setFont("helvetica", "bold");
+    pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    pdf.text("I AM REDEEMER AND MASTER EVANGELICAL CHURCH", pageWidth / 2, 15, {
+      align: "center",
+    });
+
+    pdf.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
     pdf.setLineWidth(0.5);
-    pdf.line(margin, 15, pageWidth - margin, 15);
+    pdf.line(margin, 22, pageWidth - margin, 22);
 
     // Main title
-    addTitle("MINISTRY APPLICATION OVERVIEW", 22);
+    addTitle("MINISTRY APPLICATION FORM", 18);
     yPosition += 5;
 
     // Applicant name as subtitle
@@ -351,20 +395,20 @@ export async function generateMinisterPDF(
       .filter(Boolean)
       .join(" ");
 
-    pdf.setFontSize(16);
-    pdf.setFont("helvetica", "normal");
-    pdf.setTextColor(80, 80, 80);
+    pdf.setFontSize(14);
+    pdf.setFont("helvetica", "bold");
+    pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
     const nameWidth = pdf.getTextWidth(fullName);
     pdf.text(fullName, (pageWidth - nameWidth) / 2, yPosition);
-    yPosition += 15;
+    yPosition += 10;
 
     // Add application date
-    pdf.setFontSize(10);
-    pdf.setTextColor(120, 120, 120);
+    pdf.setFontSize(9);
+    pdf.setTextColor(lightTextColor[0], lightTextColor[1], lightTextColor[2]);
     const dateText = `Generated on ${format(new Date(), "MMMM dd, yyyy")}`;
     const dateWidth = pdf.getTextWidth(dateText);
     pdf.text(dateText, (pageWidth - dateWidth) / 2, yPosition);
-    yPosition += 20;
+    yPosition += 15;
 
     // Personal Information Section
     addSectionHeader("PERSONAL INFORMATION");
@@ -372,83 +416,162 @@ export async function generateMinisterPDF(
     // Add profile photo if available
     if (ministerData.imageUrl) {
       await addImage(ministerData.imageUrl, "Profile Photo", 35, 45, true);
+      yPosition += 5;
     }
 
     // Personal details in two columns
     const personalStartY = yPosition;
-    addField("Full Name", fullName, true, personalStartY);
-    addField("Nickname", ministerData.nickname, false, personalStartY);
+    let maxHeight = 0;
 
-    const dobY = personalStartY + 12;
-    addField("Date of Birth", formatDate(ministerData.dateOfBirth), true, dobY);
-    addField("Place of Birth", ministerData.placeOfBirth, false, dobY);
+    const nameFieldHeight = addField(
+      "Full Name",
+      fullName,
+      true,
+      personalStartY
+    );
+    const nicknameFieldHeight = addField(
+      "Nickname",
+      ministerData.nickname,
+      false,
+      personalStartY
+    );
+    maxHeight = Math.max(maxHeight, nameFieldHeight, nicknameFieldHeight);
 
-    // Biography field (full width)
-    let biographyY = personalStartY + 24;
-    if (ministerData.biography) {
-      checkPageBreak(40);
-      addField("Biography", ministerData.biography, true, biographyY);
-      biographyY += 20;
-    }
+    const dobY = personalStartY + maxHeight + 2;
+    const dobFieldHeight = addField(
+      "Date of Birth",
+      formatDate(ministerData.dateOfBirth),
+      true,
+      dobY
+    );
+    const pobFieldHeight = addField(
+      "Place of Birth",
+      ministerData.placeOfBirth,
+      false,
+      dobY
+    );
+    maxHeight += Math.max(dobFieldHeight, pobFieldHeight) + 2;
 
-    const genderY = biographyY;
-    addField("Gender", formatGender(ministerData.gender), true, genderY);
-    addField(
+    const genderY = personalStartY + maxHeight + 2;
+    const genderFieldHeight = addField(
+      "Gender",
+      formatGender(ministerData.gender),
+      true,
+      genderY
+    );
+    const statusFieldHeight = addField(
       "Civil Status",
       formatCivilStatus(ministerData.civilStatus),
       false,
       genderY
     );
+    maxHeight += Math.max(genderFieldHeight, statusFieldHeight) + 2;
 
-    const physicalY = genderY + 12;
-    addField(
+    const physicalY = personalStartY + maxHeight + 2;
+    const heightFieldHeight = addField(
       "Height",
       ministerData.heightFeet ? `${ministerData.heightFeet} ft` : null,
       true,
       physicalY
     );
-    addField(
+    const weightFieldHeight = addField(
       "Weight",
       ministerData.weightKg ? `${ministerData.weightKg} kg` : null,
       false,
       physicalY
     );
+    maxHeight += Math.max(heightFieldHeight, weightFieldHeight) + 2;
 
-    yPosition = Math.max(physicalY + 12, yPosition);
+    yPosition = personalStartY + maxHeight + 10;
+
+    // Biography field (full width)
+    if (ministerData.biography) {
+      checkPageBreak(30);
+      pdf.setFontSize(10);
+      pdf.setFont("helvetica", "bold");
+      pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+      pdf.text("Biography:", margin, yPosition);
+
+      pdf.setFont("helvetica", "normal");
+      const bioLines = pdf.splitTextToSize(
+        ministerData.biography,
+        contentWidth
+      );
+      pdf.text(bioLines, margin, yPosition + 6);
+
+      yPosition += bioLines.length * 5 + 12;
+    }
 
     // Contact & Government Information
     addSectionHeader("CONTACT & GOVERNMENT INFORMATION");
 
     const contactStartY = yPosition;
-    addField("Email Address", ministerData.email, true, contactStartY);
-    addField("Telephone", ministerData.telephone, false, contactStartY);
+    maxHeight = 0;
 
-    const addressY = contactStartY + 12;
-    addField("Current Address", ministerData.address, true, addressY);
-    addField("Present Address", ministerData.presentAddress, false, addressY);
+    const emailFieldHeight = addField(
+      "Email Address",
+      ministerData.email,
+      true,
+      contactStartY
+    );
+    const telFieldHeight = addField(
+      "Telephone",
+      ministerData.telephone,
+      false,
+      contactStartY
+    );
+    maxHeight = Math.max(maxHeight, emailFieldHeight, telFieldHeight);
 
-    const permAddressY = contactStartY + 24;
-    addField(
+    const addressY = contactStartY + maxHeight + 2;
+    const addressFieldHeight = addField(
+      "Current Address",
+      ministerData.address,
+      true,
+      addressY
+    );
+    const presentAddressFieldHeight = addField(
+      "Present Address",
+      ministerData.presentAddress,
+      false,
+      addressY
+    );
+    maxHeight += Math.max(addressFieldHeight, presentAddressFieldHeight) + 2;
+
+    const permAddressY = contactStartY + maxHeight + 2;
+    const permAddressFieldHeight = addField(
       "Permanent Address",
       ministerData.permanentAddress || "Same as present address",
       true,
       permAddressY
     );
-    addField(
+    const passportFieldHeight = addField(
       "Passport Number",
       ministerData.passportNumber,
       false,
       permAddressY
     );
+    maxHeight += Math.max(permAddressFieldHeight, passportFieldHeight) + 2;
 
-    const govIdY = contactStartY + 36;
-    addField("SSS Number", ministerData.sssNumber, true, govIdY);
-    addField("PhilHealth", ministerData.philhealth, false, govIdY);
+    const govIdY = contactStartY + maxHeight + 2;
+    const sssFieldHeight = addField(
+      "SSS Number",
+      ministerData.sssNumber,
+      true,
+      govIdY
+    );
+    const philhealthFieldHeight = addField(
+      "PhilHealth",
+      ministerData.philhealth,
+      false,
+      govIdY
+    );
+    maxHeight += Math.max(sssFieldHeight, philhealthFieldHeight) + 2;
 
-    const tinY = contactStartY + 48;
-    addField("TIN", ministerData.tin, true, tinY);
+    const tinY = contactStartY + maxHeight + 2;
+    const tinFieldHeight = addField("TIN", ministerData.tin, true, tinY);
+    maxHeight += tinFieldHeight + 2;
 
-    yPosition = Math.max(contactStartY + 60, yPosition);
+    yPosition = contactStartY + maxHeight + 10;
 
     // Family Information
     addSectionHeader("FAMILY INFORMATION");
@@ -456,116 +579,184 @@ export async function generateMinisterPDF(
     // Father Information
     pdf.setFontSize(11);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(60, 60, 60);
-    pdf.text("Father Information", margin + 5, yPosition);
+    pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    pdf.text("Father Information", margin, yPosition);
     yPosition += 8;
 
     const fatherStartY = yPosition;
-    addField("Name", ministerData.fatherName, true, fatherStartY);
-    addField("Province", ministerData.fatherProvince, false, fatherStartY);
-    addField(
+    maxHeight = 0;
+
+    const fatherNameHeight = addField(
+      "Name",
+      ministerData.fatherName,
+      true,
+      fatherStartY
+    );
+    const fatherProvinceHeight = addField(
+      "Province",
+      ministerData.fatherProvince,
+      false,
+      fatherStartY
+    );
+    maxHeight = Math.max(maxHeight, fatherNameHeight, fatherProvinceHeight);
+
+    const fatherDobY = fatherStartY + maxHeight + 2;
+    const fatherDobHeight = addField(
       "Birthday",
       formatDate(ministerData.fatherBirthday),
       true,
-      fatherStartY + 12
+      fatherDobY
     );
-    addField(
+    const fatherOccupationHeight = addField(
       "Occupation",
       ministerData.fatherOccupation,
       false,
-      fatherStartY + 12
+      fatherDobY
     );
-    yPosition = fatherStartY + 28;
+    maxHeight += Math.max(fatherDobHeight, fatherOccupationHeight) + 2;
+
+    yPosition = fatherStartY + maxHeight + 15;
 
     // Mother Information
-    checkPageBreak(40);
-    yPosition += 5;
+    checkPageBreak(20);
     pdf.setFontSize(11);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(60, 60, 60);
-    pdf.text("Mother Information", margin + 5, yPosition);
+    pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    pdf.text("Mother Information", margin, yPosition);
     yPosition += 8;
 
     const motherStartY = yPosition;
-    addField("Name", ministerData.motherName, true, motherStartY);
-    addField("Province", ministerData.motherProvince, false, motherStartY);
-    addField(
+    maxHeight = 0;
+
+    const motherNameHeight = addField(
+      "Name",
+      ministerData.motherName,
+      true,
+      motherStartY
+    );
+    const motherProvinceHeight = addField(
+      "Province",
+      ministerData.motherProvince,
+      false,
+      motherStartY
+    );
+    maxHeight = Math.max(maxHeight, motherNameHeight, motherProvinceHeight);
+
+    const motherDobY = motherStartY + maxHeight + 2;
+    const motherDobHeight = addField(
       "Birthday",
       formatDate(ministerData.motherBirthday),
       true,
-      motherStartY + 12
+      motherDobY
     );
-    addField(
+    const motherOccupationHeight = addField(
       "Occupation",
       ministerData.motherOccupation,
       false,
-      motherStartY + 12
+      motherDobY
     );
-    yPosition = motherStartY + 28;
+    maxHeight += Math.max(motherDobHeight, motherOccupationHeight) + 2;
+
+    yPosition = motherStartY + maxHeight + 15;
 
     // Spouse Information (if married)
     if (ministerData.civilStatus === "married") {
-      checkPageBreak(50);
-      yPosition += 5;
+      checkPageBreak(20);
       pdf.setFontSize(11);
       pdf.setFont("helvetica", "bold");
-      pdf.setTextColor(60, 60, 60);
-      pdf.text("Spouse Information", margin + 5, yPosition);
+      pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+      pdf.text("Spouse Information", margin, yPosition);
       yPosition += 8;
 
       const spouseStartY = yPosition;
-      addField("Name", ministerData.spouseName, true, spouseStartY);
-      addField("Province", ministerData.spouseProvince, false, spouseStartY);
-      addField(
+      maxHeight = 0;
+
+      const spouseNameHeight = addField(
+        "Name",
+        ministerData.spouseName,
+        true,
+        spouseStartY
+      );
+      const spouseProvinceHeight = addField(
+        "Province",
+        ministerData.spouseProvince,
+        false,
+        spouseStartY
+      );
+      maxHeight = Math.max(maxHeight, spouseNameHeight, spouseProvinceHeight);
+
+      const spouseDobY = spouseStartY + maxHeight + 2;
+      const spouseDobHeight = addField(
         "Birthday",
         formatDate(ministerData.spouseBirthday),
         true,
-        spouseStartY + 12
+        spouseDobY
       );
-      addField(
+      const spouseOccupationHeight = addField(
         "Occupation",
         ministerData.spouseOccupation,
         false,
-        spouseStartY + 12
+        spouseDobY
       );
-      addField(
+      maxHeight += Math.max(spouseDobHeight, spouseOccupationHeight) + 2;
+
+      const weddingY = spouseStartY + maxHeight + 2;
+      const weddingHeight = addField(
         "Wedding Date",
         formatDate(ministerData.weddingDate),
         true,
-        spouseStartY + 24
+        weddingY
       );
-      yPosition = spouseStartY + 36;
+      maxHeight += weddingHeight + 2;
+
+      yPosition = spouseStartY + maxHeight + 15;
     }
 
     // Children
     if (ministerData.children && ministerData.children.length > 0) {
-      checkPageBreak(50);
-      yPosition += 5;
+      checkPageBreak(20);
       pdf.setFontSize(11);
       pdf.setFont("helvetica", "bold");
-      pdf.setTextColor(60, 60, 60);
-      pdf.text("Children", margin + 5, yPosition);
+      pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+      pdf.text("Children", margin, yPosition);
       yPosition += 8;
 
       ministerData.children.forEach((child, index) => {
-        checkPageBreak(35);
+        checkPageBreak(30);
         pdf.setFontSize(10);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(80, 80, 80);
-        pdf.text(`Child ${index + 1}:`, margin + 10, yPosition);
+        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.text(`Child ${index + 1}:`, margin, yPosition);
         yPosition += 6;
 
         const childStartY = yPosition;
-        addField("Name", child.name, true, childStartY);
-        addField(
+        maxHeight = 0;
+
+        const childNameHeight = addField("Name", child.name, true, childStartY);
+        const childDobHeight = addField(
           "Date of Birth",
           formatDate(child.dateOfBirth),
           false,
           childStartY
         );
-        addField("Gender", formatGender(child.gender), true, childStartY + 12);
-        addField("Place of Birth", child.placeOfBirth, false, childStartY + 12);
-        yPosition = childStartY + 28;
+        maxHeight = Math.max(maxHeight, childNameHeight, childDobHeight);
+
+        const childGenderY = childStartY + maxHeight + 2;
+        const childGenderHeight = addField(
+          "Gender",
+          formatGender(child.gender),
+          true,
+          childGenderY
+        );
+        const childPobHeight = addField(
+          "Place of Birth",
+          child.placeOfBirth,
+          false,
+          childGenderY
+        );
+        maxHeight += Math.max(childGenderHeight, childPobHeight) + 2;
+
+        yPosition = childStartY + maxHeight + 15;
       });
     }
 
@@ -577,24 +768,46 @@ export async function generateMinisterPDF(
       addSectionHeader("EMERGENCY CONTACTS");
 
       ministerData.emergencyContacts.forEach((contact, index) => {
-        checkPageBreak(40);
+        checkPageBreak(30);
         pdf.setFontSize(10);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(80, 80, 80);
-        pdf.text(`Contact ${index + 1}:`, margin + 10, yPosition);
+        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.text(`Contact ${index + 1}:`, margin, yPosition);
         yPosition += 6;
 
         const contactStartY = yPosition;
-        addField("Name", contact.name, true, contactStartY);
-        addField("Relationship", contact.relationship, false, contactStartY);
-        addField("Address", contact.address, true, contactStartY + 12);
-        addField(
+        maxHeight = 0;
+
+        const contactNameHeight = addField(
+          "Name",
+          contact.name,
+          true,
+          contactStartY
+        );
+        const contactRelHeight = addField(
+          "Relationship",
+          contact.relationship,
+          false,
+          contactStartY
+        );
+        maxHeight = Math.max(maxHeight, contactNameHeight, contactRelHeight);
+
+        const contactAddressY = contactStartY + maxHeight + 2;
+        const contactAddressHeight = addField(
+          "Address",
+          contact.address,
+          true,
+          contactAddressY
+        );
+        const contactNumberHeight = addField(
           "Contact Number",
           contact.contactNumber,
           false,
-          contactStartY + 12
+          contactAddressY
         );
-        yPosition = contactStartY + 28;
+        maxHeight += Math.max(contactAddressHeight, contactNumberHeight) + 2;
+
+        yPosition = contactStartY + maxHeight + 15;
       });
     }
 
@@ -606,17 +819,40 @@ export async function generateMinisterPDF(
       ministerData.otherReligiousSecularTraining
     ) {
       addSectionHeader("SKILLS & INTERESTS");
+
       const skillsStartY = yPosition;
-      addField("Skills", ministerData.skills, true, skillsStartY);
-      addField("Hobbies", ministerData.hobbies, false, skillsStartY);
-      addField("Sports", ministerData.sports, true, skillsStartY + 12);
-      addField(
+      maxHeight = 0;
+
+      const skillsHeight = addField(
+        "Skills",
+        ministerData.skills,
+        true,
+        skillsStartY
+      );
+      const hobbiesHeight = addField(
+        "Hobbies",
+        ministerData.hobbies,
+        false,
+        skillsStartY
+      );
+      maxHeight = Math.max(maxHeight, skillsHeight, hobbiesHeight);
+
+      const sportsY = skillsStartY + maxHeight + 2;
+      const sportsHeight = addField(
+        "Sports",
+        ministerData.sports,
+        true,
+        sportsY
+      );
+      const trainingHeight = addField(
         "Other Religious/Secular Training",
         ministerData.otherReligiousSecularTraining,
         false,
-        skillsStartY + 12
+        sportsY
       );
-      yPosition = skillsStartY + 24;
+      maxHeight += Math.max(sportsHeight, trainingHeight) + 2;
+
+      yPosition = skillsStartY + maxHeight + 10;
     }
 
     // Educational Background
@@ -627,34 +863,63 @@ export async function generateMinisterPDF(
       addSectionHeader("EDUCATIONAL BACKGROUND");
 
       ministerData.educationBackgrounds.forEach((education, index) => {
-        checkPageBreak(50);
+        checkPageBreak(30);
         pdf.setFontSize(10);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(80, 80, 80);
-        pdf.text(`Education ${index + 1}:`, margin + 10, yPosition);
+        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.text(`Education ${index + 1}:`, margin, yPosition);
         yPosition += 6;
 
         const eduStartY = yPosition;
-        addField("School Name", education.schoolName, true, eduStartY);
-        addField(
+        maxHeight = 0;
+
+        const schoolHeight = addField(
+          "School Name",
+          education.schoolName,
+          true,
+          eduStartY
+        );
+        const attainmentHeight = addField(
           "Educational Attainment",
           education.educationalAttainment,
           false,
           eduStartY
         );
-        addField("Course", education.course, true, eduStartY + 12);
-        addField(
+        maxHeight = Math.max(maxHeight, schoolHeight, attainmentHeight);
+
+        const courseY = eduStartY + maxHeight + 2;
+        const courseHeight = addField(
+          "Course",
+          education.course,
+          true,
+          courseY
+        );
+        const gradDateHeight = addField(
           "Date Graduated",
           formatDate(education.dateGraduated),
           false,
-          eduStartY + 12
+          courseY
         );
+        maxHeight += Math.max(courseHeight, gradDateHeight) + 2;
+
         if (education.description) {
-          addField("Description", education.description, true, eduStartY + 24);
-          yPosition = eduStartY + 36;
-        } else {
-          yPosition = eduStartY + 24;
+          const descY = eduStartY + maxHeight + 2;
+          pdf.setFontSize(10);
+          pdf.setFont("helvetica", "bold");
+          pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+          pdf.text("Description:", margin, descY);
+
+          pdf.setFont("helvetica", "normal");
+          const descLines = pdf.splitTextToSize(
+            education.description,
+            contentWidth
+          );
+          pdf.text(descLines, margin, descY + 5);
+
+          maxHeight += descLines.length * 5 + 10;
         }
+
+        yPosition = eduStartY + maxHeight + 15;
       });
     }
 
@@ -666,24 +931,46 @@ export async function generateMinisterPDF(
       addSectionHeader("EMPLOYMENT HISTORY");
 
       ministerData.employmentRecords.forEach((employment, index) => {
-        checkPageBreak(40);
+        checkPageBreak(25);
         pdf.setFontSize(10);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(80, 80, 80);
-        pdf.text(`Employment ${index + 1}:`, margin + 10, yPosition);
+        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.text(`Employment ${index + 1}:`, margin, yPosition);
         yPosition += 6;
 
         const empStartY = yPosition;
-        addField("Company Name", employment.companyName, true, empStartY);
-        addField("Position", employment.position, false, empStartY);
-        addField("From Year", employment.fromYear, true, empStartY + 12);
-        addField(
+        maxHeight = 0;
+
+        const companyHeight = addField(
+          "Company Name",
+          employment.companyName,
+          true,
+          empStartY
+        );
+        const positionHeight = addField(
+          "Position",
+          employment.position,
+          false,
+          empStartY
+        );
+        maxHeight = Math.max(maxHeight, companyHeight, positionHeight);
+
+        const periodY = empStartY + maxHeight + 2;
+        const fromHeight = addField(
+          "From Year",
+          employment.fromYear,
+          true,
+          periodY
+        );
+        const toHeight = addField(
           "To Year",
           employment.toYear || "Present",
           false,
-          empStartY + 12
+          periodY
         );
-        yPosition = empStartY + 28;
+        maxHeight += Math.max(fromHeight, toHeight) + 2;
+
+        yPosition = empStartY + maxHeight + 15;
       });
     }
 
@@ -695,38 +982,57 @@ export async function generateMinisterPDF(
       addSectionHeader("MINISTRY EXPERIENCE");
 
       ministerData.ministryExperiences.forEach((experience, index) => {
-        checkPageBreak(50);
+        checkPageBreak(30);
         pdf.setFontSize(10);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(80, 80, 80);
-        pdf.text(`Ministry Experience ${index + 1}:`, margin + 10, yPosition);
+        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.text(`Ministry Experience ${index + 1}:`, margin, yPosition);
         yPosition += 6;
 
         const expStartY = yPosition;
-        addField(
+        maxHeight = 0;
+
+        const rankHeight = addField(
           "Ministry Rank",
           _getMinistryRankName(experience.ministryRankId),
           true,
           expStartY
         );
-        addField("From Year", experience.fromYear, false, expStartY);
-        addField(
+        const fromHeight = addField(
+          "From Year",
+          experience.fromYear,
+          false,
+          expStartY
+        );
+        maxHeight = Math.max(maxHeight, rankHeight, fromHeight);
+
+        const toY = expStartY + maxHeight + 2;
+        const toHeight = addField(
           "To Year",
           experience.toYear || "Present",
           true,
-          expStartY + 12
+          toY
         );
+        maxHeight += toHeight + 2;
+
         if (experience.description) {
-          addField(
-            "Description",
+          const descY = expStartY + maxHeight + 2;
+          pdf.setFontSize(10);
+          pdf.setFont("helvetica", "bold");
+          pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+          pdf.text("Description:", margin, descY);
+
+          pdf.setFont("helvetica", "normal");
+          const descLines = pdf.splitTextToSize(
             experience.description,
-            false,
-            expStartY + 12
+            contentWidth
           );
-          yPosition = expStartY + 36;
-        } else {
-          yPosition = expStartY + 24;
+          pdf.text(descLines, margin, descY + 5);
+
+          maxHeight += descLines.length * 5 + 10;
         }
+
+        yPosition = expStartY + maxHeight + 15;
       });
     }
 
@@ -735,15 +1041,15 @@ export async function generateMinisterPDF(
       addSectionHeader("MINISTRY SKILLS");
 
       const skillsPerRow = 2;
-      let currentRow = 0;
       const skillsStartY = yPosition;
 
       ministerData.ministrySkills.forEach((skill, index) => {
         const isLeftColumn = index % skillsPerRow === 0;
-        const rowY = skillsStartY + Math.floor(index / skillsPerRow) * 12;
+        const row = Math.floor(index / skillsPerRow);
+        const rowY = skillsStartY + row * 8;
 
-        if (isLeftColumn) {
-          checkPageBreak(15);
+        if (isLeftColumn && row > 0) {
+          checkPageBreak(10);
         }
 
         addField(
@@ -752,10 +1058,12 @@ export async function generateMinisterPDF(
           isLeftColumn,
           rowY
         );
-        currentRow = Math.floor(index / skillsPerRow);
       });
 
-      yPosition = skillsStartY + (currentRow + 1) * 12 + 10;
+      const totalRows = Math.ceil(
+        ministerData.ministrySkills.length / skillsPerRow
+      );
+      yPosition = skillsStartY + totalRows * 8 + 10;
     }
 
     // Ministry Records
@@ -766,38 +1074,57 @@ export async function generateMinisterPDF(
       addSectionHeader("MINISTRY RECORDS");
 
       ministerData.ministryRecords.forEach((record, index) => {
-        checkPageBreak(50);
+        checkPageBreak(30);
         pdf.setFontSize(10);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(80, 80, 80);
-        pdf.text(`Ministry Record ${index + 1}:`, margin + 10, yPosition);
+        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.text(`Ministry Record ${index + 1}:`, margin, yPosition);
         yPosition += 6;
 
         const recordStartY = yPosition;
-        addField(
+        maxHeight = 0;
+
+        const churchHeight = addField(
           "Church Location",
           _getChurchName(record.churchLocationId),
           true,
           recordStartY
         );
-        addField("From Year", record.fromYear, false, recordStartY);
-        addField(
+        const fromHeight = addField(
+          "From Year",
+          record.fromYear,
+          false,
+          recordStartY
+        );
+        maxHeight = Math.max(maxHeight, churchHeight, fromHeight);
+
+        const toY = recordStartY + maxHeight + 2;
+        const toHeight = addField(
           "To Year",
           record.toYear || "Present",
           true,
-          recordStartY + 12
+          toY
         );
+        maxHeight += toHeight + 2;
+
         if (record.contribution) {
-          addField(
-            "Contribution",
+          const contribY = recordStartY + maxHeight + 2;
+          pdf.setFontSize(10);
+          pdf.setFont("helvetica", "bold");
+          pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+          pdf.text("Contribution:", margin, contribY);
+
+          pdf.setFont("helvetica", "normal");
+          const contribLines = pdf.splitTextToSize(
             record.contribution,
-            false,
-            recordStartY + 12
+            contentWidth
           );
-          yPosition = recordStartY + 36;
-        } else {
-          yPosition = recordStartY + 24;
+          pdf.text(contribLines, margin, contribY + 5);
+
+          maxHeight += contribLines.length * 5 + 10;
         }
+
+        yPosition = recordStartY + maxHeight + 15;
       });
     }
 
@@ -809,17 +1136,31 @@ export async function generateMinisterPDF(
       addSectionHeader("AWARDS & RECOGNITIONS");
 
       ministerData.awardsRecognitions.forEach((award, index) => {
-        checkPageBreak(30);
+        checkPageBreak(20);
         pdf.setFontSize(10);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(80, 80, 80);
-        pdf.text(`Award ${index + 1}:`, margin + 10, yPosition);
+        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.text(`Award ${index + 1}:`, margin, yPosition);
         yPosition += 6;
 
         const awardStartY = yPosition;
-        addField("Year", award.year || "Not specified", true, awardStartY);
-        addField("Description", award.description, false, awardStartY);
-        yPosition = awardStartY + 16;
+        maxHeight = 0;
+
+        const yearHeight = addField(
+          "Year",
+          award.year || "Not specified",
+          true,
+          awardStartY
+        );
+        const descHeight = addField(
+          "Description",
+          award.description,
+          false,
+          awardStartY
+        );
+        maxHeight = Math.max(maxHeight, yearHeight, descHeight);
+
+        yPosition = awardStartY + maxHeight + 12;
       });
     }
 
@@ -831,41 +1172,65 @@ export async function generateMinisterPDF(
       addSectionHeader("SEMINARS & CONFERENCES");
 
       ministerData.seminarsConferences.forEach((seminar, index) => {
-        checkPageBreak(60);
+        checkPageBreak(35);
         pdf.setFontSize(10);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(80, 80, 80);
-        pdf.text(`Seminar/Conference ${index + 1}:`, margin + 10, yPosition);
+        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.text(`Seminar/Conference ${index + 1}:`, margin, yPosition);
         yPosition += 6;
 
         const seminarStartY = yPosition;
-        addField("Title", seminar.title, true, seminarStartY);
-        addField("Year", seminar.year || "Not specified", false, seminarStartY);
-        addField(
+        maxHeight = 0;
+
+        const titleHeight = addField(
+          "Title",
+          seminar.title,
+          true,
+          seminarStartY
+        );
+        const yearHeight = addField(
+          "Year",
+          seminar.year || "Not specified",
+          false,
+          seminarStartY
+        );
+        maxHeight = Math.max(maxHeight, titleHeight, yearHeight);
+
+        const hoursY = seminarStartY + maxHeight + 2;
+        const hoursHeight = addField(
           "Number of Hours",
           seminar.numberOfHours
             ? `${seminar.numberOfHours} hours`
             : "Not specified",
           true,
-          seminarStartY + 12
+          hoursY
         );
-        addField(
+        const placeHeight = addField(
           "Place",
           seminar.place || "Not specified",
           false,
-          seminarStartY + 12
+          hoursY
         );
+        maxHeight += Math.max(hoursHeight, placeHeight) + 2;
+
         if (seminar.description) {
-          addField(
-            "Description",
+          const descY = seminarStartY + maxHeight + 2;
+          pdf.setFontSize(10);
+          pdf.setFont("helvetica", "bold");
+          pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+          pdf.text("Description:", margin, descY);
+
+          pdf.setFont("helvetica", "normal");
+          const descLines = pdf.splitTextToSize(
             seminar.description,
-            true,
-            seminarStartY + 24
+            contentWidth
           );
-          yPosition = seminarStartY + 36;
-        } else {
-          yPosition = seminarStartY + 24;
+          pdf.text(descLines, margin, descY + 5);
+
+          maxHeight += descLines.length * 5 + 10;
         }
+
+        yPosition = seminarStartY + maxHeight + 15;
       });
     }
 
@@ -874,27 +1239,31 @@ export async function generateMinisterPDF(
       addSectionHeader("CASE REPORTS");
 
       ministerData.caseReports.forEach((caseReport, index) => {
-        checkPageBreak(40);
+        checkPageBreak(20);
         pdf.setFontSize(10);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(80, 80, 80);
-        pdf.text(`Case Report ${index + 1}:`, margin + 10, yPosition);
+        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.text(`Case Report ${index + 1}:`, margin, yPosition);
         yPosition += 6;
 
         const caseReportStartY = yPosition;
-        addField(
+        maxHeight = 0;
+
+        const yearHeight = addField(
           "Year",
           caseReport.year || "Not specified",
           true,
           caseReportStartY
         );
-        addField(
+        const descHeight = addField(
           "Description",
           caseReport.description,
           false,
           caseReportStartY
         );
-        yPosition = caseReportStartY + 16;
+        maxHeight = Math.max(maxHeight, yearHeight, descHeight);
+
+        yPosition = caseReportStartY + maxHeight + 12;
       });
     }
 
@@ -908,60 +1277,68 @@ export async function generateMinisterPDF(
 
       if (ministerData.certifiedBy) {
         addField("Certified By", ministerData.certifiedBy, true);
+        yPosition += 10;
       }
-
-      yPosition += 10;
 
       // Add signature images if available
       if (
         ministerData.signatureImageUrl ||
         ministerData.signatureByCertifiedImageUrl
       ) {
-        checkPageBreak(80);
+        checkPageBreak(60);
 
         pdf.setFontSize(11);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(60, 60, 60);
-        pdf.text("Signatures:", margin + 10, yPosition);
+        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.text("Signatures:", margin, yPosition);
         yPosition += 15;
 
         const signaturesStartY = yPosition;
+        const signatureWidth = 60;
+        const signatureSpacing = 40;
 
         if (ministerData.signatureImageUrl) {
           pdf.setFontSize(10);
           pdf.setFont("helvetica", "normal");
-          pdf.setTextColor(80, 80, 80);
-          pdf.text("Applicant Signature:", margin + 15, signaturesStartY);
+          pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+          pdf.text("Applicant Signature:", margin, signaturesStartY);
 
           await addImage(
             ministerData.signatureImageUrl,
-            "Applicant Signature",
-            50,
+            "",
+            signatureWidth,
             25
           );
         }
 
         if (ministerData.signatureByCertifiedImageUrl) {
-          const certifierY = ministerData.signatureImageUrl
-            ? yPosition
-            : signaturesStartY;
+          const certifierX = margin + signatureWidth + signatureSpacing;
 
           pdf.setFontSize(10);
           pdf.setFont("helvetica", "normal");
-          pdf.setTextColor(80, 80, 80);
-          pdf.text("Certifier Signature:", margin + 15, certifierY);
+          pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+          pdf.text("Certifier Signature:", certifierX, signaturesStartY);
 
-          if (!ministerData.signatureImageUrl) {
-            yPosition = certifierY + 5;
+          try {
+            const base64Image = await getImageAsBase64(
+              ministerData.signatureByCertifiedImageUrl
+            );
+            if (base64Image) {
+              pdf.addImage(
+                base64Image,
+                "JPEG",
+                certifierX,
+                signaturesStartY + 5,
+                signatureWidth,
+                25
+              );
+            }
+          } catch (error) {
+            console.error("Error adding certifier signature:", error);
           }
-
-          await addImage(
-            ministerData.signatureByCertifiedImageUrl,
-            "Certifier Signature",
-            50,
-            25
-          );
         }
+
+        yPosition += 40;
       }
     }
 
@@ -973,21 +1350,21 @@ export async function generateMinisterPDF(
       // Footer line
       pdf.setDrawColor(200, 200, 200);
       pdf.setLineWidth(0.3);
-      pdf.line(margin, pageHeight - 15, pageWidth - margin, pageHeight - 15);
+      pdf.line(margin, pageHeight - 20, pageWidth - margin, pageHeight - 20);
 
       // Footer text
       pdf.setFontSize(8);
-      pdf.setTextColor(100, 100, 100);
+      pdf.setTextColor(lightTextColor[0], lightTextColor[1], lightTextColor[2]);
       pdf.text(
         `Ministry Application - ${fullName} - Generated on ${format(new Date(), "MMM dd, yyyy")}`,
         margin,
-        pageHeight - 8
+        pageHeight - 12
       );
 
       pdf.text(
         `Page ${i} of ${totalPages}`,
         pageWidth - margin - 20,
-        pageHeight - 8
+        pageHeight - 12
       );
     }
 

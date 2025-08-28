@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1756272053563,
-      "tag": "0000_unknown_lucky_pierre",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1756277376467,
-      "tag": "0001_sparkling_reaper",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1756356330419,
-      "tag": "0002_public_wong",
+      "when": 1756357761803,
+      "tag": "0000_thankful_quasimodo",
       "breakpoints": true
     }
   ]

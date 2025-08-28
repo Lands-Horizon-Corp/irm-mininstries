@@ -1,5 +1,5 @@
 {
-  "id": "2747e8b5-bedc-458b-9cca-f0de1dd21137",
+  "id": "867f2e8b-7cf0-4f46-a5e7-1b270613bae0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -89,7 +89,9 @@
         "churches_name_unique": {
           "name": "churches_name_unique",
           "nullsNotDistinct": false,
-          "columns": ["name"]
+          "columns": [
+            "name"
+          ]
         }
       },
       "policies": {},
@@ -176,6 +178,164 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.members": {
+      "name": "members",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "members_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "profile_picture": {
+          "name": "profile_picture",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "first_name": {
+          "name": "first_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "last_name": {
+          "name": "last_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "middle_name": {
+          "name": "middle_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gender": {
+          "name": "gender",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "birthdate": {
+          "name": "birthdate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "year_joined": {
+          "name": "year_joined",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ministry_involvement": {
+          "name": "ministry_involvement",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "occupation": {
+          "name": "occupation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "educational_attainment": {
+          "name": "educational_attainment",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "school": {
+          "name": "school",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "degree": {
+          "name": "degree",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mobile_number": {
+          "name": "mobile_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "home_address": {
+          "name": "home_address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "facebook_link": {
+          "name": "facebook_link",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "x_link": {
+          "name": "x_link",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "instagram_link": {
+          "name": "instagram_link",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.minister_awards_recognitions": {
       "name": "minister_awards_recognitions",
       "schema": "",
@@ -225,8 +385,77 @@
           "name": "minister_awards_recognitions_minister_id_ministers_id_fk",
           "tableFrom": "minister_awards_recognitions",
           "tableTo": "ministers",
-          "columnsFrom": ["minister_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.minister_case_reports": {
+      "name": "minister_case_reports",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "minister_id": {
+          "name": "minister_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "year": {
+          "name": "year",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "minister_case_reports_minister_id_ministers_id_fk": {
+          "name": "minister_case_reports_minister_id_ministers_id_fk",
+          "tableFrom": "minister_case_reports",
+          "tableTo": "ministers",
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -298,8 +527,12 @@
           "name": "minister_children_minister_id_ministers_id_fk",
           "tableFrom": "minister_children",
           "tableTo": "ministers",
-          "columnsFrom": ["minister_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -377,8 +610,12 @@
           "name": "minister_education_backgrounds_minister_id_ministers_id_fk",
           "tableFrom": "minister_education_backgrounds",
           "tableTo": "ministers",
-          "columnsFrom": ["minister_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -450,8 +687,12 @@
           "name": "minister_emergency_contacts_minister_id_ministers_id_fk",
           "tableFrom": "minister_emergency_contacts",
           "tableTo": "ministers",
-          "columnsFrom": ["minister_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -523,8 +764,12 @@
           "name": "minister_employment_records_minister_id_ministers_id_fk",
           "tableFrom": "minister_employment_records",
           "tableTo": "ministers",
-          "columnsFrom": ["minister_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -551,9 +796,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "title": {
-          "name": "title",
-          "type": "text",
+        "ministry_rank_id": {
+          "name": "ministry_rank_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -596,8 +841,25 @@
           "name": "minister_ministry_experiences_minister_id_ministers_id_fk",
           "tableFrom": "minister_ministry_experiences",
           "tableTo": "ministers",
-          "columnsFrom": ["minister_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "minister_ministry_experiences_ministry_rank_id_ministry_ranks_id_fk": {
+          "name": "minister_ministry_experiences_ministry_rank_id_ministry_ranks_id_fk",
+          "tableFrom": "minister_ministry_experiences",
+          "tableTo": "ministry_ranks",
+          "columnsFrom": [
+            "ministry_rank_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -669,8 +931,12 @@
           "name": "minister_ministry_records_minister_id_ministers_id_fk",
           "tableFrom": "minister_ministry_records",
           "tableTo": "ministers",
-          "columnsFrom": ["minister_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -678,8 +944,12 @@
           "name": "minister_ministry_records_church_location_id_churches_id_fk",
           "tableFrom": "minister_ministry_records",
           "tableTo": "churches",
-          "columnsFrom": ["church_location_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "church_location_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -733,8 +1003,12 @@
           "name": "minister_ministry_skills_minister_id_ministers_id_fk",
           "tableFrom": "minister_ministry_skills",
           "tableTo": "ministers",
-          "columnsFrom": ["minister_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -742,8 +1016,12 @@
           "name": "minister_ministry_skills_ministry_skill_id_ministry_skills_id_fk",
           "tableFrom": "minister_ministry_skills",
           "tableTo": "ministry_skills",
-          "columnsFrom": ["ministry_skill_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "ministry_skill_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -821,8 +1099,12 @@
           "name": "minister_seminars_conferences_minister_id_ministers_id_fk",
           "tableFrom": "minister_seminars_conferences",
           "tableTo": "ministers",
-          "columnsFrom": ["minister_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "minister_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -842,6 +1124,12 @@
           "type": "serial",
           "primaryKey": true,
           "notNull": true
+        },
+        "biography": {
+          "name": "biography",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "first_name": {
           "name": "first_name",
@@ -1167,7 +1455,9 @@
         "ministry_ranks_name_unique": {
           "name": "ministry_ranks_name_unique",
           "nullsNotDistinct": false,
-          "columns": ["name"]
+          "columns": [
+            "name"
+          ]
         }
       },
       "policies": {},
@@ -1205,7 +1495,7 @@
           "name": "description",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -1229,7 +1519,9 @@
         "ministry_skills_name_unique": {
           "name": "ministry_skills_name_unique",
           "nullsNotDistinct": false,
-          "columns": ["name"]
+          "columns": [
+            "name"
+          ]
         }
       },
       "policies": {},
