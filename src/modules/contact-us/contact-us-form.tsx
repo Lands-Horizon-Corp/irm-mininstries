@@ -47,7 +47,7 @@ export default function ContactForm({
       prayerRequest: "",
       repeatEmail: "",
       subject: "",
-      supportEmail: "info@irmministries.org",
+      supportEmail: "admin@irmministries.org",
     },
     resolver: zodResolver(contactUsFormSchema),
   });
@@ -244,13 +244,13 @@ export default function ContactForm({
       <Divider className="my-8 block md:hidden" />
       <div className="mt-8 flex flex-col justify-center md:mt-0 md:basis-[33.33%] md:pl-10">
         <div className="my-4 flex">
-          <Link href="mailto:info@irmministries.org">
+          <Link href="mailto:admin@irmministries.org">
             <div className="font-noto-sans flex flex-row items-center">
               <Mail className="text-muted-foreground mr-4" size={24} />
               <div className="font-noto-sansmb-3">
                 <p className="text-base font-semibold">E-Mail</p>
                 <p className="text-muted-foreground text-sm font-light">
-                  info@irmministries.org
+                  admin@irmministries.org
                 </p>
               </div>
             </div>

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     description:
       "Secure admin access for IRM Ministries. Login to manage your ministry administration panel.",
     title: "Admin Login – IRM Ministries",
-    url: "https://irmministries.org/login",
+    url: "https://irm-ministries.fly.dev/login",
   },
   title: "Admin Login – IRM Ministries",
 };
