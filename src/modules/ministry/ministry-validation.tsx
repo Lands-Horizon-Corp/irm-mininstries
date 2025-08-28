@@ -6,7 +6,7 @@ export const ministerSchema = z.object({
 
   // ==================== STEP 1: PERSONAL INFORMATION ====================
   // Church Association
-  churchId: z
+  churchId: z.coerce
     .number()
     .int()
     .min(1, { message: "Church designation is required" }),
@@ -135,7 +135,7 @@ export const ministerSchema = z.object({
     .array(
       z.object({
         id: z.number().int().optional(),
-        ministryRankId: z.number().int(),
+        ministryRankId: z.coerce.number().int(),
         description: z.string().optional().nullable(),
         fromYear: z.string(),
         toYear: z.string().optional().nullable(),
@@ -150,7 +150,7 @@ export const ministerSchema = z.object({
     .array(
       z.object({
         id: z.number().int().optional(),
-        ministrySkillId: z.number().int(),
+        ministrySkillId: z.coerce.number().int(),
         createdAt: z.coerce.date().optional(),
         updatedAt: z.coerce.date().optional(),
       })
@@ -163,7 +163,7 @@ export const ministerSchema = z.object({
     .array(
       z.object({
         id: z.number().int().optional(),
-        churchLocationId: z.number().int(),
+        churchLocationId: z.coerce.number().int(),
         fromYear: z.string(),
         toYear: z.string().optional().nullable(),
         contribution: z.string().optional().nullable(),
@@ -195,7 +195,7 @@ export const ministerSchema = z.object({
         description: z.string().optional().nullable(),
         place: z.string().optional().nullable(),
         year: z.string(),
-        numberOfHours: z.number().int(),
+        numberOfHours: z.coerce.number().int(),
         createdAt: z.coerce.date().optional(),
         updatedAt: z.coerce.date().optional(),
       })

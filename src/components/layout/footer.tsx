@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import { Facebook, Youtube } from "lucide-react";
 
+import { ModeToggle } from "../ui/theme-toggle";
+
 export function Footer() {
   return (
     <footer className="bg-muted/30 border-t">
@@ -18,6 +20,9 @@ export function Footer() {
               <br />
               <span className="text-primary/80">NIV: 1 John 4:18</span>
             </p>
+            <div className="mt-4">
+              <ModeToggle />
+            </div>
           </div>
 
           {/* Links Section */}
@@ -68,20 +73,20 @@ export function Footer() {
             </h3>
             <ul className="mt-4 space-y-3">
               <li>
-                <a
+                <Link
                   className="text-muted-foreground hover:text-foreground text-sm transition-colors sm:text-base"
                   href="/privacy"
                 >
                   Privacy Policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   className="text-muted-foreground hover:text-foreground text-sm transition-colors sm:text-base"
                   href="/terms"
                 >
                   Terms of Service
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -101,12 +106,12 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a
+                <Link
                   className="text-muted-foreground hover:text-foreground text-sm transition-colors sm:text-base"
                   href="/contact"
                 >
                   Contact Us
-                </a>
+                </Link>
               </li>
               <li>
                 <div className="mt-4">
