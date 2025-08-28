@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
@@ -68,10 +70,17 @@ export function PersonalInformation({
   onNext,
   onBack,
 }: StepProps) {
+  const searchParams = useSearchParams();
+  const urlChurchId = searchParams.get("churchId");
+
+  // Parse the church ID from URL params if available
+  const churchIdFromUrl = urlChurchId ? parseInt(urlChurchId, 10) : null;
+  const initialChurchId = churchIdFromUrl || formData.churchId || 0;
+
   const form = useForm<FormValues>({
     resolver: zodResolver(personalInformationSchema),
     defaultValues: {
-      churchId: formData.churchId || 0,
+      churchId: initialChurchId,
       biography: formData.biography || "",
       firstName: formData.firstName || "",
       lastName: formData.lastName || "",
@@ -88,6 +97,13 @@ export function PersonalInformation({
     },
     mode: "onBlur",
   });
+
+  // Update form when URL church ID changes
+  useEffect(() => {
+    if (churchIdFromUrl && churchIdFromUrl !== form.getValues("churchId")) {
+      form.setValue("churchId", churchIdFromUrl);
+    }
+  }, [churchIdFromUrl, form]);
 
   const onSubmit = async (values: FormValues) => {
     const valid = await form.trigger();

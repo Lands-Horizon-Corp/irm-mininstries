@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { ArrowRight, UserCheck, Users } from "lucide-react";
+import { ArrowRight, Share2, UserCheck, Users } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
+import { QRCodeDialog } from "@/components/ui/qr-code";
 
 export default function JoinPage() {
   return (
@@ -112,6 +113,44 @@ export default function JoinPage() {
               </Link>
             </CardFooter>
           </Card>
+        </div>
+
+        {/* Share Section */}
+        <div className="mt-16 text-center">
+          <Heading
+            align="center"
+            className="text-primary mb-8"
+            description="Share these join links with others who might be interested in joining our ministry."
+            title="Share Join Links"
+          />
+
+          <div className="flex flex-wrap justify-center gap-4">
+            <QRCodeDialog
+              description="Share this QR code to invite others to join as workers in our ministry."
+              filename="irm-join-worker-qr"
+              title="Join as Worker"
+              trigger={
+                <Button size="lg" variant="outline">
+                  <Share2 className="mr-2 h-4 w-4" />
+                  Share Worker Join Link
+                </Button>
+              }
+              value={`${window.location.origin}/join/worker`}
+            />
+
+            <QRCodeDialog
+              description="Share this QR code to invite others to join as members of our congregation."
+              filename="irm-join-member-qr"
+              title="Join as Member"
+              trigger={
+                <Button size="lg" variant="outline">
+                  <Share2 className="mr-2 h-4 w-4" />
+                  Share Member Join Link
+                </Button>
+              }
+              value={`${window.location.origin}/join/member`}
+            />
+          </div>
         </div>
       </div>
     </div>

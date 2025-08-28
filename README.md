@@ -50,14 +50,3 @@ Create me reusable QR link
 
 - church table actions
 - inside church view page
-
-- make it reusable UI
-- it accepts string and it was a dialog when clicked it will pop up
-- it will show the qr code with download button (download as png)
-- it will show the string and you can copy the link with click
-- make sure use react-qr as it was already installed
-- when i download it it would also have the string on the image
-- make it beautiful and reusable. i want to put title on this and description as well
--
-
-create link and QR code component on join links

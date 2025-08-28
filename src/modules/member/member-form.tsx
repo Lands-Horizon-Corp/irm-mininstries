@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
@@ -81,8 +81,13 @@ export default function MemberForm({
   memberId,
 }: MemberFormProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const createMember = useCreateMember();
   const updateMember = useUpdateMember();
+
+  // Get church ID from URL parameters
+  const urlChurchId = searchParams.get("churchId");
+  const churchIdFromUrl = urlChurchId ? parseInt(urlChurchId, 10) : null;
 
   // Fetch member data if editing
   const { data: memberData, isLoading: isMemberLoading } = useMember(
@@ -94,7 +99,7 @@ export default function MemberForm({
   const form = useForm<z.infer<typeof memberSchema>>({
     resolver: zodResolver(memberSchema),
     defaultValues: {
-      churchId: 0,
+      churchId: churchIdFromUrl || 0,
       profilePicture: "",
       firstName: "",
       lastName: "",
@@ -150,6 +155,17 @@ export default function MemberForm({
       });
     }
   }, [isEditMode, member, isMemberLoading, form]);
+
+  // Update church ID from URL parameter if available and not in edit mode
+  useEffect(() => {
+    if (
+      !isEditMode &&
+      churchIdFromUrl &&
+      churchIdFromUrl !== form.getValues("churchId")
+    ) {
+      form.setValue("churchId", churchIdFromUrl);
+    }
+  }, [churchIdFromUrl, form, isEditMode]);
 
   const onSubmit = async (values: z.infer<typeof memberSchema>) => {
     // Remove privacyConsent from the data before sending to API
