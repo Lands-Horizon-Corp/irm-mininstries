@@ -5,6 +5,12 @@ export const ministerSchema = z.object({
   biography: z.string().optional().nullable(),
 
   // ==================== STEP 1: PERSONAL INFORMATION ====================
+  // Church Association
+  churchId: z
+    .number()
+    .int()
+    .min(1, { message: "Church designation is required" }),
+
   firstName: z.string(),
   lastName: z.string(),
   middleName: z.string().optional().nullable(),

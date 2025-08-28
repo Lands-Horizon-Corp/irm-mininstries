@@ -3,6 +3,11 @@ import jsPDF from "jspdf";
 
 // Types for the PDF generation
 interface MinisterPDFData {
+  // Church Information
+  churchId?: number;
+  churchName?: string;
+  churchAddress?: string;
+
   // Personal Information
   biography?: string | null;
   firstName: string;
@@ -409,6 +414,34 @@ export async function generateMinisterPDF(
     const dateWidth = pdf.getTextWidth(dateText);
     pdf.text(dateText, (pageWidth - dateWidth) / 2, yPosition);
     yPosition += 15;
+
+    // Church Information Section
+    if (ministerData.churchName) {
+      addSectionHeader("CHURCH DESIGNATION");
+
+      const churchStartY = yPosition;
+      let maxHeight = 0;
+
+      const churchNameFieldHeight = addField(
+        "Church Name",
+        ministerData.churchName,
+        true,
+        churchStartY
+      );
+      const churchAddressFieldHeight = addField(
+        "Church Address",
+        ministerData.churchAddress,
+        false,
+        churchStartY
+      );
+      maxHeight = Math.max(
+        maxHeight,
+        churchNameFieldHeight,
+        churchAddressFieldHeight
+      );
+
+      yPosition = churchStartY + maxHeight + 10;
+    }
 
     // Personal Information Section
     addSectionHeader("PERSONAL INFORMATION");

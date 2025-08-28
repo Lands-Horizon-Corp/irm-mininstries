@@ -39,6 +39,7 @@ interface GetMinistersParams {
 // Simplified Minister type for list view
 interface MinisterSummary {
   id: number;
+  churchId: number;
   firstName: string;
   lastName: string;
   middleName: string | null;

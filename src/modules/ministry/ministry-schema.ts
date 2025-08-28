@@ -11,6 +11,12 @@ export const civilStatusEnum = text("civil_status", {
 
 export const ministers = pgTable("ministers", {
   id: serial("id").primaryKey(),
+
+  // Church Association
+  churchId: integer("church_id")
+    .references(() => churches.id)
+    .notNull(),
+
   biography: text("biography"),
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),

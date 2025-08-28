@@ -11,6 +11,7 @@ import { Base64ImageUpload } from "@/components/ui/base64-image-upload";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChurchSelect } from "@/components/ui/church-select";
 import {
   Form,
   FormControl,
@@ -37,6 +38,7 @@ import { Textarea } from "@/components/ui/textarea";
 import type { StepProps } from "../../ministry-validation";
 
 const personalInformationSchema = z.object({
+  churchId: z.number().min(1, { message: "Church designation is required" }),
   biography: z.string().optional(),
   firstName: z.string().min(1, { message: "First name is required" }),
   lastName: z.string().min(1, { message: "Last name is required" }),
@@ -69,6 +71,7 @@ export function PersonalInformation({
   const form = useForm<FormValues>({
     resolver: zodResolver(personalInformationSchema),
     defaultValues: {
+      churchId: formData.churchId || 0,
       biography: formData.biography || "",
       firstName: formData.firstName || "",
       lastName: formData.lastName || "",
@@ -106,7 +109,16 @@ export function PersonalInformation({
     Object.keys(values).forEach((key) => {
       const value = values[key as keyof FormValues];
       if (value !== undefined) {
-        updateMinisterData(key as keyof FormValues, value);
+        // Handle different value types
+        if (typeof value === "number") {
+          updateMinisterData(key as keyof FormValues, value.toString());
+        } else if (
+          typeof value === "string" ||
+          typeof value === "boolean" ||
+          value instanceof Date
+        ) {
+          updateMinisterData(key as keyof FormValues, value);
+        }
       }
     });
 
@@ -151,6 +163,32 @@ export function PersonalInformation({
                         className="min-h-[100px] text-sm sm:text-base"
                         placeholder="Share your story, background, interests, or anything that helps us know you better..."
                         value={field.value || ""}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Church Designation */}
+              <FormField
+                control={form.control}
+                name="churchId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium sm:text-base">
+                      Church Designation
+                      <span className="text-destructive ml-1">*</span>
+                      <span className="ml-2 text-sm font-normal text-current/50">
+                        (Select the church you are currently assigned to)
+                      </span>
+                    </FormLabel>
+                    <FormControl>
+                      <ChurchSelect
+                        className="h-10 text-sm sm:h-11 sm:text-base"
+                        placeholder="Select your designated church"
+                        value={field.value || null}
+                        onValueChange={(value) => field.onChange(value || 0)}
                       />
                     </FormControl>
                     <FormMessage />
