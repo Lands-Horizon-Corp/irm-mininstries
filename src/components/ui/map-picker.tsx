@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -98,14 +96,15 @@ export interface MapPickerProps {
   disabled?: boolean;
   /** Custom button class name */
   className?: string;
+  hideButtonCoordinates?: boolean;
 }
 
 const defaultCenter: LatLng = { lat: 37.7749, lng: -122.4194 };
-const defaultMapContainerStyle: React.CSSProperties = {
-  width: "100%",
-  height: "400px",
-  borderRadius: "8px",
-};
+// const defaultMapContainerStyle: React.CSSProperties = {
+//     width: '100%',
+//     height: '400px',
+//     borderRadius: '8px',
+// }
 const libraries: ("places" | "geometry")[] = ["places", "geometry"];
 
 export const MapPicker: React.FC<MapPickerProps> = ({
@@ -117,12 +116,13 @@ export const MapPicker: React.FC<MapPickerProps> = ({
   searchPlaceholder = "Search for a location...",
   title = "Select Location",
   showAddress = true,
-  _mapContainerStyle = defaultMapContainerStyle,
+  // _mapContainerStyle = defaultMapContainerStyle,
   placeholder = "Select location",
   variant = "outline",
   size = "default",
   disabled = false,
   className,
+  hideButtonCoordinates = true,
 }) => {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
@@ -208,7 +208,10 @@ export const MapPicker: React.FC<MapPickerProps> = ({
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         markerRef.current.addListener("dragend", (e: any) => {
-          const newLoc: LatLng = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+          const newLoc: LatLng = {
+            lat: e.latLng.lat(),
+            lng: e.latLng.lng(),
+          };
           setSelectedLocation(newLoc);
           reverseGeocode(newLoc);
         });
@@ -344,7 +347,7 @@ export const MapPicker: React.FC<MapPickerProps> = ({
       types.includes("locality") ||
       types.includes("administrative_area_level_1")
     ) {
-      return <Globe className="h-4 w-4 text-green-500" />;
+      return <Globe className="text-primary h-4 w-4" />;
     }
     return <Navigation className="text-muted-foreground h-4 w-4" />;
   };
@@ -509,7 +512,11 @@ export const MapPicker: React.FC<MapPickerProps> = ({
         onClick={() => setIsOpen(true)}
       >
         <MapPin className="mr-2 h-4 w-4" />
-        {value ? formatLocation(value) : placeholder}
+        {value ? (
+          <>{!hideButtonCoordinates ? formatLocation(value) : placeholder}</>
+        ) : (
+          placeholder
+        )}
       </Button>
 
       {/* Modal */}
