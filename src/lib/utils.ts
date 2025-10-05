@@ -47,11 +47,13 @@ export const imageCompressed = async (file: File): Promise<File> => {
 
   if (isImage) {
     const options = {
-      maxSizeMB: 5, // Maximum size 5MB
-      maxWidthOrHeight: 1920, // Maximum width or height
+      maxSizeMB: 1, // Ultra-compressed: Maximum size 1Mb
+      maxWidthOrHeight: 800, // Smaller dimensions for better compression
       useWebWorker: true,
-      fileType: "image/webp", // Convert to WebP format for better compression
-      initialQuality: 0.8, // Initial quality
+      fileType: "image/webp", // WebP for superior compression
+      initialQuality: 0.7, // Lower quality for smaller size
+      alwaysKeepResolution: false, // Allow resolution reduction
+      maxIteration: 15, // More compression iterations
     };
 
     try {
