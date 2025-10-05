@@ -81,9 +81,7 @@ export async function GET(request: NextRequest) {
         order: sortOrder,
       },
     });
-  } catch (error) {
-    console.error("Get ministry skills error:", error);
-
+  } catch {
     return NextResponse.json(
       {
         success: false,
@@ -120,8 +118,6 @@ export async function POST(request: NextRequest) {
       data: savedSkill,
     });
   } catch (error) {
-    console.error("Ministry skill submission error:", error);
-
     // Handle Zod validation errors
     if (error instanceof z.ZodError) {
       return NextResponse.json(

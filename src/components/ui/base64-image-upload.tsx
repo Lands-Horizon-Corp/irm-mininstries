@@ -18,6 +18,7 @@ import {
 } from "./dialog";
 import { Input } from "./input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
+import { toast } from "sonner";
 
 interface Base64ImageUploadProps {
   value?: string | null;
@@ -81,8 +82,15 @@ export const Base64ImageUpload: React.FC<Base64ImageUploadProps> = ({
             device.label.toLowerCase().includes("environment")
         );
         setSelectedDeviceId(backCamera?.deviceId || videoDevices[0]?.deviceId);
-      } catch (error) {
-        console.error("Error getting camera devices:", error);
+      } catch {
+        toast.error(
+          "Failed to access camera devices. Please check permissions."
+        );
+        setCameraError(
+          "Failed to access camera devices. Please check permissions."
+        );
+        setAvailableDevices([]);
+        setSelectedDeviceId(undefined);
       }
     };
 
@@ -122,8 +130,8 @@ export const Base64ImageUpload: React.FC<Base64ImageUploadProps> = ({
       setTempBase64(base64);
       setPreviewUrl(base64);
       setIsEditing(true);
-    } catch (error) {
-      console.error("Error converting file to base64:", error);
+    } catch {
+      toast.error("Failed to process the image. Please try again.");
       setUploadError("Failed to process the image. Please try again.");
     }
   }, []);
@@ -179,8 +187,8 @@ export const Base64ImageUpload: React.FC<Base64ImageUploadProps> = ({
           setIsEditing(true);
           stopCamera();
         }
-      } catch (error) {
-        console.error("Error capturing photo:", error);
+      } catch {
+        toast.error("Failed to capture photo. Please try again.");
         setCameraError("Failed to capture photo. Please try again.");
       }
     }
@@ -426,8 +434,10 @@ export const Base64ImageUpload: React.FC<Base64ImageUploadProps> = ({
                               deviceId: selectedDeviceId,
                             }}
                             width={640}
-                            onUserMediaError={(error) => {
-                              console.error("Webcam error:", error);
+                            onUserMediaError={() => {
+                              toast.error(
+                                "Camera access error. Please check permissions."
+                              );
                               setCameraError(
                                 "Camera access failed. Please check permissions and try again."
                               );

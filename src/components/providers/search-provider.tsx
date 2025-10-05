@@ -10,6 +10,7 @@ import {
 
 import type { Member } from "@/modules/member/member-schema";
 import type { ministers } from "@/modules/ministry/ministry-schema";
+import { toast } from "sonner";
 
 type Minister = typeof ministers.$inferSelect;
 
@@ -87,8 +88,8 @@ export function SearchProvider({ children }: SearchProviderProps) {
       } else {
         setMemberResults([]);
       }
-    } catch (error) {
-      console.error("Error searching members:", error);
+    } catch {
+      toast.error("Error searching members. Please try again.");
       setMemberResults([]);
     } finally {
       setIsSearchingMembers(false);
@@ -124,8 +125,8 @@ export function SearchProvider({ children }: SearchProviderProps) {
       } else {
         setMinisterResults([]);
       }
-    } catch (error) {
-      console.error("Error searching ministers:", error);
+    } catch {
+      toast.error("Error searching ministers. Please try again.");
       setMinisterResults([]);
     } finally {
       setIsSearchingMinisters(false);

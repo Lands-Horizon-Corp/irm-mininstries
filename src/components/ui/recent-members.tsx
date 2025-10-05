@@ -41,6 +41,7 @@ import { ViewMemberDialog } from "@/modules/member/components/view-member-dialog
 import MemberForm from "@/modules/member/member-form";
 import { generateMemberPDF } from "@/modules/member/member-pdf";
 import { useDeleteMember } from "@/modules/member/member-service";
+import { toast } from "sonner";
 
 interface RecentMember {
   id: number;
@@ -82,8 +83,8 @@ const MemberActions = ({ member, onRefresh }: MemberActionsProps) => {
       await deleteMemberMutation.mutateAsync(member.id);
       setIsDeleteDialogOpen(false);
       onRefresh(); // Refresh the recent members list
-    } catch (error) {
-      console.error("Failed to delete member:", error);
+    } catch {
+      toast.error("Failed to delete member. Please try again.");
     }
   };
 
@@ -113,8 +114,8 @@ const MemberActions = ({ member, onRefresh }: MemberActionsProps) => {
         createdAt: new Date(member.createdAt),
         updatedAt: new Date(member.createdAt), // Using createdAt as fallback
       });
-    } catch (error) {
-      console.error("Failed to download PDF:", error);
+    } catch {
+      toast.error("Failed to download PDF. Please try again.");
     } finally {
       setIsDownloadingPDF(false);
     }
@@ -332,9 +333,9 @@ export function RecentMembers() {
       } else {
         setError("Failed to fetch recent members");
       }
-    } catch (err) {
+    } catch {
       setError("Error loading recent members");
-      console.error("Error fetching recent members:", err);
+      toast.error("Error loading recent members. Please try again.");
     } finally {
       setLoading(false);
     }

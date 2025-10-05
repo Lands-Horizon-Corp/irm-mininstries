@@ -136,11 +136,7 @@ export function QRScanner({
           throw new Error("Invalid QR code format");
         }
       } catch {
-        console.warn(
-          "QR code detected but not valid for this app:",
-          qrCode.data
-        );
-        // Don't show error toast for every invalid QR, just continue scanning
+        // Invalid QR code data
       }
     }
   }, [member, minister, onMemberFound, onMinisterFound]);
@@ -171,8 +167,7 @@ export function QRScanner({
         // Add immediate play attempt
         const video = videoRef.current;
 
-        video.onerror = (error) => {
-          console.error("Video element error:", error);
+        video.onerror = () => {
           setError("Failed to load camera stream");
           toast.error("Failed to load camera stream");
         };
@@ -186,8 +181,10 @@ export function QRScanner({
             setError("");
 
             scanningIntervalRef.current = setInterval(scanQRCode, 100); // Scan every 100ms for better responsiveness
-          } catch (playError) {
-            console.error("Error playing video:", playError);
+          } catch {
+            toast.error(
+              "Failed to start video playback. Please allow autoplay and try again."
+            );
             setCameraStatus("play-error");
             setError("Failed to start video playback");
           }
@@ -222,8 +219,10 @@ export function QRScanner({
                 setCameraStatus("playing");
                 setError("");
                 scanningIntervalRef.current = setInterval(scanQRCode, 100);
-              } catch (playError) {
-                console.error("Error playing video (delayed):", playError);
+              } catch {
+                toast.error(
+                  "Failed to start video playback. Please allow autoplay and try again."
+                );
                 setCameraStatus("play-error");
                 setError("Failed to start video playback");
               }
@@ -236,14 +235,14 @@ export function QRScanner({
             // Immediate try
             tryPlayDelayed();
           } else {
-            console.error("Video element still not available after delay!");
+            toast.error("Video element still not available after delay!");
             setCameraStatus("video-element-missing");
             setError("Video element not available");
           }
         }, 100);
       }
     } catch (error) {
-      console.error("Error accessing camera:", error);
+      toast.error("Error accessing camera:");
 
       let errorMessage = "Camera access denied. Please check permissions.";
 

@@ -80,9 +80,7 @@ export async function GET() {
     );
 
     return response;
-  } catch (error) {
-    console.error("Export ministry skills error:", error);
-
+  } catch {
     return NextResponse.json(
       {
         success: false,
