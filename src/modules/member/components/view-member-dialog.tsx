@@ -64,6 +64,10 @@ export function ViewMemberDialog({
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-4xl">
+          <DialogTitle className="sr-only">Loading Member</DialogTitle>
+          <DialogDescription className="sr-only">
+            Loading member information, please wait...
+          </DialogDescription>
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin" />
           </div>
@@ -76,6 +80,10 @@ export function ViewMemberDialog({
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-4xl">
+          <DialogTitle className="sr-only">Error</DialogTitle>
+          <DialogDescription className="sr-only">
+            Failed to load member information.
+          </DialogDescription>
           <div className="py-8 text-center">
             <p className="text-muted-foreground">Member not found</p>
             <Button className="mt-4" onClick={onClose}>

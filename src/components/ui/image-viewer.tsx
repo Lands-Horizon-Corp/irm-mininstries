@@ -3,7 +3,12 @@
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import Image from "next/image";
 
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface ImageViewerProps {
   src: string | File | null;
@@ -26,6 +31,9 @@ export function ImageViewer({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="h-auto max-h-[80vh] w-full max-w-[95vw] p-0">
         <DialogTitle className="sr-only">Bildanzeige - {alt}</DialogTitle>
+        <DialogDescription className="sr-only">
+          Image viewer with zoom and pan functionality
+        </DialogDescription>
         <div className="relative flex h-full w-full items-center justify-center bg-gray-400">
           {/* Zoom + Pan wrapper */}
           <TransformWrapper
