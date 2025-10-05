@@ -109,7 +109,7 @@ export function ViewMemberDialog({
             <div className="relative h-12 w-12 overflow-hidden rounded-full">
               {member.profilePicture ? (
                 <button
-                  className="h-full w-full rounded-full focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+                  className="relative h-full w-full rounded-full focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
                   type="button"
                   onClick={() => setIsImageViewerOpen(true)}
                 >

@@ -29,6 +29,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -170,6 +171,9 @@ export function ViewMinisterDialog({
         <DialogContent className="max-h-screen min-w-7xl overflow-auto">
           <DialogHeader>
             <DialogTitle>View Minister</DialogTitle>
+            <DialogDescription>
+              Loading minister information, please wait...
+            </DialogDescription>
           </DialogHeader>
           <div className="flex items-center justify-center py-8">
             <div className="text-center">
@@ -190,6 +194,9 @@ export function ViewMinisterDialog({
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Error</DialogTitle>
+            <DialogDescription>
+              Failed to load minister information.
+            </DialogDescription>
           </DialogHeader>
           <div className="py-4">
             <p className="text-destructive text-sm">
@@ -208,6 +215,10 @@ export function ViewMinisterDialog({
       <DialogContent className="max-h-screen min-w-7xl overflow-auto">
         <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
           <DialogTitle>Minister Profile s</DialogTitle>
+          <DialogDescription className="sr-only">
+            Comprehensive view of minister information including personal
+            details, ministry experience, and qualifications.
+          </DialogDescription>
           <Button
             disabled={isExportingPDF}
             size="sm"
