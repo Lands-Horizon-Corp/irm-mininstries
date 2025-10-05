@@ -100,9 +100,9 @@ export function Footer() {
               <li className="text-muted-foreground text-sm sm:text-base">
                 <a
                   className="hover:text-foreground transition-colors"
-                  href="mailto:irm-ministries@gmail.com"
+                  href="mailto:admin@irmministries.org"
                 >
-                  irm-ministries@gmail.com
+                  admin@irmministries.org
                 </a>
               </li>
               <li>
