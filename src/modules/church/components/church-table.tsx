@@ -195,9 +195,11 @@ const ChurchActions = ({ church }: ChurchActionsProps) => {
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="max-h-[90vh] min-w-4xl overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="sr-only">Edit Church</DialogTitle>
-          </DialogHeader>
+          <DialogTitle className="sr-only">Edit Church</DialogTitle>
+          <DialogDescription>
+            Update the church information including name, address, and other
+            details.
+          </DialogDescription>
           <ChurchForm
             initialData={church}
             isDialog={true}

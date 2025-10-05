@@ -196,6 +196,10 @@ const MemberActions = ({ member, onRefresh }: MemberActionsProps) => {
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="max-h-[90vh] w-full min-w-4xl overflow-y-auto">
           <DialogTitle>Edit Member</DialogTitle>
+          <DialogDescription>
+            Update member information including personal details and ministry
+            involvement.
+          </DialogDescription>
           <MemberForm
             isDialog={true}
             memberId={member.id}

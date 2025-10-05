@@ -10,6 +10,7 @@ import { Container } from "@/components/ui/container";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -49,6 +50,10 @@ export default function MinistrySkillsPage() {
                 <DialogTitle className="sr-only">
                   Add Ministry Skill
                 </DialogTitle>
+                <DialogDescription>
+                  Create a new ministry skill to be assigned to ministers and
+                  track competencies.
+                </DialogDescription>
                 <MinistrySkillsForm
                   isDialog={true}
                   onClose={() => setDialogOpen(false)}

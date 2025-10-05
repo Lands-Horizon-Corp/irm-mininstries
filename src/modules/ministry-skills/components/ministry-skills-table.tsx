@@ -192,6 +192,9 @@ const MinistrySkillActions = ({ ministrySkill }: MinistrySkillActionsProps) => {
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogTitle className="sr-only">Edit Ministry Skill</DialogTitle>
+          <DialogDescription>
+            Update the ministry skill name and description.
+          </DialogDescription>
           <MinistrySkillsForm
             initialData={ministrySkill}
             isDialog={true}

@@ -199,6 +199,9 @@ const MinistryRankActions = ({ ministryRank }: MinistryRankActionsProps) => {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="sr-only">Edit Ministry Rank</DialogTitle>
+            <DialogDescription>
+              Update the ministry rank details and hierarchy level.
+            </DialogDescription>
           </DialogHeader>
           <MinistryRanksForm
             initialData={ministryRank}
