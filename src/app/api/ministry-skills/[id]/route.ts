@@ -48,9 +48,7 @@ export async function GET(
       success: true,
       data: skill,
     });
-  } catch (error) {
-    console.error("Get ministry skill by ID error:", error);
-
+  } catch {
     return NextResponse.json(
       {
         success: false,
@@ -122,8 +120,6 @@ export async function PUT(
       data: updatedSkill,
     });
   } catch (error) {
-    console.error("Update ministry skill error:", error);
-
     // Handle Zod validation errors
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -230,8 +226,6 @@ export async function DELETE(
       },
     });
   } catch (error) {
-    console.error("Delete ministry skill error:", error);
-
     // Handle foreign key constraint errors
     if (
       error instanceof Error &&

@@ -222,8 +222,10 @@ export function DashboardQRScanner({
 
           // Start QR code scanning
           scanningIntervalRef.current = setInterval(scanQRCode, 200);
-        } catch (playError) {
-          console.error("Video play error:", playError);
+        } catch {
+          toast.error(
+            "Failed to start video playback. Please allow autoplay and try again."
+          );
           setCameraStatus("play-error");
           setError(
             "Failed to start video playback. Please allow autoplay and try again."
@@ -265,7 +267,6 @@ export function DashboardQRScanner({
         errorMessage = error.message;
       }
 
-      console.error("Camera error:", error);
       toast.error(errorMessage);
       setError(errorMessage);
       setCameraStatus("error");
@@ -419,8 +420,7 @@ export function DashboardQRScanner({
         await downloadMinisterPDF(scannedData.id);
         toast.success("Minister PDF downloaded successfully!");
       }
-    } catch (error) {
-      console.error("Failed to download PDF:", error);
+    } catch {
       toast.error("Failed to download PDF. Please try again.");
     } finally {
       setIsDownloadingPDF(false);
