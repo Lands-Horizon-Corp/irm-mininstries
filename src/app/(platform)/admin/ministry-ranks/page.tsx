@@ -10,6 +10,7 @@ import { Container } from "@/components/ui/container";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -47,6 +48,10 @@ export default function MinistryRanksPage() {
               </DialogTrigger>
               <DialogContent className="max-w-2xl">
                 <DialogTitle className="sr-only">Add Ministry Rank</DialogTitle>
+                <DialogDescription>
+                  Create a new ministry rank with hierarchy level and
+                  permissions for the organizational structure.
+                </DialogDescription>
                 <MinistryRanksForm
                   isDialog={true}
                   onClose={() => setDialogOpen(false)}

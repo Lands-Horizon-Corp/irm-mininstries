@@ -12,6 +12,7 @@ import { Button } from "./button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -316,6 +317,9 @@ export const Base64ImageUpload: React.FC<Base64ImageUploadProps> = ({
               <DialogTitle className="text-xl font-semibold">
                 Upload Image
               </DialogTitle>
+              <DialogDescription>
+                Choose to upload an image file or take a photo with your camera.
+              </DialogDescription>
             </DialogHeader>
 
             {!isEditing ? (
