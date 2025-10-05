@@ -1,5 +1,5 @@
 # Use the official Node.js image
-FROM node:20-alpine as base
+FROM node:24-alpine as base
 
 # Enable corepack for pnpm
 RUN corepack enable
@@ -11,7 +11,7 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
 # Copy source code
 COPY . .
