@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { Church } from "lucide-react";
 
 import AllChurches from "@/modules/church/components/all-churches";
 import type { Church as ChurchType } from "@/modules/church/church-schema";
@@ -11,35 +10,19 @@ export default function ChurchPage() {
 
   const handleSelectChurch = (church: ChurchType) => {
     setSelectedChurch(church);
-    // You can add additional logic here like navigation or state updates
   };
 
   return (
-    <div className="bg-background min-h-screen">
-      {/* Page Header */}
-      <div className="bg-card border-b">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center gap-3">
-            <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg">
-              <Church className="text-primary h-5 w-5" />
-            </div>
-            <div>
-              <h1 className="text-foreground text-2xl font-bold">Churches</h1>
-              <p className="text-muted-foreground">
-                Explore and manage churches in our network
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="contact_us__container bg-secondary-background my-16 flex flex-col justify-center">
+      <div className="to-background/0 via-background/0 from-primary/50 absolute right-0 -z-10 -mt-20 h-screen w-full bg-radial-[ellipse_at_100%_0%] to-100%" />
+      <div className="to-background/0 via-background/0 from-primary/20 absolute right-0 -z-10 h-screen w-full bg-radial-[ellipse_at_0%_50%] to-100%" />
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4">
+      <div className="flex justify-center">
         <AllChurches
           onSelectChurch={handleSelectChurch}
           selectedChurchId={selectedChurch?.id}
         />
-      </main>
+      </div>
     </div>
   );
 }

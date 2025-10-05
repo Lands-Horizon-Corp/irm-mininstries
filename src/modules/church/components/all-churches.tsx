@@ -9,9 +9,13 @@ import {
   Navigation,
   ZoomIn,
   Building2,
+  UsersIcon,
+  UserCheck,
 } from "lucide-react";
 
 import { ImageViewer } from "@/components/ui/image-viewer";
+import { MultiMapViewer } from "@/components/ui/multi-map-viewer";
+import type { MapLocation } from "@/components/ui/multi-map-viewer";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -28,6 +32,7 @@ import {
 
 import { useAllChurches } from "../church-service";
 import type { Church } from "../church-schema";
+import Link from "next/link";
 
 interface AllChurchesProps {
   onSelectChurch?: (church: Church) => void;
@@ -64,12 +69,12 @@ function ChurchCard({ church, onSelect, isSelected }: ChurchCardProps) {
   return (
     <>
       <Card
-        className={`group cursor-pointer transition-shadow hover:shadow-md ${
+        className={`group cursor-pointer transition-all duration-200 hover:shadow-md active:scale-[0.98] ${
           isSelected ? "ring-primary shadow-md ring-2" : ""
         }`}
         onClick={() => onSelect(church)}
       >
-        <CardContent className="p-2">
+        <CardContent className="p-2 sm:p-3">
           {/* Church Image */}
           <div className="bg-muted/50 mb-2 aspect-[5/3] w-full overflow-hidden rounded-lg">
             {church.imageUrl ? (
@@ -99,13 +104,17 @@ function ChurchCard({ church, onSelect, isSelected }: ChurchCardProps) {
           </div>
 
           {/* Church Info */}
-          <div className="space-y-2">
-            <h3 className="line-clamp-1 text-sm font-medium">{church.name}</h3>
+          <div className="space-y-2 sm:space-y-3">
+            <h3 className="line-clamp-1 text-sm leading-tight font-medium">
+              {church.name}
+            </h3>
 
             {church.address && (
-              <div className="text-muted-foreground flex items-center gap-1 text-xs">
-                <MapPin className="h-2.5 w-2.5" />
-                <span className="line-clamp-1">{church.address}</span>
+              <div className="text-muted-foreground flex items-start gap-1 truncate text-xs">
+                <MapPin className="mt-0.5 h-2.5 w-2.5 flex-shrink-0" />
+                <span className="line-clamp-2 leading-relaxed">
+                  {church.address}
+                </span>
               </div>
             )}
 
@@ -113,7 +122,7 @@ function ChurchCard({ church, onSelect, isSelected }: ChurchCardProps) {
               <Button
                 size="sm"
                 variant="outline"
-                className="h-6 w-full text-xs"
+                className="h-8 min-h-[32px] w-full text-xs transition-transform active:scale-95"
                 onClick={handleDirections}
               >
                 <Navigation className="mr-1 h-2.5 w-2.5" />
@@ -156,9 +165,41 @@ function AllChurches({ onSelectChurch, selectedChurchId }: AllChurchesProps) {
     );
   }, [churches, search]);
 
+  // Convert churches to map locations
+  const mapLocations = useMemo((): MapLocation[] => {
+    return filteredChurches
+      .filter((church) => church.latitude && church.longitude)
+      .map((church) => ({
+        id: church.id,
+        name: church.name,
+        lat: parseFloat(church.latitude!),
+        lng: parseFloat(church.longitude!),
+        address: church.address || undefined,
+        imageUrl: church.imageUrl || undefined,
+      }));
+  }, [filteredChurches]);
+
   const handleSelectChurch = (church: Church) => {
     onSelectChurch?.(church);
   };
+
+  const handleMapLocationSelect = (location: MapLocation) => {
+    const church = filteredChurches.find((c) => c.id === location.id);
+    if (church) {
+      handleSelectChurch(church);
+    }
+  };
+
+  // Dynamic carousel configuration based on content
+  const getCarouselOptions = (itemCount: number) => ({
+    align: "start" as const,
+    slidesToScroll: "auto" as const,
+    dragFree: true,
+    containScroll: "trimSnaps" as const,
+    skipSnaps: false,
+    // Show navigation only if there are more items than can fit on screen
+    loop: itemCount > 4,
+  });
 
   if (error) {
     return (
@@ -179,25 +220,17 @@ function AllChurches({ onSelectChurch, selectedChurchId }: AllChurchesProps) {
   }
 
   return (
-    <Container className="py-6">
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="space-y-3 text-center">
-          <h1 className="text-2xl font-semibold">All Churches</h1>
-          <p className="text-muted-foreground text-sm">
-            Browse and explore registered churches
-          </p>
-        </div>
-
+    <Container className="py-4 sm:py-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* Search */}
-        <div className="mx-auto max-w-md">
+        <div className="mx-auto max-w-md px-4 sm:px-0">
           <div className="relative">
             <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               placeholder="Search churches..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-10"
+              className="h-12 pl-10 sm:h-10"
             />
           </div>
           {search && (
@@ -215,6 +248,9 @@ function AllChurches({ onSelectChurch, selectedChurchId }: AllChurchesProps) {
           <Carousel
             opts={{
               align: "start",
+              slidesToScroll: 1,
+              dragFree: true,
+              containScroll: "trimSnaps",
             }}
             className="w-full"
           >
@@ -222,7 +258,7 @@ function AllChurches({ onSelectChurch, selectedChurchId }: AllChurchesProps) {
               {Array.from({ length: 8 }).map((_, i) => (
                 <CarouselItem
                   key={i}
-                  className="pl-1 md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                  className="basis-4/5 pl-1 min-[480px]:basis-1/2 sm:basis-2/5 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
                 >
                   <div className="p-1">
                     <Card className="animate-pulse">
@@ -239,38 +275,142 @@ function AllChurches({ onSelectChurch, selectedChurchId }: AllChurchesProps) {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselPrevious className="hidden sm:flex" />
+            <CarouselNext className="hidden sm:flex" />
           </Carousel>
         )}
 
-        {/* Churches Carousel */}
+        {/* Map Section */}
+        {!isLoading && mapLocations.length > 0 && (
+          <MultiMapViewer
+            locations={mapLocations}
+            height="400px"
+            selectedLocationId={selectedChurchId}
+            onLocationSelect={handleMapLocationSelect}
+          />
+        )}
+
+        {/* Churches Section */}
         {!isLoading && filteredChurches.length > 0 && (
-          <Carousel
-            opts={{
-              align: "start",
-            }}
-            className="w-full"
-          >
-            <CarouselContent className="-ml-1">
-              {filteredChurches.map((church) => (
-                <CarouselItem
-                  key={church.id}
-                  className="pl-1 md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
-                >
-                  <div className="p-1">
-                    <ChurchCard
-                      church={church}
-                      onSelect={handleSelectChurch}
-                      isSelected={selectedChurchId === church.id}
-                    />
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
+          <div className="sm:space-y-4">
+            <div>
+              {selectedChurchId &&
+                (() => {
+                  const selectedChurch = filteredChurches.find(
+                    (c) => c.id === selectedChurchId
+                  );
+                  return selectedChurch ? (
+                    <div className="bg-background z-50 mx-4 max-w-full rounded-md border p-4 shadow-lg sm:mx-0">
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full border"
+                          aria-hidden="true"
+                        >
+                          {selectedChurch.imageUrl ? (
+                            <Image
+                              src={selectedChurch.imageUrl}
+                              alt={selectedChurch.name}
+                              width={36}
+                              height={36}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <Building2 className="opacity-60" size={16} />
+                          )}
+                        </div>
+                        <div className="flex grow items-center gap-2 sm:gap-12">
+                          <div className="min-w-0 flex-1 space-y-1">
+                            <p className="truncate text-sm font-medium">
+                              {selectedChurch.name}
+                            </p>
+                            <div className="text-muted-foreground space-y-0.5 text-xs">
+                              {selectedChurch.email && (
+                                <p className="truncate">
+                                  {selectedChurch.email}
+                                </p>
+                              )}
+                              {selectedChurch.address && (
+                                <p className="truncate">
+                                  {selectedChurch.address}
+                                </p>
+                              )}
+                              {(selectedChurch.address ||
+                                (selectedChurch.latitude &&
+                                  selectedChurch.longitude)) && (
+                                <span
+                                  className="text-primary hover:text-primary/80 cursor-pointer underline"
+                                  onClick={() => {
+                                    if (
+                                      selectedChurch.latitude &&
+                                      selectedChurch.longitude
+                                    ) {
+                                      const url = `https://www.google.com/maps/dir/?api=1&destination=${selectedChurch.latitude},${selectedChurch.longitude}`;
+                                      window.open(url, "_blank");
+                                    } else if (selectedChurch.address) {
+                                      const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedChurch.address)}`;
+                                      window.open(url, "_blank");
+                                    }
+                                  }}
+                                >
+                                  Get directions
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex gap-3">
+                            <Link
+                              className="w-full"
+                              href={`/join/worker?churchId=${selectedChurch.id}`}
+                            >
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="hidden sm:flex"
+                              >
+                                <UsersIcon className="text-primary h-8 w-8" />{" "}
+                                Join as Worker
+                              </Button>
+                            </Link>
+                            <Link
+                              className="w-full"
+                              href={`/join/member?churchId=${selectedChurch.id}`}
+                            >
+                              <Button size="sm" className="hidden sm:flex">
+                                <UserCheck className="text-primary h-8 w-8" />{" "}
+                                Join as member
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : null;
+                })()}
+            </div>
+            <Carousel
+              opts={getCarouselOptions(filteredChurches.length)}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-1 pb-2">
+                {filteredChurches.map((church) => (
+                  <CarouselItem
+                    key={church.id}
+                    className="basis-4/5 pl-1 min-[480px]:basis-1/2 sm:basis-2/5 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+                  >
+                    <div className="p-1">
+                      <ChurchCard
+                        church={church}
+                        onSelect={handleSelectChurch}
+                        isSelected={selectedChurchId === church.id}
+                      />
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="hidden sm:flex" />
+              <CarouselNext className="hidden sm:flex" />
+            </Carousel>
+          </div>
         )}
 
         {/* Empty State */}
@@ -301,12 +441,16 @@ function AllChurches({ onSelectChurch, selectedChurchId }: AllChurchesProps) {
 
         {/* Footer Stats */}
         {!isLoading && filteredChurches.length > 0 && (
-          <div className="text-center">
+          <div className="flex justify-center gap-4">
             <Badge variant="outline" className="text-xs">
               {filteredChurches.length} church
-              {filteredChurches.length !== 1 ? "es" : ""}
-              {search && " found"}
+              {filteredChurches.length !== 1 ? "es" : ""} total
             </Badge>
+            {mapLocations.length > 0 && (
+              <Badge variant="secondary" className="text-xs">
+                {mapLocations.length} with locations
+              </Badge>
+            )}
           </div>
         )}
       </div>
