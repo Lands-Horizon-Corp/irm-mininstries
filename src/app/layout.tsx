@@ -10,6 +10,7 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Footer } from "../components/layout/footer";
 import { Navbar } from "../components/layout/navbar";
 
+// @ts-ignore
 import "./globals.css";
 
 const geistSans = Geist({

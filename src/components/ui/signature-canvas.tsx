@@ -4,6 +4,7 @@ import SignatureCanvas from "react-signature-canvas";
 import { RotateCcwIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface SignatureCanvasProps {
   value?: string;
@@ -43,8 +44,8 @@ const SignatureCanvasComponent = ({
       if (value) {
         try {
           canvas.fromDataURL(value);
-        } catch (error) {
-          console.warn("Failed to restore signature after resize:", error);
+        } catch {
+          toast.error("Failed to restore signature after resize.");
         }
       }
     }
@@ -84,8 +85,8 @@ const SignatureCanvasComponent = ({
     if (value) {
       try {
         canvas.fromDataURL(value);
-      } catch (error) {
-        console.warn("Failed to load signature:", error);
+      } catch {
+        toast.error("Failed to load signature.");
       }
     } else if (!value && !canvas.isEmpty()) {
       canvas.clear();
@@ -111,8 +112,8 @@ const SignatureCanvasComponent = ({
       } else {
         onChange?.("");
       }
-    } catch (error) {
-      console.warn("Failed to capture signature:", error);
+    } catch {
+      toast.error("Failed to capture signature.");
       onChange?.("");
     }
   };
