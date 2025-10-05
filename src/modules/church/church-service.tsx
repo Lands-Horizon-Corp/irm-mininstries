@@ -94,6 +94,30 @@ const getChurches = async (
   return result;
 };
 
+// Get all churches without pagination (with optional search)
+const getAllChurches = async (
+  search?: string
+): Promise<ApiResponse<Church[]>> => {
+  const searchParams = new URLSearchParams();
+
+  if (search) searchParams.set("search", search);
+  searchParams.set("all", "true"); // Flag to indicate we want all results
+
+  const response = await fetch(`/api/churches?${searchParams.toString()}`);
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const result = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.error || "Failed to fetch churches");
+  }
+
+  return result;
+};
+
 // Get church by ID
 const getChurchById = async (id: number): Promise<ApiResponse<Church>> => {
   const response = await fetch(`/api/churches/${id}`);
@@ -178,6 +202,60 @@ const getChurchMinisters = async (
   return response.json();
 };
 
+// Get all church members without pagination (with optional search)
+const getAllChurchMembers = async (
+  churchId: number,
+  search?: string
+): Promise<ApiResponse<Member[]>> => {
+  const searchParams = new URLSearchParams();
+
+  if (search) searchParams.set("search", search);
+  searchParams.set("all", "true"); // Flag to indicate we want all results
+
+  const response = await fetch(
+    `/api/churches/${churchId}/members?${searchParams.toString()}`
+  );
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const result = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.error || "Failed to fetch church members");
+  }
+
+  return result;
+};
+
+// Get all church ministers without pagination (with optional search)
+const getAllChurchMinisters = async (
+  churchId: number,
+  search?: string
+): Promise<ApiResponse<Minister[]>> => {
+  const searchParams = new URLSearchParams();
+
+  if (search) searchParams.set("search", search);
+  searchParams.set("all", "true"); // Flag to indicate we want all results
+
+  const response = await fetch(
+    `/api/churches/${churchId}/ministers?${searchParams.toString()}`
+  );
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const result = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.error || "Failed to fetch church ministers");
+  }
+
+  return result;
+};
+
 // Create church
 const createChurch = async (
   data: ChurchFormData
@@ -259,6 +337,15 @@ export const useChurches = (params: GetChurchesParams = {}) => {
   });
 };
 
+// Get all churches without pagination (with optional search)
+export const useAllChurches = (search?: string) => {
+  return useQuery({
+    queryKey: ["all-churches", search],
+    queryFn: () => getAllChurches(search),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+};
+
 // Get church by ID
 export const useChurch = (id: number) => {
   return useQuery({
@@ -299,6 +386,26 @@ export const useChurchMinisters = (
   return useQuery({
     queryKey: ["church-ministers", churchId, params],
     queryFn: () => getChurchMinisters(churchId, params),
+    enabled: !!churchId,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+};
+
+// Get all church members without pagination (with optional search)
+export const useAllChurchMembers = (churchId: number, search?: string) => {
+  return useQuery({
+    queryKey: ["all-church-members", churchId, search],
+    queryFn: () => getAllChurchMembers(churchId, search),
+    enabled: !!churchId,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+};
+
+// Get all church ministers without pagination (with optional search)
+export const useAllChurchMinisters = (churchId: number, search?: string) => {
+  return useQuery({
+    queryKey: ["all-church-ministers", churchId, search],
+    queryFn: () => getAllChurchMinisters(churchId, search),
     enabled: !!churchId,
     staleTime: 2 * 60 * 1000, // 2 minutes
   });

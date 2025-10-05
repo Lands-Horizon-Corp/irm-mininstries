@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { format, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import {
   Calendar,
   Church,
@@ -42,6 +42,7 @@ import MemberForm from "@/modules/member/member-form";
 import { generateMemberPDF } from "@/modules/member/member-pdf";
 import { useDeleteMember } from "@/modules/member/member-service";
 import { toast } from "sonner";
+import { formatDate } from "@/lib/utils";
 
 interface RecentMember {
   id: number;
@@ -225,7 +226,6 @@ const MemberActions = ({ member, onRefresh }: MemberActionsProps) => {
 interface MemberItemProps {
   member: RecentMember;
   onRefresh: () => void;
-  formatDate: (dateString: string) => string;
   getTimeAgo: (dateString: string) => string;
   getInitials: (firstName: string, lastName: string) => string;
 }
@@ -233,7 +233,6 @@ interface MemberItemProps {
 const MemberItem = ({
   member,
   onRefresh,
-  formatDate,
   getTimeAgo,
   getInitials,
 }: MemberItemProps) => {
@@ -349,10 +348,6 @@ export function RecentMembers() {
     fetchRecentMembers();
   }, []);
 
-  const formatDate = (dateString: string) => {
-    return format(new Date(dateString), "MMM d, yyyy");
-  };
-
   const getTimeAgo = (dateString: string) => {
     return formatDistanceToNow(new Date(dateString), { addSuffix: true });
   };
@@ -431,7 +426,6 @@ export function RecentMembers() {
         ) : (
           members.map((member) => (
             <MemberItem
-              formatDate={formatDate}
               getInitials={getInitials}
               getTimeAgo={getTimeAgo}
               key={member.id}

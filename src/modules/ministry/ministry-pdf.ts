@@ -1,3 +1,4 @@
+import { formatDate } from "@/lib/utils";
 import { format } from "date-fns";
 import jsPDF from "jspdf";
 import { toast } from "sonner";
@@ -326,12 +327,6 @@ export async function generateMinisterPDF(
     }
   };
 
-  // Helper functions for formatting and lookups
-  const formatDate = (date: Date | null | undefined) => {
-    if (!date) return "Not provided";
-    return format(new Date(date), "MMM dd, yyyy");
-  };
-
   const formatGender = (gender: string) => {
     return gender === "male" ? "Male" : "Female";
   };
@@ -474,7 +469,7 @@ export async function generateMinisterPDF(
     const dobY = personalStartY + maxHeight + 2;
     const dobFieldHeight = addField(
       "Date of Birth",
-      formatDate(ministerData.dateOfBirth),
+      formatDate(ministerData.dateOfBirth ?? null),
       true,
       dobY
     );
@@ -637,7 +632,7 @@ export async function generateMinisterPDF(
     const fatherDobY = fatherStartY + maxHeight + 2;
     const fatherDobHeight = addField(
       "Birthday",
-      formatDate(ministerData.fatherBirthday),
+      formatDate(ministerData.fatherBirthday ?? null),
       true,
       fatherDobY
     );
@@ -679,7 +674,7 @@ export async function generateMinisterPDF(
     const motherDobY = motherStartY + maxHeight + 2;
     const motherDobHeight = addField(
       "Birthday",
-      formatDate(ministerData.motherBirthday),
+      formatDate(ministerData.motherBirthday ?? null),
       true,
       motherDobY
     );
@@ -722,7 +717,7 @@ export async function generateMinisterPDF(
       const spouseDobY = spouseStartY + maxHeight + 2;
       const spouseDobHeight = addField(
         "Birthday",
-        formatDate(ministerData.spouseBirthday),
+        formatDate(ministerData.spouseBirthday ?? null),
         true,
         spouseDobY
       );
@@ -737,7 +732,7 @@ export async function generateMinisterPDF(
       const weddingY = spouseStartY + maxHeight + 2;
       const weddingHeight = addField(
         "Wedding Date",
-        formatDate(ministerData.weddingDate),
+        formatDate(ministerData.weddingDate ?? null),
         true,
         weddingY
       );
@@ -930,7 +925,7 @@ export async function generateMinisterPDF(
         );
         const gradDateHeight = addField(
           "Date Graduated",
-          formatDate(education.dateGraduated),
+          formatDate(education.dateGraduated ?? null),
           false,
           courseY
         );

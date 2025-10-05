@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 
-import { format } from "date-fns";
 import {
   Award,
   BookOpen,
@@ -43,6 +42,7 @@ import { generateMinisterPDF } from "../ministry-pdf";
 import { useMinister } from "../ministry-service";
 import type { Minister } from "../ministry-validation";
 import { toast } from "sonner";
+import { formatDate } from "@/lib/utils";
 
 interface ViewMinisterDialogProps {
   isOpen: boolean;
@@ -132,12 +132,6 @@ export function ViewMinisterDialog({
     } finally {
       setIsExportingPDF(false);
     }
-  };
-
-  // Helper functions
-  const formatDate = (date: Date | null | undefined) => {
-    if (!date) return "Not provided";
-    return format(new Date(date), "MMM dd, yyyy");
   };
 
   const getChurchName = (id: number) => {
