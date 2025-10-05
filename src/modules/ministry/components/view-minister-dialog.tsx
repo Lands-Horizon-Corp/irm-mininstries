@@ -474,7 +474,7 @@ export function ViewMinisterDialog({
                       <div>
                         <label className="text-sm font-medium">Birthday</label>
                         <p className="mt-1">
-                          {formatDate(formData.spouseBirthday)}
+                          {formatDate(formData.spouseBirthday ?? null)}
                         </p>
                       </div>
                       <div>
@@ -490,7 +490,7 @@ export function ViewMinisterDialog({
                           Wedding Date
                         </label>
                         <p className="mt-1">
-                          {formatDate(formData.weddingDate)}
+                          {formatDate(formData.weddingDate ?? null)}
                         </p>
                       </div>
                     </div>
