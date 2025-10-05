@@ -48,9 +48,7 @@ export async function GET(
       success: true,
       data: contact,
     });
-  } catch (error) {
-    console.error("Get contact submission by ID error:", error);
-
+  } catch {
     return NextResponse.json(
       {
         success: false,
@@ -126,8 +124,6 @@ export async function PUT(
       data: updatedContact,
     });
   } catch (error) {
-    console.error("Update contact submission error:", error);
-
     // Handle Zod validation errors
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -217,9 +213,7 @@ export async function DELETE(
         subject: existingContact.subject,
       },
     });
-  } catch (error) {
-    console.error("Delete contact submission error:", error);
-
+  } catch {
     // Handle other errors
     return NextResponse.json(
       {

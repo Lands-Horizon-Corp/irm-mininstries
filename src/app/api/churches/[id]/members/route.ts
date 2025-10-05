@@ -87,8 +87,7 @@ export async function GET(
         hasPrev: page > 1,
       },
     });
-  } catch (error) {
-    console.error("Error fetching church members:", error);
+  } catch {
     return Response.json(
       { error: "Failed to fetch church members" },
       { status: 500 }
