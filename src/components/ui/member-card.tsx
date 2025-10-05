@@ -56,6 +56,7 @@ export function MemberCard({
   onDownloadPdf,
 }: MemberCardProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isQRDialogOpen, setIsQRDialogOpen] = useState(false);
 
   const handleDelete = () => {
     onDelete?.(member.id);
@@ -146,17 +147,10 @@ export function MemberCard({
                         Download PDF
                       </DropdownMenuItem>
                     )}
-                    <PersonQRCode
-                      id={member.id}
-                      name={fullName}
-                      trigger={
-                        <DropdownMenuItem>
-                          <QrCode className="mr-2 h-4 w-4" />
-                          Download QR
-                        </DropdownMenuItem>
-                      }
-                      type="member"
-                    />
+                    <DropdownMenuItem onClick={() => setIsQRDialogOpen(true)}>
+                      <QrCode className="mr-2 h-4 w-4" />
+                      Download QR
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     {onDelete && (
                       <DropdownMenuItem
@@ -250,6 +244,15 @@ export function MemberCard({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* QR Code Dialog */}
+      <PersonQRCode
+        id={member.id}
+        name={fullName}
+        type="member"
+        isOpen={isQRDialogOpen}
+        onClose={() => setIsQRDialogOpen(false)}
+      />
     </>
   );
 }
