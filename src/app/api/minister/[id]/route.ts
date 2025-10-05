@@ -131,9 +131,7 @@ export async function GET(
       success: true,
       data: fullMinisterData,
     });
-  } catch (error) {
-    console.error("Get minister by ID error:", error);
-
+  } catch {
     return NextResponse.json(
       {
         success: false,
@@ -415,8 +413,19 @@ export async function PUT(
         );
       }
     } catch (relatedDataError) {
-      console.error("Error updating related data:", relatedDataError);
-      // The main minister record has been updated, but some related data may have failed
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Failed to update related data",
+          message:
+            "Minister updated, but failed to update some related data. Please try updating the related data separately.",
+          details:
+            relatedDataError instanceof Error
+              ? relatedDataError.message
+              : String(relatedDataError),
+        },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({
@@ -425,8 +434,6 @@ export async function PUT(
       data: updatedMinister,
     });
   } catch (error) {
-    console.error("Update minister error:", error);
-
     // Handle Zod validation errors
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -537,8 +544,19 @@ export async function DELETE(
       // Delete the main minister record
       await db.delete(ministers).where(eq(ministers.id, id));
     } catch (deleteError) {
-      console.error("Error deleting minister:", deleteError);
-      throw deleteError;
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Failed to delete minister",
+          message:
+            "Something went wrong while deleting the minister. Please try again.",
+          details:
+            deleteError instanceof Error
+              ? deleteError.message
+              : String(deleteError),
+        },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({
@@ -551,8 +569,6 @@ export async function DELETE(
       },
     });
   } catch (error) {
-    console.error("Delete minister error:", error);
-
     // Handle foreign key constraint errors
     if (
       error instanceof Error &&

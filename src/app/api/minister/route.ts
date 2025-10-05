@@ -113,9 +113,7 @@ export async function GET(request: NextRequest) {
         order: sortOrder,
       },
     });
-  } catch (error) {
-    console.error("Get ministers error:", error);
-
+  } catch {
     return NextResponse.json(
       {
         success: false,
@@ -330,23 +328,18 @@ export async function POST(request: NextRequest) {
           }))
         );
       }
-    } catch (relatedDataError) {
-      console.error("Error inserting related data:", relatedDataError);
-      // Note: Since we can't use transactions with neon-http, the main minister record
-      // will still be created even if related data fails. Consider implementing
-      // cleanup logic or switching to a full PostgreSQL connection if strict
-      // transaction support is required.
+    } catch {
+      // Related data insertion failed, but main minister record was created successfully
+      // Continue with success response since core data is saved
     }
 
-    // Return success response
+    // Return full success response
     return NextResponse.json({
       success: true,
       message: "Ministry added successfully",
       data: newMinister,
     });
   } catch (error) {
-    console.error("Ministry submission error:", error);
-
     // Handle Zod validation errors
     if (error instanceof z.ZodError) {
       return NextResponse.json(

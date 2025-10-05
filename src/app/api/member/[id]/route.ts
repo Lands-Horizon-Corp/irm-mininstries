@@ -46,9 +46,7 @@ export async function GET(
       success: true,
       data: member,
     });
-  } catch (error) {
-    console.error("Get member by ID error:", error);
-
+  } catch {
     return NextResponse.json(
       {
         success: false,
@@ -138,8 +136,6 @@ export async function PUT(
       data: updatedMember,
     });
   } catch (error) {
-    console.error("Update member error:", error);
-
     // Handle Zod validation errors
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -222,9 +218,7 @@ export async function DELETE(
       success: true,
       message: "Member deleted successfully",
     });
-  } catch (error) {
-    console.error("Delete member error:", error);
-
+  } catch {
     return NextResponse.json(
       {
         success: false,
