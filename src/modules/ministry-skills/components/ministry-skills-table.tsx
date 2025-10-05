@@ -64,6 +64,7 @@ import {
   useDeleteMinistrySkill,
   useMinistrySkills,
 } from "../ministry-skills-service";
+import { toast } from "sonner";
 
 // Ministry Skill Actions Component
 interface MinistrySkillActionsProps {
@@ -80,8 +81,8 @@ const MinistrySkillActions = ({ ministrySkill }: MinistrySkillActionsProps) => {
     try {
       await deleteMinistrySkillMutation.mutateAsync(ministrySkill.id);
       setIsDeleteDialogOpen(false);
-    } catch (error) {
-      console.error("Failed to delete ministry skill:", error);
+    } catch {
+      toast.error("Failed to delete ministry skill");
     }
   };
 
@@ -411,9 +412,8 @@ export default function MinistrySkillsTable() {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Export failed:", error);
-      // You could add a toast notification here
+    } catch {
+      toast.error("Failed to export ministry skills");
     } finally {
       setIsExporting(false);
     }

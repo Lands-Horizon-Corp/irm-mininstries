@@ -200,7 +200,6 @@ export const useCreateMember = () => {
       toast.success(data.message || "Member created successfully!");
     },
     onError: (error: Error) => {
-      console.error("Create member error:", error);
       toast.error(error.message || "Failed to create member");
     },
   });
@@ -219,7 +218,6 @@ export const useUpdateMember = () => {
       toast.success(data.message || "Member updated successfully!");
     },
     onError: (error: Error) => {
-      console.error("Update member error:", error);
       toast.error(error.message || "Failed to update member");
     },
   });
@@ -236,7 +234,6 @@ export const useDeleteMember = () => {
       toast.success(data.message || "Member deleted successfully!");
     },
     onError: (error: Error) => {
-      console.error("Delete member error:", error);
       toast.error(error.message || "Failed to delete member");
     },
   });

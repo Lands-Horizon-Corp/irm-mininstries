@@ -70,6 +70,7 @@ import {
 
 import { EditMinisterDialog } from "./edit-minister-dialog";
 import { ViewMinisterDialog } from "./view-minister-dialog";
+import { toast } from "sonner";
 
 // Minister interface based on your requirements
 interface Minister {
@@ -104,8 +105,8 @@ const MinisterActions = ({ minister }: MinisterActionsProps) => {
     try {
       await deleteMinisterMutation.mutateAsync(minister.id);
       setIsDeleteDialogOpen(false);
-    } catch (error) {
-      console.error("Failed to delete minister:", error);
+    } catch {
+      toast.error("Failed to delete minister");
     }
   };
 
@@ -113,8 +114,8 @@ const MinisterActions = ({ minister }: MinisterActionsProps) => {
     setIsDownloadingPDF(true);
     try {
       await downloadMinisterPDF(minister.id);
-    } catch (error) {
-      console.error("Failed to download PDF:", error);
+    } catch {
+      toast.error("Failed to download PDF");
     } finally {
       setIsDownloadingPDF(false);
     }
@@ -465,9 +466,8 @@ export default function MinisterTable() {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Export failed:", error);
-      // You could add a toast notification here
+    } catch {
+      toast.error("Failed to export ministers");
     } finally {
       setIsExporting(false);
     }

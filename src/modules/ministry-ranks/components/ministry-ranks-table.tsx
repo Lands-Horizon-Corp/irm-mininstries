@@ -64,6 +64,7 @@ import {
   useDeleteMinistryRank,
   useMinistryRanks,
 } from "../ministry-ranks-service";
+import { toast } from "sonner";
 
 // Ministry Rank Actions Component
 interface MinistryRankActionsProps {
@@ -80,8 +81,8 @@ const MinistryRankActions = ({ ministryRank }: MinistryRankActionsProps) => {
     try {
       await deleteMinistryRankMutation.mutateAsync(ministryRank.id);
       setIsDeleteDialogOpen(false);
-    } catch (error) {
-      console.error("Failed to delete ministry rank:", error);
+    } catch {
+      toast.error("Failed to delete ministry rank");
     }
   };
 
@@ -420,9 +421,8 @@ export default function MinistryRanksTable() {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Export failed:", error);
-      // You could add a toast notification here
+    } catch {
+      toast.error("Failed to export ministry ranks");
     } finally {
       setIsExporting(false);
     }

@@ -56,8 +56,7 @@ export function MemberSuccessDialog({
       setCopied(true);
       toast.success("QR data copied to clipboard!");
       setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
-      console.error("Failed to copy QR data:", error);
+    } catch {
       toast.error("Failed to copy QR data");
     }
   };
@@ -129,7 +128,7 @@ export function MemberSuccessDialog({
         };
 
         logo.onerror = () => {
-          console.warn("Logo failed to load, proceeding without logo");
+          toast.error("Failed to load logo image");
           renderTextAndDownload();
         };
 
@@ -175,8 +174,7 @@ export function MemberSuccessDialog({
       };
 
       img.src = svgUrl;
-    } catch (error) {
-      console.error("Error downloading QR code:", error);
+    } catch {
       toast.error("Failed to download QR Code");
     }
   };

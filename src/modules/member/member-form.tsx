@@ -42,6 +42,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { MemberSuccessDialog } from "./components/member-success-dialog";
 import { generateMemberPDF } from "./member-pdf";
 import { useCreateMember, useMember, useUpdateMember } from "./member-service";
+import { toast } from "sonner";
 
 // Create a form-specific schema that properly handles form input types
 const memberFormSchema = z.object({
@@ -279,8 +280,8 @@ export default function MemberForm({
         createdAt: new Date(),
         updatedAt: new Date(),
       });
-    } catch (error) {
-      console.error("Failed to generate PDF:", error);
+    } catch {
+      toast.error("Failed to generate PDF. Please try again.");
     }
   };
 

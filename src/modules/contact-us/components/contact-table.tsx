@@ -62,6 +62,7 @@ import {
   useContactSubmissions,
   useDeleteContactSubmission,
 } from "../contact-us-service";
+import { toast } from "sonner";
 
 // Contact Actions Component
 interface ContactActionsProps {
@@ -77,8 +78,8 @@ const ContactActions = ({ contact }: ContactActionsProps) => {
     try {
       await deleteContactMutation.mutateAsync(contact.id);
       setIsDeleteDialogOpen(false);
-    } catch (error) {
-      console.error("Failed to delete contact submission:", error);
+    } catch {
+      toast.error("Failed to delete contact submission. Please try again.");
     }
   };
 
@@ -422,9 +423,8 @@ export default function ContactTable() {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Export failed:", error);
-      // You could add a toast notification here
+    } catch {
+      toast.error("Failed to export contact submissions. Please try again.");
     } finally {
       setIsExporting(false);
     }

@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import jsPDF from "jspdf";
+import { toast } from "sonner";
 
 // Types for the PDF generation
 interface MinisterPDFData {
@@ -185,8 +186,8 @@ export async function generateMinisterPDF(
         reader.onerror = reject;
         reader.readAsDataURL(blob);
       });
-    } catch (error) {
-      console.error("Error converting image to base64:", error);
+    } catch {
+      toast.error("Failed to load image for PDF.");
       return "";
     }
   };
@@ -320,8 +321,8 @@ export async function generateMinisterPDF(
 
         yPosition += height + 12;
       }
-    } catch (error) {
-      console.error("Error adding image to PDF:", error);
+    } catch {
+      toast.error("Failed to load image for PDF.");
     }
   };
 
@@ -1366,8 +1367,8 @@ export async function generateMinisterPDF(
                 25
               );
             }
-          } catch (error) {
-            console.error("Error adding certifier signature:", error);
+          } catch {
+            toast.error("Failed to load certifier's signature for PDF.");
           }
         }
 
@@ -1407,8 +1408,8 @@ export async function generateMinisterPDF(
 
     // Save the PDF
     pdf.save(filename);
-  } catch (error) {
-    console.error("Error generating PDF:", error);
+  } catch {
+    toast.error("Failed to generate PDF");
     throw new Error("Failed to generate PDF");
   }
 }

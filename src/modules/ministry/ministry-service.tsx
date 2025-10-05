@@ -286,9 +286,8 @@ export const downloadMinisterPDF = async (ministerId: number) => {
     await generateMinisterPDF(ministerData, lookupData);
 
     toast.success("PDF downloaded successfully");
-  } catch (error) {
-    console.error("Error downloading PDF:", error);
+  } catch {
     toast.error("Failed to download PDF");
-    throw error;
+    throw new Error("Failed to download PDF");
   }
 };

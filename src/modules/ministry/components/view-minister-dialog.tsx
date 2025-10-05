@@ -41,6 +41,7 @@ import { useMinistrySkills } from "@/modules/ministry-skills/ministry-skills-ser
 import { generateMinisterPDF } from "../ministry-pdf";
 import { useMinister } from "../ministry-service";
 import type { Minister } from "../ministry-validation";
+import { toast } from "sonner";
 
 interface ViewMinisterDialogProps {
   isOpen: boolean;
@@ -125,8 +126,8 @@ export function ViewMinisterDialog({
 
       // Generate and download PDF
       await generateMinisterPDF(formData, lookupData);
-    } catch (error) {
-      console.error("Failed to export PDF:", error);
+    } catch {
+      toast.error("Failed to export minister PDF");
     } finally {
       setIsExportingPDF(false);
     }
