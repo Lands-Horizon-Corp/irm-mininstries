@@ -369,7 +369,6 @@ export function MinisterForm({
         }
       }
     } catch (error) {
-      console.error("Error submitting form:", error);
       setSubmissionError(
         error instanceof Error
           ? error.message

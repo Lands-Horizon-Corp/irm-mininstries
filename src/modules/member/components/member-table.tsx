@@ -66,6 +66,7 @@ import { generateMemberPDF } from "../member-pdf";
 import { useDeleteMember, useMembers } from "../member-service";
 
 import { ViewMemberDialog } from "./view-member-dialog";
+import { toast } from "sonner";
 
 // Member interface for table display
 interface Member {
@@ -100,8 +101,8 @@ const MemberActions = ({ member }: MemberActionsProps) => {
     try {
       await deleteMemberMutation.mutateAsync(member.id);
       setIsDeleteDialogOpen(false);
-    } catch (error) {
-      console.error("Failed to delete member:", error);
+    } catch {
+      toast.error("Failed to delete member. Please try again.");
     }
   };
 
@@ -131,8 +132,8 @@ const MemberActions = ({ member }: MemberActionsProps) => {
         createdAt: member.createdAt,
         updatedAt: member.updatedAt,
       });
-    } catch (error) {
-      console.error("Failed to download PDF:", error);
+    } catch {
+      toast.error("Failed to generate PDF. Please try again.");
     } finally {
       setIsDownloadingPDF(false);
     }
@@ -463,9 +464,8 @@ export default function MemberTable() {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Export failed:", error);
-      // You could add a toast notification here
+    } catch {
+      toast.error("Export failed. Please try again.");
     } finally {
       setIsExporting(false);
     }

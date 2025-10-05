@@ -23,6 +23,7 @@ import { Separator } from "@/components/ui/separator";
 import { useChurch } from "../../church/church-service";
 import { generateMemberPDF } from "../member-pdf";
 import { useMember } from "../member-service";
+import { toast } from "sonner";
 
 interface ViewMemberDialogProps {
   isOpen: boolean;
@@ -53,8 +54,8 @@ export function ViewMemberDialog({
           churchName: church?.name || undefined,
           churchAddress: church?.address || undefined,
         });
-      } catch (error) {
-        console.error("Failed to download PDF:", error);
+      } catch {
+        toast.error("Failed to generate PDF. Please try again.");
       }
     }
   };

@@ -59,6 +59,7 @@ import {
   useChurchStats,
   useDeleteChurch,
 } from "../church-service";
+import { toast } from "sonner";
 
 // Church Stats Component
 interface ChurchStatsProps {
@@ -118,8 +119,8 @@ const ChurchActions = ({ church }: ChurchActionsProps) => {
     try {
       await deleteChurchMutation.mutateAsync(church.id);
       setIsDeleteDialogOpen(false);
-    } catch (error) {
-      console.error("Failed to delete church:", error);
+    } catch {
+      toast.error("Failed to delete church. Please try again.");
     }
   };
 
@@ -297,9 +298,8 @@ export default function ChurchTable() {
       // Cleanup
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Error exporting to Excel:", error);
-      // You could add a toast notification here
+    } catch {
+      toast.error("Failed to export churches. Please try again.");
     } finally {
       setIsExporting(false);
     }
