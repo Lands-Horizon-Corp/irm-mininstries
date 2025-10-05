@@ -16,19 +16,41 @@ export const abbreviateUUID = (uuid: string, abbrevLength = 7) => {
 
 export const imageCompressed = async (file: File): Promise<File> => {
   let processedFile = file;
-  const imageTypes = ["image/jpeg", "image/png", "image/jpg"];
+  const imageTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/jpg",
+    "image/gif",
+    "image/webp",
+    "image/bmp",
+    "image/tiff",
+    "image/tif",
+    "image/svg+xml",
+    "image/avif",
+    "image/heic",
+    "image/heif",
+  ];
   const isImage =
     imageTypes.includes(file.type) ||
     file.name.toLowerCase().endsWith(".jpg") ||
     file.name.toLowerCase().endsWith(".jpeg") ||
-    file.name.toLowerCase().endsWith(".png");
+    file.name.toLowerCase().endsWith(".png") ||
+    file.name.toLowerCase().endsWith(".gif") ||
+    file.name.toLowerCase().endsWith(".webp") ||
+    file.name.toLowerCase().endsWith(".bmp") ||
+    file.name.toLowerCase().endsWith(".tiff") ||
+    file.name.toLowerCase().endsWith(".tif") ||
+    file.name.toLowerCase().endsWith(".svg") ||
+    file.name.toLowerCase().endsWith(".avif") ||
+    file.name.toLowerCase().endsWith(".heic") ||
+    file.name.toLowerCase().endsWith(".heif");
 
   if (isImage) {
     const options = {
       maxSizeMB: 5, // Maximum size 5MB
       maxWidthOrHeight: 1920, // Maximum width or height
       useWebWorker: true,
-      fileType: file.type,
+      fileType: "image/webp", // Convert to WebP format for better compression
       initialQuality: 0.8, // Initial quality
     };
 
