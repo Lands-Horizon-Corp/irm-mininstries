@@ -10,7 +10,7 @@ export default function ContactPage() {
       <ContactUsHeading
         subHeader="Response Within 24 Hours"
         title="Contact us directly"
-      /> 
+      />
       <div className="flex justify-center">
         <ContactUsForm />
       </div>
