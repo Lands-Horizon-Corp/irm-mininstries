@@ -3,13 +3,47 @@
 import { useState } from "react";
 import Link from "next/link";
 
-import { Menu, UserIcon, X } from "lucide-react";
+import { Menu, UserIcon, X, LucideIcon } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
 
 import { cn } from "../../lib/utils";
 
 import Logo from "./logo";
+
+interface NavRoute {
+  href: string;
+  label: string;
+  variant?: "default" | "link";
+  icon?: LucideIcon;
+  showOnMobile?: boolean;
+  showOnDesktop?: boolean;
+}
+
+const navRoutes: NavRoute[] = [
+  {
+    href: "/",
+    label: "Home",
+    variant: "link",
+    showOnMobile: true,
+    showOnDesktop: true,
+  },
+  {
+    href: "/contact",
+    label: "Contact",
+    variant: "link",
+    showOnMobile: true,
+    showOnDesktop: true,
+  },
+  {
+    href: "/join",
+    label: "Join",
+    variant: "default",
+    icon: UserIcon,
+    showOnMobile: true,
+    showOnDesktop: true,
+  },
+];
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,27 +58,27 @@ export function Navbar() {
             </div>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
-            <Link
-              className={cn(
-                buttonVariants({ variant: "link" }),
-                "text-current"
-              )}
-              href="/"
-            >
-              Home
-            </Link>
-            <Link
-              className={cn(
-                buttonVariants({ variant: "link" }),
-                "text-current"
-              )}
-              href="/contact"
-            >
-              Contact
-            </Link>
-            <Link className={cn(buttonVariants(), "ml-4")} href="/join">
-              <UserIcon className="mr-2 inline h-4 w-4" /> Join
-            </Link>
+            {navRoutes
+              .filter((route) => route.showOnDesktop)
+              .map((route) => {
+                const Icon = route.icon;
+                const isJoinButton = route.variant === "default";
+
+                return (
+                  <Link
+                    key={route.href}
+                    className={cn(
+                      buttonVariants({ variant: route.variant || "link" }),
+                      route.variant === "link" ? "text-current" : "",
+                      isJoinButton ? "ml-4" : ""
+                    )}
+                    href={route.href}
+                  >
+                    {Icon && <Icon className="mr-2 inline h-4 w-4" />}
+                    {route.label}
+                  </Link>
+                );
+              })}
           </div>
 
           {/* Mobile menu button */}
@@ -73,31 +107,31 @@ export function Navbar() {
       {isMenuOpen && (
         <div className="sm:hidden" id="mobile-menu">
           <div className="space-y-4 px-2 pt-2 pb-3">
-            <Link
-              className={cn("block font-medium")}
-              href="/"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Home
-            </Link>
-            <Link
-              className={cn("block font-medium")}
-              href="/contact"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Contact
-            </Link>
+            {navRoutes
+              .filter((route) => route.showOnMobile)
+              .map((route) => {
+                const Icon = route.icon;
+                const isJoinButton = route.variant === "default";
 
-            <Link
-              className={cn(
-                buttonVariants({ variant: "default" }),
-                "mx-auto w-full px-4 py-2 text-center"
-              )}
-              href="/join"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Join
-            </Link>
+                return (
+                  <Link
+                    key={route.href}
+                    className={cn(
+                      isJoinButton
+                        ? buttonVariants({ variant: "default" }) +
+                            " mx-auto w-full px-4 py-2 text-center"
+                        : "block font-medium"
+                    )}
+                    href={route.href}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {Icon && !isJoinButton && (
+                      <Icon className="mr-2 inline h-4 w-4" />
+                    )}
+                    {route.label}
+                  </Link>
+                );
+              })}
           </div>
         </div>
       )}
