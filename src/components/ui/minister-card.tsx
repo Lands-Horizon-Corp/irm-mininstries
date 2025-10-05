@@ -58,6 +58,7 @@ export function MinisterCard({
 }: MinisterCardProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [isQRDialogOpen, setIsQRDialogOpen] = useState(false);
 
   const handleDelete = () => {
     onDelete?.(minister.id);
@@ -151,17 +152,10 @@ export function MinisterCard({
                     Download PDF
                   </DropdownMenuItem>
                 )}
-                <PersonQRCode
-                  id={minister.id}
-                  name={fullName}
-                  trigger={
-                    <DropdownMenuItem>
-                      <QrCode className="mr-2 h-4 w-4" />
-                      Download QR
-                    </DropdownMenuItem>
-                  }
-                  type="minister"
-                />
+                <DropdownMenuItem onClick={() => setIsQRDialogOpen(true)}>
+                  <QrCode className="mr-2 h-4 w-4" />
+                  Download QR
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 {onDelete && (
                   <DropdownMenuItem
@@ -257,6 +251,15 @@ export function MinisterCard({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* QR Code Dialog */}
+      <PersonQRCode
+        id={minister.id}
+        name={fullName}
+        type="minister"
+        isOpen={isQRDialogOpen}
+        onClose={() => setIsQRDialogOpen(false)}
+      />
     </>
   );
 }
