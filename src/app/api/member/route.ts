@@ -32,6 +32,7 @@ export async function GET(request: NextRequest) {
         ilike(members.firstName, `%${search}%`),
         ilike(members.lastName, `%${search}%`),
         ilike(members.middleName, `%${search}%`),
+        ilike(members.mobileNumber, `%${search}%`),
         ilike(members.email, `%${search}%`),
         ilike(members.occupation, `%${search}%`),
         ilike(members.ministryInvolvement, `%${search}%`)
