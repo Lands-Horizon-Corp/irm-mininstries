@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 import { db } from "@/db/drizzle";
 import { churches } from "@/modules/church/church-schema";
 import { ministers } from "@/modules/ministry/ministry-schema";
+import { formatDate } from "@/lib/utils";
 
 export async function GET(
   request: Request,
@@ -107,10 +108,6 @@ export async function GET(
         return text.length > maxLength
           ? text.substring(0, maxLength) + "..."
           : text;
-      };
-
-      const formatDate = (date: Date | null) => {
-        return date ? new Date(date).toLocaleDateString() : "";
       };
 
       return {

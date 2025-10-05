@@ -1,3 +1,4 @@
+import { formatDate } from "@/lib/utils";
 import { format } from "date-fns";
 import jsPDF from "jspdf";
 
@@ -229,12 +230,6 @@ export async function generateMemberPDF(
     }
   };
 
-  // Helper functions for formatting
-  const formatDate = (date: string | null | undefined) => {
-    if (!date) return "Not provided";
-    return format(new Date(date), "MMM dd, yyyy");
-  };
-
   const formatGender = (gender: string) => {
     return gender === "male" ? "Male" : "Female";
   };
@@ -341,7 +336,7 @@ export async function generateMemberPDF(
     const dobY = personalStartY + maxHeight + 2;
     const dobFieldHeight = addField(
       "Date of Birth",
-      formatDate(memberData.birthdate),
+      formatDate(memberData.birthdate ?? null),
       true,
       dobY
     );

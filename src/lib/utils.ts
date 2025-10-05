@@ -65,3 +65,12 @@ export const imageCompressed = async (file: File): Promise<File> => {
   }
   return processedFile;
 };
+
+export const formatDate = (date: Date | null | string) => {
+  if (!date) return "";
+  else if (typeof date === "string") {
+    const parsedDate = new Date(date);
+    return isNaN(parsedDate.getTime()) ? "" : parsedDate.toLocaleDateString();
+  }
+  return date.toLocaleDateString();
+};

@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
-import { format } from "date-fns";
 import {
   Award,
   BookOpen,
@@ -35,6 +34,7 @@ import { useMinistrySkills } from "@/modules/ministry-skills/ministry-skills-ser
 
 import { generateMinisterPDF } from "../../ministry-pdf";
 import type { StepProps } from "../../ministry-validation";
+import { formatDate } from "@/lib/utils";
 
 export function Overview({
   formData,
@@ -110,12 +110,6 @@ export function Overview({
     limit: 200,
   });
   const ministrySkillsData = ministrySkillsResponse?.data || [];
-
-  // Helper functions
-  const formatDate = (date: Date | null | undefined) => {
-    if (!date) return "Not provided";
-    return format(new Date(date), "MMM dd, yyyy");
-  };
 
   const getChurchName = (id: number) => {
     return (
@@ -379,7 +373,7 @@ export function Overview({
                   <div>
                     <label className="text-sm font-medium">Birthday</label>
                     <p className="mt-1">
-                      {formatDate(formData.spouseBirthday)}
+                      {formatDate(formData.spouseBirthday ?? null)}
                     </p>
                   </div>
                   <div>
@@ -390,7 +384,9 @@ export function Overview({
                   </div>
                   <div>
                     <label className="text-sm font-medium">Wedding Date</label>
-                    <p className="mt-1">{formatDate(formData.weddingDate)}</p>
+                    <p className="mt-1">
+                      {formatDate(formData.weddingDate ?? null)}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -566,7 +562,7 @@ export function Overview({
                             Date Graduated
                           </label>
                           <p className="mt-1">
-                            {formatDate(education.dateGraduated)}
+                            {formatDate(education.dateGraduated ?? null)}
                           </p>
                         </div>
                         {education.description && (

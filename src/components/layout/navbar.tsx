@@ -36,6 +36,13 @@ const navRoutes: NavRoute[] = [
     showOnDesktop: true,
   },
   {
+    href: "/church",
+    label: "Churches",
+    variant: "link",
+    showOnMobile: true,
+    showOnDesktop: true,
+  },
+  {
     href: "/join",
     label: "Join",
     variant: "default",
