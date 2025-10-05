@@ -53,9 +53,7 @@ export async function GET(
       success: true,
       data: church,
     });
-  } catch (error) {
-    console.error("Get church by ID error:", error);
-
+  } catch {
     return NextResponse.json(
       {
         success: false,
@@ -132,8 +130,6 @@ export async function PUT(
       data: updatedChurch,
     });
   } catch (error) {
-    console.error("Update church error:", error);
-
     // Handle Zod validation errors
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -274,8 +270,6 @@ export async function DELETE(
       },
     });
   } catch (error) {
-    console.error("Delete church error:", error);
-
     // Handle foreign key constraint errors
     if (
       error instanceof Error &&

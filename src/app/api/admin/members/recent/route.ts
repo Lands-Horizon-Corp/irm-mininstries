@@ -40,8 +40,7 @@ export async function GET(_request: NextRequest) {
       data: recentMembers,
       count: recentMembers.length,
     });
-  } catch (error) {
-    console.error("Error fetching recent members:", error);
+  } catch {
     return NextResponse.json(
       {
         success: false,

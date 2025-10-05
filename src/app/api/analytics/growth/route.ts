@@ -192,9 +192,7 @@ export async function GET(request: NextRequest) {
         },
       },
     });
-  } catch (error) {
-    console.error("Growth analytics error:", error);
-
+  } catch {
     return NextResponse.json(
       {
         success: false,
