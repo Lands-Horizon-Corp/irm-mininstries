@@ -12,7 +12,7 @@ import {
   ZoomIn,
   ZoomOut,
   Download,
-  Maximize2,
+  TimerResetIcon,
 } from "lucide-react";
 
 import {
@@ -195,7 +195,7 @@ export function ImageViewer({
               onClick={() => transformFunctionsRef.current?.resetTransform()}
               title="Reset Zoom"
             >
-              <Maximize2 className="h-4 w-4" />
+              <TimerResetIcon className="h-4 w-4" />
             </Button>
 
             <div className="bg-border mx-2 h-6 w-px" />
