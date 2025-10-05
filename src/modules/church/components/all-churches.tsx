@@ -375,7 +375,11 @@ function AllChurches({ onSelectChurch, selectedChurchId }: AllChurchesProps) {
                               className="w-full"
                               href={`/join/member?churchId=${selectedChurch.id}`}
                             >
-                              <Button size="sm" className="hidden sm:flex">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="hidden sm:flex"
+                              >
                                 <UserCheck className="text-primary h-8 w-8" />{" "}
                                 Join as member
                               </Button>
