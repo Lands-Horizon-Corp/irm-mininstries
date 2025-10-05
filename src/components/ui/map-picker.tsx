@@ -118,7 +118,7 @@ export interface MapPickerProps {
   hideButtonCoordinates?: boolean;
 }
 
-const defaultCenter: LatLng = { lat: 37.7749, lng: -122.4194 };
+const defaultCenter: LatLng = { lat: 14.5995, lng: 120.9842 }; // Manila, Philippines
 
 export const MapPicker: React.FC<MapPickerProps> = ({
   value,
@@ -156,6 +156,7 @@ export const MapPicker: React.FC<MapPickerProps> = ({
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
   const [isLoadingSuggestions, setIsLoadingSuggestions] =
     useState<boolean>(false);
+  const [isGettingLocation, setIsGettingLocation] = useState<boolean>(false);
 
   const mapRef = useRef<google.maps.Map | null>(null);
   const geocoderRef = useRef<google.maps.Geocoder | null>(null);
@@ -170,6 +171,72 @@ export const MapPicker: React.FC<MapPickerProps> = ({
   const formatLocation = (location: LatLng): string => {
     return `${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}`;
   };
+
+  const getCurrentLocation = useCallback(() => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by this browser.");
+      return;
+    }
+
+    setIsGettingLocation(true);
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userLocation: LatLng = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+
+        // Update state first
+        setMapCenter(userLocation);
+        setMapZoom(15);
+        setIsGettingLocation(false);
+
+        // Force map to update with a slight delay to ensure it's rendered
+        if (mapRef.current) {
+          setTimeout(() => {
+            if (mapRef.current) {
+              mapRef.current.setCenter(userLocation);
+              mapRef.current.setZoom(15);
+              // Force a re-render by updating the map options
+              mapRef.current.setOptions({
+                center: userLocation,
+                zoom: 15,
+              });
+            }
+          }, 100);
+        }
+
+        toast.success(
+          `Located: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`
+        );
+      },
+      (error) => {
+        setIsGettingLocation(false);
+        let errorMessage = "Unable to get your location";
+
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage =
+              "Location access denied. Please enable location permissions.";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = "Location information unavailable.";
+            break;
+          case error.TIMEOUT:
+            errorMessage = "Location request timed out.";
+            break;
+        }
+
+        toast.error(errorMessage);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0, // Always get fresh location
+      }
+    );
+  }, []);
 
   const { resolvedTheme } = useTheme();
 
@@ -612,7 +679,20 @@ export const MapPicker: React.FC<MapPickerProps> = ({
                 <div className="flex-1 space-y-4 overflow-y-auto p-6">
                   {/* Search Section */}
                   <div className={cn("space-y-2", viewOnly && "hidden")}>
-                    <Label htmlFor="location-search">Search Location</Label>
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="location-search">Search Location</Label>
+                      <Button
+                        className="h-8 px-3"
+                        disabled={!isLoaded || isGettingLocation}
+                        size="sm"
+                        type="button"
+                        variant="outline"
+                        onClick={getCurrentLocation}
+                      >
+                        <NavigationIcon className="mr-2 h-3 w-3" />
+                        {isGettingLocation ? "Getting..." : "My Location"}
+                      </Button>
+                    </div>
                     <div className="relative">
                       <SearchIcon className="text-muted-foreground absolute top-1/2 left-3 z-10 h-4 w-4 -translate-y-1/2" />
 
