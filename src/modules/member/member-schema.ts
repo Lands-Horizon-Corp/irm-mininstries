@@ -11,7 +11,7 @@ export const members = pgTable("members", {
     .notNull(),
 
   // Profile Information
-  profilePicture: text("profile_picture"), // URL to profile image
+  profilePicture: text("profile_picture"), // URL to profile image (recommended) or base64 data
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
   middleName: text("middle_name"),
