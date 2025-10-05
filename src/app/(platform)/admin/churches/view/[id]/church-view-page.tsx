@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { format } from "date-fns";
 import {
   ArrowLeft,
@@ -24,6 +23,8 @@ import {
   UserCheck,
   Users,
 } from "lucide-react";
+
+import MapViewer from "@/components/ui/map-viewer";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -127,13 +128,6 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
   const deleteChurchMutation = useDeleteChurch();
   const deleteMemberMutation = useDeleteMember();
   const deleteMinisterMutation = useDeleteMinister();
-
-  // Google Maps setup
-  const { isLoaded: isMapLoaded } = useJsApiLoader({
-    id: "google-maps-script",
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
-    libraries: ["places", "geometry"],
-  });
 
   const church = churchResponse?.data;
   const stats = statsResponse?.data;
@@ -560,39 +554,14 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <div className="h-48 w-full overflow-hidden rounded-lg border">
-                  {isMapLoaded ? (
-                    <GoogleMap
-                      center={{
-                        lat: parseFloat(church.latitude),
-                        lng: parseFloat(church.longitude),
-                      }}
-                      mapContainerStyle={{
-                        width: "100%",
-                        height: "100%",
-                      }}
-                      options={{
-                        disableDefaultUI: true,
-                        zoomControl: true,
-                        gestureHandling: "cooperative",
-                        clickableIcons: false,
-                      }}
-                      zoom={15}
-                    >
-                      <Marker
-                        position={{
-                          lat: parseFloat(church.latitude),
-                          lng: parseFloat(church.longitude),
-                        }}
-                        title={church.name}
-                      />
-                    </GoogleMap>
-                  ) : (
-                    <div className="bg-muted text-muted-foreground flex h-full w-full items-center justify-center text-sm">
-                      Loading map...
-                    </div>
-                  )}
-                </div>
+                <MapViewer
+                  lat={parseFloat(church.latitude)}
+                  lng={parseFloat(church.longitude)}
+                  height="192px"
+                  markerTitle={church.name}
+                  showActions={true}
+                  zoom={15}
+                />
 
                 <div className="space-y-2">
                   <div className="flex items-start gap-2">
@@ -611,39 +580,6 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
                     {parseFloat(church.latitude).toFixed(6)},{" "}
                     {parseFloat(church.longitude).toFixed(6)}
                   </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <Button
-                    asChild
-                    className="flex-1"
-                    size="sm"
-                    variant="outline"
-                  >
-                    <a
-                      href={`https://www.google.com/maps?q=${church.latitude},${church.longitude}`}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                      Open in Maps
-                    </a>
-                  </Button>
-                  <Button
-                    asChild
-                    className="flex-1"
-                    size="sm"
-                    variant="outline"
-                  >
-                    <a
-                      href={`https://www.google.com/maps/dir/?api=1&destination=${church.latitude},${church.longitude}`}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <Navigation className="mr-2 h-4 w-4" />
-                      Get Directions
-                    </a>
-                  </Button>
                 </div>
               </CardContent>
             </Card>
