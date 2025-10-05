@@ -28,6 +28,43 @@ export const metadata: Metadata = {
     "IRM Ministries is a church rooted in God's Word, united in prayer, and commissioned to redeem lives through intentional discipleship. We embody servant leadership while nurturing relationships with God and people, impacting our community and the world through faithful worship and humble service.",
   title:
     "IRM Ministries - Intentional Redeeming Ministries | Faith, Community & Servant Leadership",
+  openGraph: {
+    title: "IRM Ministries - Intentional Redeeming Ministries",
+    description: "Faith, Community & Servant Leadership",
+    url: "https://irm-ministries.fly.dev",
+    siteName: "IRM Ministries",
+    images: [
+      {
+        url: "/images/logo-dark.webp",
+        width: 1200,
+        height: 630,
+        alt: "IRM Ministries - Faith, Community & Servant Leadership",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "IRM Ministries - Intentional Redeeming Ministries",
+    description: "Faith, Community & Servant Leadership",
+    images: ["/images/logo-dark.webp"],
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/images/logo-dark.webp", sizes: "192x192", type: "image/webp" },
+      { url: "/images/logo-dark.webp", sizes: "512x512", type: "image/webp" },
+    ],
+    apple: [
+      {
+        url: "/images/logo-white.webp",
+        sizes: "180x180",
+        type: "image/webp",
+      },
+    ],
+  },
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
