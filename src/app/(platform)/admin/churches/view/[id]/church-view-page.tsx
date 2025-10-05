@@ -22,9 +22,11 @@ import {
   Trash2,
   UserCheck,
   Users,
+  ZoomIn,
 } from "lucide-react";
 
 import MapViewer from "@/components/ui/map-viewer";
+import { ImageViewer } from "@/components/ui/image-viewer";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -99,7 +101,7 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
     useState(false);
   const [isExportingMembers, setIsExportingMembers] = useState(false);
   const [isExportingMinisters, setIsExportingMinisters] = useState(false);
-
+  const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
   const { data: churchResponse, isLoading, error } = useChurch(churchId);
   const { data: statsResponse, isLoading: statsLoading } =
     useChurchStats(churchId);
@@ -361,12 +363,24 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
             <CardContent className="p-0">
               <div className="from-primary/5 to-primary/10 relative h-64 w-full overflow-hidden rounded-t-lg bg-gradient-to-br">
                 {church.imageUrl ? (
-                  <Image
-                    fill
-                    alt={`${church.name} church`}
-                    className="object-cover"
-                    src={church.imageUrl}
-                  />
+                  <div
+                    className="relative h-full w-full cursor-pointer transition-opacity hover:opacity-90"
+                    onClick={() => setIsImageViewerOpen(true)}
+                    title="Click to view full image"
+                  >
+                    <Image
+                      fill
+                      alt={`${church.name} church`}
+                      className="object-cover"
+                      src={church.imageUrl}
+                    />
+                    {/* Overlay hint */}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-opacity hover:bg-black/10 hover:opacity-100">
+                      <div className="bg-background/20 rounded-full p-2 backdrop-blur-sm">
+                        <ZoomIn className="text-foreground h-6 w-6" />
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <div className="flex h-full w-full items-center justify-center">
                     <Building2 className="text-muted-foreground h-16 w-16" />
@@ -1045,6 +1059,16 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
             </DialogContent>
           </Dialog>
         </>
+      )}
+
+      {/* Image Viewer */}
+      {church.imageUrl && (
+        <ImageViewer
+          src={church.imageUrl}
+          alt={`${church.name} church image`}
+          isOpen={isImageViewerOpen}
+          onClose={() => setIsImageViewerOpen(false)}
+        />
       )}
     </div>
   );

@@ -6,7 +6,7 @@ import NextImage from "next/image";
 
 import { Camera, Check, RotateCcw, RotateCw, Upload, X } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { cn, imageCompressed } from "@/lib/utils";
 
 import { Button } from "./button";
 import {
@@ -45,6 +45,7 @@ export const Base64ImageUpload: React.FC<Base64ImageUploadProps> = ({
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [isCompressing, setIsCompressing] = useState(false);
   const [availableDevices, setAvailableDevices] = useState<MediaDeviceInfo[]>(
     []
   );
@@ -109,31 +110,28 @@ export const Base64ImageUpload: React.FC<Base64ImageUploadProps> = ({
 
   const handleFileSelect = useCallback(async (file: File) => {
     setUploadError(null); // Clear any previous errors
+    setIsCompressing(true); // Start compression loading
 
     // Check if file type is valid
     if (!file || (file.type !== "image/jpeg" && file.type !== "image/png")) {
       setUploadError("Please select a valid image file (JPEG or PNG).");
-      return;
-    }
-
-    // Check file size (1.5MB = 1.5 * 1024 * 1024 bytes = 1,572,864 bytes)
-    const maxSizeInBytes = 1.5 * 1024 * 1024; // 1.5MB
-    if (file.size > maxSizeInBytes) {
-      const fileSizeInMB = (file.size / (1024 * 1024)).toFixed(2);
-      setUploadError(
-        `File size (${fileSizeInMB}MB) exceeds the maximum limit of 1.5MB. Please choose a smaller image.`
-      );
+      setIsCompressing(false);
       return;
     }
 
     try {
-      const base64 = await fileToBase64(file);
+      // Compress the image first
+      const compressedFile = await imageCompressed(file);
+      const base64 = await fileToBase64(compressedFile);
+
       setTempBase64(base64);
       setPreviewUrl(base64);
       setIsEditing(true);
+      setIsCompressing(false);
     } catch {
       toast.error("Failed to process the image. Please try again.");
       setUploadError("Failed to process the image. Please try again.");
+      setIsCompressing(false);
     }
   }, []);
 
@@ -341,6 +339,18 @@ export const Base64ImageUpload: React.FC<Base64ImageUploadProps> = ({
                     </div>
                   )}
 
+                  {isCompressing && (
+                    <div className="border-primary/20 bg-primary/10 rounded-lg border p-4">
+                      <p className="text-primary text-sm font-medium">
+                        Compressing Image...
+                      </p>
+                      <p className="text-primary/80 mt-1 text-sm">
+                        Please wait while we optimize your image for better
+                        performance.
+                      </p>
+                    </div>
+                  )}
+
                   <div
                     className={cn(
                       "group rounded-xl border-2 border-dashed p-12 text-center transition-all duration-300",
@@ -365,16 +375,17 @@ export const Base64ImageUpload: React.FC<Base64ImageUploadProps> = ({
                           or click to select files
                         </p>
                         <p className="text-muted-foreground text-xs">
-                          Maximum file size: 1.5MB (JPEG, PNG)
+                          Images will be automatically compressed (JPEG, PNG)
                         </p>
                       </div>
                       <Button
                         className="mt-4"
                         type="button"
                         variant="outline"
+                        disabled={isCompressing}
                         onClick={() => fileInputRef.current?.click()}
                       >
-                        Browse Files
+                        {isCompressing ? "Compressing..." : "Browse Files"}
                       </Button>
                     </div>
                   </div>

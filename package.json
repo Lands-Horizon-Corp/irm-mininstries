@@ -37,6 +37,7 @@
     "@types/html2canvas": "^1.0.0",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/react-signature-canvas": "^1.0.7",
+    "browser-image-compression": "^2.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
