@@ -9,6 +9,7 @@ import { Container } from "@/components/ui/container";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -67,6 +68,10 @@ export default function MinistersPage() {
             <DialogContent className="max-h-screen min-w-7xl overflow-auto">
               <DialogHeader>
                 <DialogTitle>Create New Minister</DialogTitle>
+                <DialogDescription>
+                  Add a new minister with their personal details, ministry
+                  skills, and church assignment.
+                </DialogDescription>
               </DialogHeader>
               <div className="mt-4">
                 <MinisterForm

@@ -10,6 +10,7 @@ import { Container } from "@/components/ui/container";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -47,6 +48,10 @@ export default function ContactUsPage() {
               </DialogTrigger>
               <DialogContent className="max-h-[80vh] max-w-2xl overflow-y-auto">
                 <DialogTitle className="sr-only">Send Message</DialogTitle>
+                <DialogDescription>
+                  Create a new contact message entry for administrative
+                  purposes.
+                </DialogDescription>
                 <ContactForm
                   isDialog={true}
                   onClose={() => setDialogOpen(false)}

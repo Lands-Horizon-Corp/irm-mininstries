@@ -914,6 +914,10 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
         <DialogContent className="max-h-[90vh] min-w-4xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="sr-only">Edit Church</DialogTitle>
+            <DialogDescription>
+              Update the church information including name, address, and other
+              details.
+            </DialogDescription>
           </DialogHeader>
           <ChurchForm
             initialData={church}
@@ -964,6 +968,10 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
             <DialogContent className="max-h-[90vh] w-full min-w-4xl overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Edit Member</DialogTitle>
+                <DialogDescription>
+                  Update member information including personal details and
+                  ministry involvement.
+                </DialogDescription>
               </DialogHeader>
               <MemberForm
                 isDialog={true}
@@ -1036,6 +1044,10 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
             <DialogContent className="max-h-[90vh] w-full min-w-4xl overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Edit Minister</DialogTitle>
+                <DialogDescription>
+                  Update minister information including skills, ranks, and
+                  ministry details.
+                </DialogDescription>
               </DialogHeader>
               <MinisterForm
                 initialData={selectedMinister}

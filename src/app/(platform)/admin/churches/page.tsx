@@ -10,6 +10,7 @@ import { Container } from "@/components/ui/container";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -47,6 +48,10 @@ export default function ChurchesPage() {
               </DialogTrigger>
               <DialogContent className="max-h-[80vh] min-w-5xl overflow-y-auto">
                 <DialogTitle className="sr-only">Add New Church</DialogTitle>
+                <DialogDescription>
+                  Create a new church with location details, contact
+                  information, and administrative settings.
+                </DialogDescription>
                 <ChurchForm
                   isDialog={true}
                   onClose={() => setDialogOpen(false)}
