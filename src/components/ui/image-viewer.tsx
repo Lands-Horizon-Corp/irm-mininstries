@@ -19,7 +19,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -89,7 +88,7 @@ export function ImageViewer({
         </DialogDescription>
 
         {/* Image Container */}
-        <div className="bg-muted relative flex h-full min-h-[60vh] w-full flex-1 items-center justify-center">
+        <div className="bg-muted relative flex h-full w-full flex-1 items-center justify-center">
           <TransformWrapper
             doubleClick={{ disabled: false }}
             initialScale={1}
@@ -111,7 +110,7 @@ export function ImageViewer({
                   <div className="relative flex h-full w-full items-center justify-center">
                     <Image
                       alt={alt}
-                      className="max-h-[75vh] w-auto object-contain"
+                      className="max-h w-auto object-contain"
                       height={1080}
                       sizes="95vw"
                       src={imageSrc || "/placeholder.svg"}
@@ -140,7 +139,7 @@ export function ImageViewer({
         </div>
 
         {/* Bottom Toolbar */}
-        <DialogFooter className="bg-background/50 border-t p-4 backdrop-blur">
+        <div className="bg-background/50 my-0 gap-0 border-t p-4 backdrop-blur">
           <div className="flex w-full items-center justify-center gap-2">
             <Button
               size="icon"
@@ -218,7 +217,7 @@ export function ImageViewer({
               </>
             )}
           </div>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );
