@@ -71,8 +71,7 @@ export async function GET(request: NextRequest) {
       success: true,
       data: searchResults,
     });
-  } catch (error) {
-    console.error("Error searching ministers:", error);
+  } catch {
     return Response.json(
       {
         success: false,

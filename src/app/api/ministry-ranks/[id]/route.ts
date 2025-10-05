@@ -48,9 +48,7 @@ export async function GET(
       success: true,
       data: rank,
     });
-  } catch (error) {
-    console.error("Get ministry rank by ID error:", error);
-
+  } catch {
     return NextResponse.json(
       {
         success: false,
@@ -122,8 +120,6 @@ export async function PUT(
       data: updatedRank,
     });
   } catch (error) {
-    console.error("Update ministry rank error:", error);
-
     // Handle Zod validation errors
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -230,8 +226,6 @@ export async function DELETE(
       },
     });
   } catch (error) {
-    console.error("Delete ministry rank error:", error);
-
     // Handle foreign key constraint errors
     if (
       error instanceof Error &&

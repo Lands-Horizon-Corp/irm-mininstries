@@ -146,9 +146,7 @@ export async function GET() {
     );
 
     return response;
-  } catch (error) {
-    console.error("Export members error:", error);
-
+  } catch {
     return NextResponse.json(
       {
         success: false,

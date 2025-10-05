@@ -81,9 +81,7 @@ export async function GET(request: NextRequest) {
         order: sortOrder,
       },
     });
-  } catch (error) {
-    console.error("Get ministry ranks error:", error);
-
+  } catch {
     return NextResponse.json(
       {
         success: false,
@@ -124,8 +122,6 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Ministry rank submission error:", error);
-
     // Handle Zod validation errors
     if (error instanceof z.ZodError) {
       return NextResponse.json(
