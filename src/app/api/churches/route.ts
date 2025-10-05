@@ -83,9 +83,7 @@ export async function GET(request: NextRequest) {
         order: sortOrder,
       },
     });
-  } catch (error) {
-    console.error("Get churches error:", error);
-
+  } catch {
     return NextResponse.json(
       {
         success: false,
@@ -127,8 +125,6 @@ export async function POST(request: NextRequest) {
       data: savedChurch,
     });
   } catch (error) {
-    console.error("Church submission error:", error);
-
     // Handle Zod validation errors
     if (error instanceof z.ZodError) {
       return NextResponse.json(

@@ -70,8 +70,7 @@ const downloadChart = async (chartId: string, filename: string) => {
   try {
     const chartElement = document.getElementById(chartId);
     if (!chartElement) {
-      console.error("Chart element not found");
-      return;
+      throw new Error("Chart element not found");
     }
 
     // Import html2canvas dynamically
@@ -90,8 +89,8 @@ const downloadChart = async (chartId: string, filename: string) => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  } catch (error) {
-    console.error("Error downloading chart:", error);
+  } catch {
+    throw new Error("Error downloading chart image");
   }
 };
 
@@ -180,18 +179,14 @@ export function GrowthCharts() {
       );
       const result: GrowthResponse = await response.json();
 
-      console.log("[v0] API Response:", result); // Added debug logging
-
       if (result.success) {
         setData(result.data);
         setError(null);
-        console.log("[v0] Data set successfully:", result.data); // Added debug logging
       } else {
         setError("Failed to fetch growth data");
       }
-    } catch (err) {
+    } catch {
       setError("Error loading growth analytics");
-      console.error("Growth data fetch error:", err);
     } finally {
       setLoading(false);
     }
@@ -263,7 +258,6 @@ export function GrowthCharts() {
   const { summary, combined } = data;
 
   if (!summary || !combined || combined.length === 0) {
-    console.log("[v0] Invalid data structure:", { summary, combined });
     return (
       <Card>
         <CardContent className="flex flex-col items-center justify-center p-12 text-center">

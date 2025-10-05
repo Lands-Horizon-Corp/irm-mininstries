@@ -61,6 +61,7 @@ import {
   useDeleteMinister,
 } from "@/modules/ministry/ministry-service";
 import type { Minister } from "@/modules/ministry/ministry-validation";
+import { toast } from "sonner";
 
 interface ChurchViewPageProps {
   churchId: number;
@@ -142,14 +143,10 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
   const ministersPagination = ministersResponse?.pagination;
 
   const handleDelete = async () => {
-    try {
-      await deleteChurchMutation.mutateAsync(churchId);
-      setIsDeleteDialogOpen(false);
-      // Navigate back to churches list
-      window.location.href = "/admin/churches";
-    } catch (error) {
-      console.error("Failed to delete church:", error);
-    }
+    await deleteChurchMutation.mutateAsync(churchId);
+    setIsDeleteDialogOpen(false);
+    // Navigate back to churches list
+    window.location.href = "/admin/churches";
   };
 
   const handleEditSuccess = () => {
@@ -174,13 +171,9 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
 
   const handleMemberDeleteConfirm = async () => {
     if (selectedMember && selectedMember.id) {
-      try {
-        await deleteMemberMutation.mutateAsync(selectedMember.id);
-        setIsDeleteMemberDialogOpen(false);
-        setSelectedMember(null);
-      } catch (error) {
-        console.error("Failed to delete member:", error);
-      }
+      await deleteMemberMutation.mutateAsync(selectedMember.id);
+      setIsDeleteMemberDialogOpen(false);
+      setSelectedMember(null);
     }
   };
 
@@ -210,8 +203,8 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
         createdAt: member.createdAt,
         updatedAt: member.updatedAt,
       });
-    } catch (error) {
-      console.error("Failed to download PDF:", error);
+    } catch {
+      toast.error("Failed to download PDF");
     } finally {
       setIsDownloadingPDF(false);
     }
@@ -235,13 +228,9 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
 
   const handleMinisterDeleteConfirm = async () => {
     if (selectedMinister && selectedMinister.id) {
-      try {
-        await deleteMinisterMutation.mutateAsync(selectedMinister.id);
-        setIsDeleteMinisterDialogOpen(false);
-        setSelectedMinister(null);
-      } catch (error) {
-        console.error("Failed to delete minister:", error);
-      }
+      await deleteMinisterMutation.mutateAsync(selectedMinister.id);
+      setIsDeleteMinisterDialogOpen(false);
+      setSelectedMinister(null);
     }
   };
 
@@ -251,8 +240,6 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
       if (minister.id) {
         await downloadMinisterPDF(minister.id);
       }
-    } catch (error) {
-      console.error("Failed to download PDF:", error);
     } finally {
       setIsDownloadingMinisterPDF(false);
     }
@@ -281,9 +268,8 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Export members failed:", error);
-      // You could add a toast notification here
+    } catch {
+      toast.error("Export members failed");
     } finally {
       setIsExportingMembers(false);
     }
@@ -314,9 +300,8 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Export ministers failed:", error);
-      // You could add a toast notification here
+    } catch {
+      toast.error("Export ministers failed");
     } finally {
       setIsExportingMinisters(false);
     }
