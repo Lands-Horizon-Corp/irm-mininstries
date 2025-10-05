@@ -69,8 +69,7 @@ export async function generateMemberPDF(
         reader.onerror = reject;
         reader.readAsDataURL(blob);
       });
-    } catch (error) {
-      console.error("Error converting image to base64:", error);
+    } catch {
       return "";
     }
   };
@@ -225,8 +224,8 @@ export async function generateMemberPDF(
 
         yPosition += height + 12;
       }
-    } catch (error) {
-      console.error("Error adding image to PDF:", error);
+    } catch {
+      throw new Error("Failed to add image to PDF");
     }
   };
 
@@ -524,8 +523,7 @@ export async function generateMemberPDF(
 
     // Save the PDF
     pdf.save(filename);
-  } catch (error) {
-    console.error("Error generating member PDF:", error);
+  } catch {
     throw new Error("Failed to generate member PDF");
   }
 }

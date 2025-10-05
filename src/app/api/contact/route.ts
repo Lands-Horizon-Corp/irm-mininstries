@@ -86,9 +86,7 @@ export async function GET(request: NextRequest) {
         order: sortOrder,
       },
     });
-  } catch (error) {
-    console.error("Get contact submissions error:", error);
-
+  } catch {
     return NextResponse.json(
       {
         success: false,
@@ -124,8 +122,6 @@ export async function POST(request: NextRequest) {
       data: savedContact,
     });
   } catch (error) {
-    console.error("Contact form submission error:", error);
-
     // Handle Zod validation errors
     if (error instanceof z.ZodError) {
       return NextResponse.json(

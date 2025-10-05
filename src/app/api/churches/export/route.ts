@@ -88,8 +88,7 @@ export async function GET() {
     });
 
     return response;
-  } catch (error) {
-    console.error("Error exporting churches:", error);
+  } catch {
     return NextResponse.json(
       {
         success: false,

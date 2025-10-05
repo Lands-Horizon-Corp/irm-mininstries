@@ -69,9 +69,7 @@ export async function GET(
         totalPeople: memberCount + ministerCount,
       },
     });
-  } catch (error) {
-    console.error("Get church stats error:", error);
-
+  } catch {
     return NextResponse.json(
       {
         success: false,
