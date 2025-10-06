@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 
 import { asc } from "drizzle-orm";
-import * as XLSX from "xlsx";
 
 import { db } from "@/db/drizzle";
+import { createExcelExport, createExcelResponse } from "@/lib/excel-export";
 import { contactSubmissions } from "@/modules/contact-us/contact-us-schema";
 
 // GET - Export all contact submissions to Excel
@@ -17,59 +17,46 @@ export async function GET() {
 
     // Transform data for Excel export
     const exportData = contacts.map((contact) => ({
-      ID: contact.id,
-      Name: contact.name,
-      Email: contact.email,
-      Subject: contact.subject,
-      Message: contact.description,
-      "Prayer Request": contact.prayerRequest || "No",
-      "Support Email": contact.supportEmail,
-      "Submitted Date": contact.createdAt
+      id: contact.id,
+      name: contact.name,
+      email: contact.email,
+      subject: contact.subject,
+      message: contact.description,
+      prayerRequest: contact.prayerRequest || "No",
+      supportEmail: contact.supportEmail,
+      submittedDate: contact.createdAt
         ? new Date(contact.createdAt).toLocaleDateString()
         : "",
-      "Submitted Time": contact.createdAt
+      submittedTime: contact.createdAt
         ? new Date(contact.createdAt).toLocaleTimeString()
         : "",
     }));
 
-    // Create workbook and worksheet
-    const workbook = XLSX.utils.book_new();
-    const worksheet = XLSX.utils.json_to_sheet(exportData);
-
-    // Set column widths
-    worksheet["!cols"] = [
-      { wch: 5 }, // ID
-      { wch: 25 }, // Name
-      { wch: 30 }, // Email
-      { wch: 40 }, // Subject
-      { wch: 50 }, // Message
-      { wch: 15 }, // Prayer Request
-      { wch: 30 }, // Support Email
-      { wch: 15 }, // Submitted Date
-      { wch: 15 }, // Submitted Time
+    // Define Excel columns
+    const columns = [
+      { header: "ID", key: "id", width: 5 },
+      { header: "Name", key: "name", width: 25 },
+      { header: "Email", key: "email", width: 30 },
+      { header: "Subject", key: "subject", width: 40 },
+      { header: "Message", key: "message", width: 50 },
+      { header: "Prayer Request", key: "prayerRequest", width: 15 },
+      { header: "Support Email", key: "supportEmail", width: 30 },
+      { header: "Submitted Date", key: "submittedDate", width: 15 },
+      { header: "Submitted Time", key: "submittedTime", width: 15 },
     ];
 
-    // Add worksheet to workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Contact Submissions");
-
     // Generate Excel buffer
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "buffer",
+    const excelBuffer = await createExcelExport({
+      sheetName: "Contact Submissions",
+      columns,
+      data: exportData,
     });
 
-    // Create response with proper headers
-    const response = new NextResponse(excelBuffer);
-    response.headers.set(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
-    response.headers.set(
-      "Content-Disposition",
-      `attachment; filename="contact-submissions-${new Date().toISOString().split("T")[0]}.xlsx"`
-    );
+    // Create filename
+    const filename = `contact-submissions-${new Date().toISOString().split("T")[0]}.xlsx`;
 
-    return response;
+    // Return Excel response
+    return createExcelResponse(excelBuffer, filename);
   } catch {
     return NextResponse.json(
       {

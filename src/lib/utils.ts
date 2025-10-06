@@ -74,3 +74,8 @@ export const formatDate = (date: Date | null | string) => {
   }
   return date.toLocaleDateString();
 };
+
+export const truncateText = (text: string | null, maxLength = 32000) => {
+  if (!text) return "";
+  return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+};

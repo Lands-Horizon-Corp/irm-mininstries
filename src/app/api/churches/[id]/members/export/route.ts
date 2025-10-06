@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 
 import { asc, eq } from "drizzle-orm";
-import * as XLSX from "xlsx";
 
 import { db } from "@/db/drizzle";
+import { createExcelExport, createExcelResponse } from "@/lib/excel-export";
 import { churches } from "@/modules/church/church-schema";
 import { members } from "@/modules/member/member-schema";
+import { truncateText } from "@/lib/utils";
 
 export async function GET(
   request: Request,
@@ -79,104 +80,85 @@ export async function GET(
       if (member.middleName) fullName.push(member.middleName);
       fullName.push(member.lastName);
 
-      // Helper function to truncate text to Excel's limit
-      const truncateText = (text: string | null, maxLength = 32000) => {
-        if (!text) return "";
-        return text.length > maxLength
-          ? text.substring(0, maxLength) + "..."
-          : text;
-      };
-
       return {
-        ID: member.id,
-        "Full Name": truncateText(fullName.join(" ")),
-        "First Name": truncateText(member.firstName),
-        "Middle Name": truncateText(member.middleName || ""),
-        "Last Name": truncateText(member.lastName),
-        Gender: member.gender,
-        Birthdate: member.birthdate
+        id: member.id,
+        fullName: truncateText(fullName.join(" ")),
+        firstName: truncateText(member.firstName),
+        middleName: truncateText(member.middleName || ""),
+        lastName: truncateText(member.lastName),
+        gender: member.gender,
+        birthdate: member.birthdate
           ? new Date(member.birthdate).toLocaleDateString()
           : "",
-        "Year Joined": member.yearJoined,
-        "Ministry Involvement": truncateText(member.ministryInvolvement || ""),
-        Occupation: truncateText(member.occupation || ""),
-        "Educational Attainment": truncateText(
-          member.educationalAttainment || ""
-        ),
-        School: truncateText(member.school || ""),
-        Degree: truncateText(member.degree || ""),
-        "Mobile Number": truncateText(member.mobileNumber || ""),
-        Email: truncateText(member.email || ""),
-        "Home Address": truncateText(member.homeAddress || "", 500),
-        "Facebook Link": truncateText(member.facebookLink || ""),
-        "X Link": truncateText(member.xLink || ""),
-        "Instagram Link": truncateText(member.instagramLink || ""),
-        Notes: truncateText(member.notes || "", 1000),
-        "Registration Date": member.createdAt
+        yearJoined: member.yearJoined,
+        ministryInvolvement: truncateText(member.ministryInvolvement || ""),
+        occupation: truncateText(member.occupation || ""),
+        educationalAttainment: truncateText(member.educationalAttainment || ""),
+        school: truncateText(member.school || ""),
+        degree: truncateText(member.degree || ""),
+        mobileNumber: truncateText(member.mobileNumber || ""),
+        email: truncateText(member.email || ""),
+        homeAddress: truncateText(member.homeAddress || "", 500),
+        facebookLink: truncateText(member.facebookLink || ""),
+        xLink: truncateText(member.xLink || ""),
+        instagramLink: truncateText(member.instagramLink || ""),
+        notes: truncateText(member.notes || "", 1000),
+        registrationDate: member.createdAt
           ? new Date(member.createdAt).toLocaleDateString()
           : "",
-        "Registration Time": member.createdAt
+        registrationTime: member.createdAt
           ? new Date(member.createdAt).toLocaleTimeString()
           : "",
-        "Last Updated": member.updatedAt
+        lastUpdated: member.updatedAt
           ? new Date(member.updatedAt).toLocaleDateString()
           : "",
       };
     });
 
-    // Create workbook and worksheet
-    const workbook = XLSX.utils.book_new();
-    const worksheet = XLSX.utils.json_to_sheet(exportData);
-
-    // Set column widths for better readability
-    worksheet["!cols"] = [
-      { wch: 5 }, // ID
-      { wch: 30 }, // Full Name
-      { wch: 20 }, // First Name
-      { wch: 20 }, // Middle Name
-      { wch: 20 }, // Last Name
-      { wch: 10 }, // Gender
-      { wch: 15 }, // Birthdate
-      { wch: 12 }, // Year Joined
-      { wch: 30 }, // Ministry Involvement
-      { wch: 25 }, // Occupation
-      { wch: 20 }, // Educational Attainment
-      { wch: 25 }, // School
-      { wch: 25 }, // Degree
-      { wch: 18 }, // Mobile Number
-      { wch: 30 }, // Email
-      { wch: 40 }, // Home Address
-      { wch: 25 }, // Facebook Link
-      { wch: 25 }, // X Link
-      { wch: 25 }, // Instagram Link
-      { wch: 50 }, // Notes
-      { wch: 18 }, // Registration Date
-      { wch: 18 }, // Registration Time
-      { wch: 18 }, // Last Updated
+    // Define Excel columns
+    const columns = [
+      { header: "ID", key: "id", width: 5 },
+      { header: "Full Name", key: "fullName", width: 30 },
+      { header: "First Name", key: "firstName", width: 20 },
+      { header: "Middle Name", key: "middleName", width: 20 },
+      { header: "Last Name", key: "lastName", width: 20 },
+      { header: "Gender", key: "gender", width: 10 },
+      { header: "Birthdate", key: "birthdate", width: 15 },
+      { header: "Year Joined", key: "yearJoined", width: 12 },
+      { header: "Ministry Involvement", key: "ministryInvolvement", width: 30 },
+      { header: "Occupation", key: "occupation", width: 25 },
+      {
+        header: "Educational Attainment",
+        key: "educationalAttainment",
+        width: 20,
+      },
+      { header: "School", key: "school", width: 25 },
+      { header: "Degree", key: "degree", width: 25 },
+      { header: "Mobile Number", key: "mobileNumber", width: 18 },
+      { header: "Email", key: "email", width: 30 },
+      { header: "Home Address", key: "homeAddress", width: 40 },
+      { header: "Facebook Link", key: "facebookLink", width: 25 },
+      { header: "X Link", key: "xLink", width: 25 },
+      { header: "Instagram Link", key: "instagramLink", width: 25 },
+      { header: "Notes", key: "notes", width: 50 },
+      { header: "Registration Date", key: "registrationDate", width: 18 },
+      { header: "Registration Time", key: "registrationTime", width: 18 },
+      { header: "Last Updated", key: "lastUpdated", width: 18 },
     ];
 
-    // Add worksheet to workbook
-    const churchName = church[0].name.toLowerCase().replace(/[^a-z0-9]/g, "-");
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Members");
-
     // Generate Excel buffer
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "buffer",
+    const excelBuffer = await createExcelExport({
+      sheetName: "Members",
+      columns,
+      data: exportData,
     });
 
-    // Create response with proper headers
-    const response = new NextResponse(excelBuffer);
-    response.headers.set(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
-    response.headers.set(
-      "Content-Disposition",
-      `attachment; filename="${churchName}-members-${new Date().toISOString().split("T")[0]}.xlsx"`
-    );
+    // Create filename with church name
+    const churchName = church[0].name.toLowerCase().replace(/[^a-z0-9]/g, "-");
+    const filename = `${churchName}-members-${new Date().toISOString().split("T")[0]}.xlsx`;
 
-    return response;
+    // Return Excel response
+    return createExcelResponse(excelBuffer, filename);
   } catch {
     return NextResponse.json(
       {
