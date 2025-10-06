@@ -166,14 +166,11 @@ export async function generateMinisterPDF(
   lookupData: LookupData = {}
 ): Promise<void> {
   const pdf = new jsPDF("p", "mm", "a4");
-  let yPosition = 30;
+  let yPosition = 18;
   const pageHeight = pdf.internal.pageSize.height;
   const pageWidth = pdf.internal.pageSize.width;
-  const margin = 20;
+  const margin = 12;
   const contentWidth = pageWidth - 2 * margin;
-  const primaryColor = [65, 105, 225]; // Royal blue
-  const accentColor = [220, 220, 250]; // Light lavender
-  const textColor = [50, 50, 50];
   const lightTextColor = [100, 100, 100];
 
   // Helper function to convert image URL to base64
@@ -194,31 +191,30 @@ export async function generateMinisterPDF(
   };
 
   // Helper function to add new page if needed
-  const checkPageBreak = (requiredSpace = 25) => {
-    const footerSpace = 30;
+  const checkPageBreak = (requiredSpace = 15) => {
+    const footerSpace = 20;
     if (yPosition + requiredSpace > pageHeight - margin - footerSpace) {
       pdf.addPage();
-      yPosition = 30;
+      yPosition = 18;
 
       // Add header to new page
-      pdf.setFillColor(accentColor[0], accentColor[1], accentColor[2]);
-      pdf.rect(0, 0, pageWidth, 20, "F");
-
-      pdf.setFontSize(18);
+      pdf.setFontSize(14);
       pdf.setFont("helvetica", "bold");
-      pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+      pdf.setTextColor(0, 0, 0);
       pdf.text(
         "I AM REDEEMER AND MASTER EVANGELICAL CHURCH",
         pageWidth / 2,
-        15,
+        12,
         {
           align: "center",
         }
       );
 
-      pdf.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+      pdf.setDrawColor(0, 0, 0);
       pdf.setLineWidth(0.5);
-      pdf.line(margin, 22, pageWidth - margin, 22);
+      pdf.line(margin, 14, pageWidth - margin, 14);
+
+      yPosition = 18;
 
       return true;
     }
@@ -226,36 +222,37 @@ export async function generateMinisterPDF(
   };
 
   // Helper function to add title
-  const addTitle = (text: string, fontSize = 22) => {
-    checkPageBreak(30);
+  const addTitle = (text: string, fontSize = 16) => {
+    checkPageBreak(20);
     pdf.setFontSize(fontSize);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    pdf.setTextColor(0, 0, 0);
+    pdf.text(text, pageWidth / 2, yPosition, { align: "center" });
+
     const textWidth = pdf.getTextWidth(text);
     const centerX = (pageWidth - textWidth) / 2;
-    pdf.text(text, centerX, yPosition);
-
-    pdf.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    pdf.setDrawColor(0, 0, 0);
     pdf.setLineWidth(0.3);
-    pdf.line(centerX, yPosition + 2, centerX + textWidth, yPosition + 2);
+    pdf.line(centerX, yPosition + 1, centerX + textWidth, yPosition + 1);
 
-    yPosition += 15;
+    yPosition += 8;
   };
 
   // Helper function to add section header
   const addSectionHeader = (title: string) => {
-    checkPageBreak(15);
-    yPosition += 10;
+    checkPageBreak(10);
+    yPosition += 5;
 
-    pdf.setFillColor(accentColor[0], accentColor[1], accentColor[2]);
-    pdf.rect(margin, yPosition - 5, contentWidth, 10, "F");
-
-    pdf.setFontSize(14);
+    pdf.setFontSize(11);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-    pdf.text(title, margin + 5, yPosition + 2);
+    pdf.setTextColor(0, 0, 0);
+    pdf.text(title, margin, yPosition);
 
-    yPosition += 12;
+    pdf.setDrawColor(0, 0, 0);
+    pdf.setLineWidth(0.2);
+    pdf.line(margin, yPosition + 1.5, pageWidth - margin, yPosition + 1.5);
+
+    yPosition += 6;
   };
 
   // Helper function to add field in two columns
@@ -268,20 +265,20 @@ export async function generateMinisterPDF(
     if (!value) return 0;
 
     const currentY = customY || yPosition;
-    const columnWidth = contentWidth / 2 - 5;
-    const xPosition = isLeftColumn ? margin + 5 : margin + columnWidth + 10;
+    const columnWidth = (contentWidth - 6) / 2;
+    const xPosition = isLeftColumn ? margin : margin + columnWidth + 6;
 
-    pdf.setFontSize(11);
+    pdf.setFontSize(9);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+    pdf.setTextColor(0, 0, 0);
     pdf.text(`${label}:`, xPosition, currentY);
 
     pdf.setFont("helvetica", "normal");
-    pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
-    const lines = pdf.splitTextToSize(value, columnWidth - 15);
-    pdf.text(lines, xPosition + 2, currentY + 5);
+    pdf.setTextColor(0, 0, 0);
+    const lines = pdf.splitTextToSize(value, columnWidth - 2);
+    pdf.text(lines, xPosition, currentY + 3.5);
 
-    const fieldHeight = Math.max(12, lines.length * 6 + 5);
+    const fieldHeight = Math.max(7, lines.length * 3.5 + 3);
 
     if (!customY) {
       yPosition += fieldHeight;
@@ -294,23 +291,23 @@ export async function generateMinisterPDF(
   const addImage = async (
     imageUrl: string,
     alt: string,
-    width = 40,
-    height = 40,
+    width = 30,
+    height = 35,
     centered = false
   ) => {
     try {
       const base64Image = await getImageAsBase64(imageUrl);
       if (base64Image) {
-        checkPageBreak(height + 15);
-        const x = centered ? (pageWidth - width) / 2 : margin + 10;
+        checkPageBreak(height + 8);
+        const x = centered ? (pageWidth - width) / 2 : margin + 5;
 
-        pdf.setDrawColor(200, 200, 200);
-        pdf.setLineWidth(0.2);
-        pdf.rect(x - 1, yPosition - 1, width + 2, height + 2);
+        pdf.setDrawColor(150, 150, 150);
+        pdf.setLineWidth(0.1);
+        pdf.rect(x - 0.5, yPosition - 0.5, width + 1, height + 1);
 
         pdf.addImage(base64Image, "JPEG", x, yPosition, width, height);
 
-        pdf.setFontSize(9);
+        pdf.setFontSize(7);
         pdf.setFont("helvetica", "italic");
         pdf.setTextColor(
           lightTextColor[0],
@@ -318,9 +315,9 @@ export async function generateMinisterPDF(
           lightTextColor[2]
         );
         const captionX = centered ? (pageWidth - pdf.getTextWidth(alt)) / 2 : x;
-        pdf.text(alt, captionX, yPosition + height + 5);
+        pdf.text(alt, captionX, yPosition + height + 3);
 
-        yPosition += height + 12;
+        yPosition += height + 6;
       }
     } catch {
       toast.error("Failed to load image for PDF.");
@@ -368,23 +365,22 @@ export async function generateMinisterPDF(
 
   try {
     // Add header
-    pdf.setFillColor(accentColor[0], accentColor[1], accentColor[2]);
-    pdf.rect(0, 0, pageWidth, 20, "F");
-
-    pdf.setFontSize(18);
+    pdf.setFontSize(14);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-    pdf.text("I AM REDEEMER AND MASTER EVANGELICAL CHURCH", pageWidth / 2, 15, {
+    pdf.setTextColor(0, 0, 0);
+    pdf.text("I AM REDEEMER AND MASTER EVANGELICAL CHURCH", pageWidth / 2, 12, {
       align: "center",
     });
 
-    pdf.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    pdf.setDrawColor(0, 0, 0);
     pdf.setLineWidth(0.5);
-    pdf.line(margin, 22, pageWidth - margin, 22);
+    pdf.line(margin, 14, pageWidth - margin, 14);
+
+    yPosition = 18;
 
     // Main title
-    addTitle("MINISTRY APPLICATION FORM", 20);
-    yPosition += 5;
+    addTitle("MINISTRY APPLICATION FORM", 14);
+    yPosition += 2;
 
     // Applicant name as subtitle
     const fullName = [
@@ -396,20 +392,18 @@ export async function generateMinisterPDF(
       .filter(Boolean)
       .join(" ");
 
-    pdf.setFontSize(16);
+    pdf.setFontSize(12);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-    const nameWidth = pdf.getTextWidth(fullName);
-    pdf.text(fullName, (pageWidth - nameWidth) / 2, yPosition);
-    yPosition += 10;
+    pdf.setTextColor(0, 0, 0);
+    pdf.text(fullName, pageWidth / 2, yPosition, { align: "center" });
+    yPosition += 6;
 
     // Add application date
-    pdf.setFontSize(10);
-    pdf.setTextColor(lightTextColor[0], lightTextColor[1], lightTextColor[2]);
+    pdf.setFontSize(8);
+    pdf.setTextColor(100, 100, 100);
     const dateText = `Generated on ${format(new Date(), "MMMM dd, yyyy")}`;
-    const dateWidth = pdf.getTextWidth(dateText);
-    pdf.text(dateText, (pageWidth - dateWidth) / 2, yPosition);
-    yPosition += 15;
+    pdf.text(dateText, pageWidth / 2, yPosition, { align: "center" });
+    yPosition += 8;
 
     // Church Information Section
     if (ministerData.churchName) {
@@ -436,7 +430,7 @@ export async function generateMinisterPDF(
         churchAddressFieldHeight
       );
 
-      yPosition = churchStartY + maxHeight + 10;
+      yPosition = churchStartY + maxHeight + 5;
     }
 
     // Personal Information Section
@@ -444,8 +438,8 @@ export async function generateMinisterPDF(
 
     // Add profile photo if available
     if (ministerData.imageUrl) {
-      await addImage(ministerData.imageUrl, "Profile Photo", 35, 45, true);
-      yPosition += 5;
+      await addImage(ministerData.imageUrl, "Profile Photo", 28, 35, true);
+      yPosition += 3;
     }
 
     // Personal details in two columns
@@ -511,24 +505,25 @@ export async function generateMinisterPDF(
     );
     maxHeight += Math.max(heightFieldHeight, weightFieldHeight) + 2;
 
-    yPosition = personalStartY + maxHeight + 10;
+    yPosition = personalStartY + maxHeight + 5;
 
     // Biography field (full width)
     if (ministerData.biography) {
-      checkPageBreak(30);
-      pdf.setFontSize(11);
+      checkPageBreak(20);
+      pdf.setFontSize(9);
       pdf.setFont("helvetica", "bold");
-      pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+      pdf.setTextColor(0, 0, 0);
       pdf.text("Biography:", margin, yPosition);
 
       pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(0, 0, 0);
       const bioLines = pdf.splitTextToSize(
         ministerData.biography,
         contentWidth
       );
-      pdf.text(bioLines, margin, yPosition + 6);
+      pdf.text(bioLines, margin, yPosition + 4);
 
-      yPosition += bioLines.length * 6 + 12;
+      yPosition += bioLines.length * 4 + 8;
     }
 
     // Contact & Government Information
@@ -606,9 +601,9 @@ export async function generateMinisterPDF(
     addSectionHeader("FAMILY INFORMATION");
 
     // Father Information
-    pdf.setFontSize(12);
+    pdf.setFontSize(10);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    pdf.setTextColor(0, 0, 0);
     pdf.text("Father Information", margin, yPosition);
     yPosition += 8;
 
@@ -644,13 +639,13 @@ export async function generateMinisterPDF(
     );
     maxHeight += Math.max(fatherDobHeight, fatherOccupationHeight) + 2;
 
-    yPosition = fatherStartY + maxHeight + 15;
+    yPosition = fatherStartY + maxHeight + 8;
 
     // Mother Information
-    checkPageBreak(20);
-    pdf.setFontSize(12);
+    checkPageBreak(15);
+    pdf.setFontSize(10);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    pdf.setTextColor(0, 0, 0);
     pdf.text("Mother Information", margin, yPosition);
     yPosition += 8;
 
@@ -686,14 +681,14 @@ export async function generateMinisterPDF(
     );
     maxHeight += Math.max(motherDobHeight, motherOccupationHeight) + 2;
 
-    yPosition = motherStartY + maxHeight + 15;
+    yPosition = motherStartY + maxHeight + 8;
 
     // Spouse Information (if married)
     if (ministerData.civilStatus === "married") {
-      checkPageBreak(20);
-      pdf.setFontSize(12);
+      checkPageBreak(15);
+      pdf.setFontSize(10);
       pdf.setFont("helvetica", "bold");
-      pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+      pdf.setTextColor(0, 0, 0);
       pdf.text("Spouse Information", margin, yPosition);
       yPosition += 8;
 
@@ -738,25 +733,25 @@ export async function generateMinisterPDF(
       );
       maxHeight += weddingHeight + 2;
 
-      yPosition = spouseStartY + maxHeight + 15;
+      yPosition = spouseStartY + maxHeight + 8;
     }
 
     // Children
     if (ministerData.children && ministerData.children.length > 0) {
-      checkPageBreak(20);
-      pdf.setFontSize(12);
+      checkPageBreak(15);
+      pdf.setFontSize(10);
       pdf.setFont("helvetica", "bold");
-      pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+      pdf.setTextColor(0, 0, 0);
       pdf.text("Children", margin, yPosition);
       yPosition += 8;
 
       ministerData.children.forEach((child, index) => {
-        checkPageBreak(30);
-        pdf.setFontSize(11);
+        checkPageBreak(20);
+        pdf.setFontSize(9);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.setTextColor(0, 0, 0);
         pdf.text(`Child ${index + 1}:`, margin, yPosition);
-        yPosition += 6;
+        yPosition += 4;
 
         const childStartY = yPosition;
         maxHeight = 0;
@@ -785,7 +780,7 @@ export async function generateMinisterPDF(
         );
         maxHeight += Math.max(childGenderHeight, childPobHeight) + 2;
 
-        yPosition = childStartY + maxHeight + 15;
+        yPosition = childStartY + maxHeight + 8;
       });
     }
 
@@ -797,12 +792,12 @@ export async function generateMinisterPDF(
       addSectionHeader("EMERGENCY CONTACTS");
 
       ministerData.emergencyContacts.forEach((contact, index) => {
-        checkPageBreak(30);
-        pdf.setFontSize(11);
+        checkPageBreak(20);
+        pdf.setFontSize(9);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.setTextColor(0, 0, 0);
         pdf.text(`Contact ${index + 1}:`, margin, yPosition);
-        yPosition += 6;
+        yPosition += 4;
 
         const contactStartY = yPosition;
         maxHeight = 0;
@@ -836,7 +831,7 @@ export async function generateMinisterPDF(
         );
         maxHeight += Math.max(contactAddressHeight, contactNumberHeight) + 2;
 
-        yPosition = contactStartY + maxHeight + 15;
+        yPosition = contactStartY + maxHeight + 8;
       });
     }
 
@@ -881,7 +876,7 @@ export async function generateMinisterPDF(
       );
       maxHeight += Math.max(sportsHeight, trainingHeight) + 2;
 
-      yPosition = skillsStartY + maxHeight + 10;
+      yPosition = skillsStartY + maxHeight + 5;
     }
 
     // Educational Background
@@ -892,12 +887,12 @@ export async function generateMinisterPDF(
       addSectionHeader("EDUCATIONAL BACKGROUND");
 
       ministerData.educationBackgrounds.forEach((education, index) => {
-        checkPageBreak(30);
-        pdf.setFontSize(11);
+        checkPageBreak(20);
+        pdf.setFontSize(9);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.setTextColor(0, 0, 0);
         pdf.text(`Education ${index + 1}:`, margin, yPosition);
-        yPosition += 6;
+        yPosition += 4;
 
         const eduStartY = yPosition;
         maxHeight = 0;
@@ -932,23 +927,24 @@ export async function generateMinisterPDF(
         maxHeight += Math.max(courseHeight, gradDateHeight) + 2;
 
         if (education.description) {
-          const descY = eduStartY + maxHeight + 2;
-          pdf.setFontSize(11);
+          const descY = eduStartY + maxHeight + 1;
+          pdf.setFontSize(9);
           pdf.setFont("helvetica", "bold");
-          pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+          pdf.setTextColor(0, 0, 0);
           pdf.text("Description:", margin, descY);
 
           pdf.setFont("helvetica", "normal");
+          pdf.setTextColor(0, 0, 0);
           const descLines = pdf.splitTextToSize(
             education.description,
             contentWidth
           );
-          pdf.text(descLines, margin, descY + 5);
+          pdf.text(descLines, margin, descY + 4);
 
-          maxHeight += descLines.length * 6 + 10;
+          maxHeight += descLines.length * 4 + 6;
         }
 
-        yPosition = eduStartY + maxHeight + 15;
+        yPosition = eduStartY + maxHeight + 8;
       });
     }
 
@@ -960,12 +956,12 @@ export async function generateMinisterPDF(
       addSectionHeader("EMPLOYMENT HISTORY");
 
       ministerData.employmentRecords.forEach((employment, index) => {
-        checkPageBreak(25);
-        pdf.setFontSize(11);
+        checkPageBreak(18);
+        pdf.setFontSize(9);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.setTextColor(0, 0, 0);
         pdf.text(`Employment ${index + 1}:`, margin, yPosition);
-        yPosition += 6;
+        yPosition += 4;
 
         const empStartY = yPosition;
         maxHeight = 0;
@@ -999,7 +995,7 @@ export async function generateMinisterPDF(
         );
         maxHeight += Math.max(fromHeight, toHeight) + 2;
 
-        yPosition = empStartY + maxHeight + 15;
+        yPosition = empStartY + maxHeight + 8;
       });
     }
 
@@ -1011,12 +1007,12 @@ export async function generateMinisterPDF(
       addSectionHeader("MINISTRY EXPERIENCE");
 
       ministerData.ministryExperiences.forEach((experience, index) => {
-        checkPageBreak(30);
-        pdf.setFontSize(11);
+        checkPageBreak(20);
+        pdf.setFontSize(9);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.setTextColor(0, 0, 0);
         pdf.text(`Ministry Experience ${index + 1}:`, margin, yPosition);
-        yPosition += 6;
+        yPosition += 4;
 
         const expStartY = yPosition;
         maxHeight = 0;
@@ -1045,23 +1041,24 @@ export async function generateMinisterPDF(
         maxHeight += toHeight + 2;
 
         if (experience.description) {
-          const descY = expStartY + maxHeight + 2;
-          pdf.setFontSize(11);
+          const descY = expStartY + maxHeight + 1;
+          pdf.setFontSize(9);
           pdf.setFont("helvetica", "bold");
-          pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+          pdf.setTextColor(0, 0, 0);
           pdf.text("Description:", margin, descY);
 
           pdf.setFont("helvetica", "normal");
+          pdf.setTextColor(0, 0, 0);
           const descLines = pdf.splitTextToSize(
             experience.description,
             contentWidth
           );
-          pdf.text(descLines, margin, descY + 5);
+          pdf.text(descLines, margin, descY + 4);
 
-          maxHeight += descLines.length * 6 + 10;
+          maxHeight += descLines.length * 4 + 6;
         }
 
-        yPosition = expStartY + maxHeight + 15;
+        yPosition = expStartY + maxHeight + 8;
       });
     }
 
@@ -1092,7 +1089,7 @@ export async function generateMinisterPDF(
       const totalRows = Math.ceil(
         ministerData.ministrySkills.length / skillsPerRow
       );
-      yPosition = skillsStartY + totalRows * 8 + 10;
+      yPosition = skillsStartY + totalRows * 6 + 5;
     }
 
     // Ministry Records
@@ -1103,12 +1100,12 @@ export async function generateMinisterPDF(
       addSectionHeader("MINISTRY RECORDS");
 
       ministerData.ministryRecords.forEach((record, index) => {
-        checkPageBreak(30);
-        pdf.setFontSize(11);
+        checkPageBreak(20);
+        pdf.setFontSize(9);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.setTextColor(0, 0, 0);
         pdf.text(`Ministry Record ${index + 1}:`, margin, yPosition);
-        yPosition += 6;
+        yPosition += 4;
 
         const recordStartY = yPosition;
         maxHeight = 0;
@@ -1137,23 +1134,24 @@ export async function generateMinisterPDF(
         maxHeight += toHeight + 2;
 
         if (record.contribution) {
-          const contribY = recordStartY + maxHeight + 2;
-          pdf.setFontSize(11);
+          const contribY = recordStartY + maxHeight + 1;
+          pdf.setFontSize(9);
           pdf.setFont("helvetica", "bold");
-          pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+          pdf.setTextColor(0, 0, 0);
           pdf.text("Contribution:", margin, contribY);
 
           pdf.setFont("helvetica", "normal");
+          pdf.setTextColor(0, 0, 0);
           const contribLines = pdf.splitTextToSize(
             record.contribution,
             contentWidth
           );
-          pdf.text(contribLines, margin, contribY + 5);
+          pdf.text(contribLines, margin, contribY + 4);
 
-          maxHeight += contribLines.length * 6 + 10;
+          maxHeight += contribLines.length * 4 + 6;
         }
 
-        yPosition = recordStartY + maxHeight + 15;
+        yPosition = recordStartY + maxHeight + 8;
       });
     }
 
@@ -1165,12 +1163,12 @@ export async function generateMinisterPDF(
       addSectionHeader("AWARDS & RECOGNITIONS");
 
       ministerData.awardsRecognitions.forEach((award, index) => {
-        checkPageBreak(20);
-        pdf.setFontSize(11);
+        checkPageBreak(15);
+        pdf.setFontSize(9);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.setTextColor(0, 0, 0);
         pdf.text(`Award ${index + 1}:`, margin, yPosition);
-        yPosition += 6;
+        yPosition += 4;
 
         const awardStartY = yPosition;
         maxHeight = 0;
@@ -1189,7 +1187,7 @@ export async function generateMinisterPDF(
         );
         maxHeight = Math.max(maxHeight, yearHeight, descHeight);
 
-        yPosition = awardStartY + maxHeight + 12;
+        yPosition = awardStartY + maxHeight + 6;
       });
     }
 
@@ -1201,12 +1199,12 @@ export async function generateMinisterPDF(
       addSectionHeader("SEMINARS & CONFERENCES");
 
       ministerData.seminarsConferences.forEach((seminar, index) => {
-        checkPageBreak(35);
-        pdf.setFontSize(11);
+        checkPageBreak(25);
+        pdf.setFontSize(9);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.setTextColor(0, 0, 0);
         pdf.text(`Seminar/Conference ${index + 1}:`, margin, yPosition);
-        yPosition += 6;
+        yPosition += 4;
 
         const seminarStartY = yPosition;
         maxHeight = 0;
@@ -1243,23 +1241,24 @@ export async function generateMinisterPDF(
         maxHeight += Math.max(hoursHeight, placeHeight) + 2;
 
         if (seminar.description) {
-          const descY = seminarStartY + maxHeight + 2;
-          pdf.setFontSize(11);
+          const descY = seminarStartY + maxHeight + 1;
+          pdf.setFontSize(9);
           pdf.setFont("helvetica", "bold");
-          pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+          pdf.setTextColor(0, 0, 0);
           pdf.text("Description:", margin, descY);
 
           pdf.setFont("helvetica", "normal");
+          pdf.setTextColor(0, 0, 0);
           const descLines = pdf.splitTextToSize(
             seminar.description,
             contentWidth
           );
-          pdf.text(descLines, margin, descY + 5);
+          pdf.text(descLines, margin, descY + 4);
 
-          maxHeight += descLines.length * 6 + 10;
+          maxHeight += descLines.length * 4 + 6;
         }
 
-        yPosition = seminarStartY + maxHeight + 15;
+        yPosition = seminarStartY + maxHeight + 8;
       });
     }
 
@@ -1268,12 +1267,12 @@ export async function generateMinisterPDF(
       addSectionHeader("CASE REPORTS");
 
       ministerData.caseReports.forEach((caseReport, index) => {
-        checkPageBreak(20);
-        pdf.setFontSize(11);
+        checkPageBreak(15);
+        pdf.setFontSize(9);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.setTextColor(0, 0, 0);
         pdf.text(`Case Report ${index + 1}:`, margin, yPosition);
-        yPosition += 6;
+        yPosition += 4;
 
         const caseReportStartY = yPosition;
         maxHeight = 0;
@@ -1292,7 +1291,7 @@ export async function generateMinisterPDF(
         );
         maxHeight = Math.max(maxHeight, yearHeight, descHeight);
 
-        yPosition = caseReportStartY + maxHeight + 12;
+        yPosition = caseReportStartY + maxHeight + 6;
       });
     }
 
@@ -1306,7 +1305,7 @@ export async function generateMinisterPDF(
 
       if (ministerData.certifiedBy) {
         addField("Certified By", ministerData.certifiedBy, true);
-        yPosition += 10;
+        yPosition += 6;
       }
 
       // Add signature images if available
@@ -1314,22 +1313,22 @@ export async function generateMinisterPDF(
         ministerData.signatureImageUrl ||
         ministerData.signatureByCertifiedImageUrl
       ) {
-        checkPageBreak(60);
+        checkPageBreak(40);
 
-        pdf.setFontSize(12);
+        pdf.setFontSize(10);
         pdf.setFont("helvetica", "bold");
-        pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+        pdf.setTextColor(0, 0, 0);
         pdf.text("Signatures:", margin, yPosition);
-        yPosition += 15;
+        yPosition += 10;
 
         const signaturesStartY = yPosition;
         const signatureWidth = 60;
         const signatureSpacing = 40;
 
         if (ministerData.signatureImageUrl) {
-          pdf.setFontSize(11);
+          pdf.setFontSize(9);
           pdf.setFont("helvetica", "normal");
-          pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+          pdf.setTextColor(0, 0, 0);
           pdf.text("Applicant Signature:", margin, signaturesStartY);
 
           await addImage(
@@ -1343,9 +1342,9 @@ export async function generateMinisterPDF(
         if (ministerData.signatureByCertifiedImageUrl) {
           const certifierX = margin + signatureWidth + signatureSpacing;
 
-          pdf.setFontSize(11);
+          pdf.setFontSize(9);
           pdf.setFont("helvetica", "normal");
-          pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+          pdf.setTextColor(0, 0, 0);
           pdf.text("Certifier Signature:", certifierX, signaturesStartY);
 
           try {
@@ -1367,7 +1366,7 @@ export async function generateMinisterPDF(
           }
         }
 
-        yPosition += 40;
+        yPosition += 25;
       }
     }
 
@@ -1378,23 +1377,21 @@ export async function generateMinisterPDF(
 
       // Footer line
       pdf.setDrawColor(200, 200, 200);
-      pdf.setLineWidth(0.3);
-      pdf.line(margin, pageHeight - 20, pageWidth - margin, pageHeight - 20);
+      pdf.setLineWidth(0.2);
+      pdf.line(margin, pageHeight - 15, pageWidth - margin, pageHeight - 15);
 
       // Footer text
-      pdf.setFontSize(9);
+      pdf.setFontSize(7);
       pdf.setTextColor(lightTextColor[0], lightTextColor[1], lightTextColor[2]);
       pdf.text(
         `Ministry Application - ${fullName} - Generated on ${format(new Date(), "MMM dd, yyyy")}`,
         margin,
-        pageHeight - 12
+        pageHeight - 10
       );
 
-      pdf.text(
-        `Page ${i} of ${totalPages}`,
-        pageWidth - margin - 20,
-        pageHeight - 12
-      );
+      const pageText = `Page ${i} of ${totalPages}`;
+      const pageTextWidth = pdf.getTextWidth(pageText);
+      pdf.text(pageText, pageWidth - margin - pageTextWidth, pageHeight - 10);
     }
 
     // Generate filename with timestamp
