@@ -39,6 +39,7 @@ export interface MultiMapViewerProps {
   style?: React.CSSProperties;
   /** Custom map options */
   mapOptions?: google.maps.MapOptions;
+  children?: React.ReactNode;
 }
 
 const defaultMapContainerStyle: React.CSSProperties = {
@@ -57,6 +58,7 @@ export const MultiMapViewer: React.FC<MultiMapViewerProps> = ({
   className,
   style,
   mapOptions = {},
+  children,
 }) => {
   const { isLoaded, loadError } = useJsApiLoader(GOOGLE_MAPS_LOADER_CONFIG);
   const { resolvedTheme } = useTheme();
@@ -308,6 +310,7 @@ export const MultiMapViewer: React.FC<MultiMapViewerProps> = ({
               <Maximize2 className="mr-2 h-4 w-4" />
               View All ({locations.length})
             </Button>
+            {children}
           </div>
         )}
       </div>
