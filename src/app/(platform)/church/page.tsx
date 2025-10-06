@@ -1,15 +1,34 @@
 "use client";
 
 import React, { useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 
 import AllChurches from "@/modules/church/components/all-churches";
 import type { Church as ChurchType } from "@/modules/church/church-schema";
 
 export default function ChurchPage() {
   const [selectedChurch, setSelectedChurch] = useState<ChurchType | null>(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const churchIdParam = searchParams.get("churchId");
 
-  const handleSelectChurch = (church: ChurchType) => {
+  // Get selectedChurchId from URL or selected church
+  const selectedChurchId = churchIdParam
+    ? parseInt(churchIdParam, 10)
+    : selectedChurch?.id;
+
+  const handleSelectChurch = (church: ChurchType | null) => {
     setSelectedChurch(church);
+
+    const params = new URLSearchParams(searchParams.toString());
+    if (church) {
+      // Update URL with the selected church ID
+      params.set("churchId", church.id.toString());
+    } else {
+      // Remove churchId param when unselecting
+      params.delete("churchId");
+    }
+    router.push(`/church?${params.toString()}`, { scroll: false });
   };
 
   return (
@@ -20,7 +39,7 @@ export default function ChurchPage() {
       <div className="flex justify-center">
         <AllChurches
           onSelectChurch={handleSelectChurch}
-          selectedChurchId={selectedChurch?.id}
+          selectedChurchId={selectedChurchId}
         />
       </div>
     </div>

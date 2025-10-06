@@ -35,7 +35,7 @@ import type { Church } from "../church-schema";
 import Link from "next/link";
 
 interface AllChurchesProps {
-  onSelectChurch?: (church: Church) => void;
+  onSelectChurch?: (church: Church | null) => void;
   selectedChurchId?: number;
 }
 
@@ -180,7 +180,11 @@ function AllChurches({ onSelectChurch, selectedChurchId }: AllChurchesProps) {
   }, [filteredChurches]);
 
   const handleSelectChurch = (church: Church) => {
-    onSelectChurch?.(church);
+    if (selectedChurchId === church.id) {
+      onSelectChurch?.(null);
+    } else {
+      onSelectChurch?.(church);
+    }
   };
 
   const handleMapLocationSelect = (location: MapLocation) => {
