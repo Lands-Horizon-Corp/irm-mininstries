@@ -49,14 +49,11 @@ export async function generateMemberPDF(
   memberData: MemberPDFData
 ): Promise<void> {
   const pdf = new jsPDF("p", "mm", "a4");
-  let yPosition = 30;
+  let yPosition = 20;
   const pageHeight = pdf.internal.pageSize.height;
   const pageWidth = pdf.internal.pageSize.width;
-  const margin = 20;
+  const margin = 12;
   const contentWidth = pageWidth - 2 * margin;
-  const primaryColor = [65, 105, 225]; // Royal blue
-  const accentColor = [220, 220, 250]; // Light lavender
-  const textColor = [50, 50, 50];
   const lightTextColor = [100, 100, 100];
 
   // Helper function to convert image URL to base64
@@ -76,31 +73,28 @@ export async function generateMemberPDF(
   };
 
   // Helper function to add new page if needed
-  const checkPageBreak = (requiredSpace = 25) => {
-    const footerSpace = 30;
+  const checkPageBreak = (requiredSpace = 18) => {
+    const footerSpace = 20;
     if (yPosition + requiredSpace > pageHeight - margin - footerSpace) {
       pdf.addPage();
-      yPosition = 30;
+      yPosition = 20;
 
       // Add header to new page
-      pdf.setFillColor(accentColor[0], accentColor[1], accentColor[2]);
-      pdf.rect(0, 0, pageWidth, 20, "F");
-
-      pdf.setFontSize(16);
+      pdf.setFontSize(12);
       pdf.setFont("helvetica", "bold");
-      pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+      pdf.setTextColor(0, 0, 0);
       pdf.text(
         "I AM REDEEMER AND MASTER EVANGELICAL CHURCH",
         pageWidth / 2,
-        15,
+        12,
         {
           align: "center",
         }
       );
 
-      pdf.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+      pdf.setDrawColor(0, 0, 0);
       pdf.setLineWidth(0.5);
-      pdf.line(margin, 22, pageWidth - margin, 22);
+      pdf.line(margin, 15, pageWidth - margin, 15);
 
       return true;
     }
@@ -108,36 +102,37 @@ export async function generateMemberPDF(
   };
 
   // Helper function to add title
-  const addTitle = (text: string, fontSize = 20) => {
-    checkPageBreak(30);
+  const addTitle = (text: string, fontSize = 14) => {
+    checkPageBreak(15);
     pdf.setFontSize(fontSize);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    pdf.setTextColor(0, 0, 0);
     const textWidth = pdf.getTextWidth(text);
     const centerX = (pageWidth - textWidth) / 2;
     pdf.text(text, centerX, yPosition);
 
-    pdf.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    pdf.setDrawColor(0, 0, 0);
     pdf.setLineWidth(0.3);
-    pdf.line(centerX, yPosition + 2, centerX + textWidth, yPosition + 2);
+    pdf.line(centerX, yPosition + 1, centerX + textWidth, yPosition + 1);
 
-    yPosition += 15;
+    yPosition += 8;
   };
 
   // Helper function to add section header
   const addSectionHeader = (title: string) => {
-    checkPageBreak(15);
-    yPosition += 10;
+    checkPageBreak(8);
+    yPosition += 4;
 
-    pdf.setFillColor(accentColor[0], accentColor[1], accentColor[2]);
-    pdf.rect(margin, yPosition - 5, contentWidth, 10, "F");
-
-    pdf.setFontSize(12);
+    pdf.setFontSize(9);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-    pdf.text(title, margin + 5, yPosition + 2);
+    pdf.setTextColor(0, 0, 0);
+    pdf.text(title, margin, yPosition);
 
-    yPosition += 12;
+    pdf.setDrawColor(0, 0, 0);
+    pdf.setLineWidth(0.2);
+    pdf.line(margin, yPosition + 1, pageWidth - margin, yPosition + 1);
+
+    yPosition += 6;
   };
 
   // Helper function to add field in two columns
@@ -150,20 +145,20 @@ export async function generateMemberPDF(
     if (!value) return 0;
 
     const currentY = customY || yPosition;
-    const columnWidth = contentWidth / 2 - 5;
-    const xPosition = isLeftColumn ? margin + 5 : margin + columnWidth + 10;
+    const columnWidth = contentWidth / 2 - 3;
+    const xPosition = isLeftColumn ? margin + 2 : margin + columnWidth + 6;
 
-    pdf.setFontSize(10);
+    pdf.setFontSize(8);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+    pdf.setTextColor(0, 0, 0);
     pdf.text(`${label}:`, xPosition, currentY);
 
     pdf.setFont("helvetica", "normal");
-    pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
-    const lines = pdf.splitTextToSize(value, columnWidth - 15);
-    pdf.text(lines, xPosition + 2, currentY + 5);
+    pdf.setTextColor(0, 0, 0);
+    const lines = pdf.splitTextToSize(value, columnWidth - 10);
+    pdf.text(lines, xPosition + 1, currentY + 3);
 
-    const fieldHeight = Math.max(10, lines.length * 5 + 5);
+    const fieldHeight = Math.max(6, lines.length * 3 + 2);
 
     if (!customY) {
       yPosition += fieldHeight;
@@ -179,41 +174,42 @@ export async function generateMemberPDF(
   ) => {
     if (!value) return;
 
-    checkPageBreak(20);
+    checkPageBreak(12);
 
-    pdf.setFontSize(10);
+    pdf.setFontSize(8);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(textColor[0], textColor[1], textColor[2]);
+    pdf.setTextColor(0, 0, 0);
     pdf.text(`${label}:`, margin, yPosition);
 
     pdf.setFont("helvetica", "normal");
-    const lines = pdf.splitTextToSize(value, contentWidth - 10);
-    pdf.text(lines, margin + 2, yPosition + 6);
+    pdf.setTextColor(0, 0, 0);
+    const lines = pdf.splitTextToSize(value, contentWidth - 5);
+    pdf.text(lines, margin + 1, yPosition + 3.5);
 
-    yPosition += lines.length * 5 + 12;
+    yPosition += lines.length * 3 + 6;
   };
 
   // Helper function to add image
   const addImage = async (
     imageUrl: string,
     alt: string,
-    width = 40,
-    height = 40,
+    width = 30,
+    height = 35,
     centered = false
   ) => {
     try {
       const base64Image = await getImageAsBase64(imageUrl);
       if (base64Image) {
-        checkPageBreak(height + 15);
-        const x = centered ? (pageWidth - width) / 2 : margin + 10;
+        checkPageBreak(height + 8);
+        const x = centered ? (pageWidth - width) / 2 : margin + 5;
 
         pdf.setDrawColor(200, 200, 200);
-        pdf.setLineWidth(0.2);
-        pdf.rect(x - 1, yPosition - 1, width + 2, height + 2);
+        pdf.setLineWidth(0.1);
+        pdf.rect(x - 0.5, yPosition - 0.5, width + 1, height + 1);
 
         pdf.addImage(base64Image, "JPEG", x, yPosition, width, height);
 
-        pdf.setFontSize(8);
+        pdf.setFontSize(7);
         pdf.setFont("helvetica", "italic");
         pdf.setTextColor(
           lightTextColor[0],
@@ -221,9 +217,9 @@ export async function generateMemberPDF(
           lightTextColor[2]
         );
         const captionX = centered ? (pageWidth - pdf.getTextWidth(alt)) / 2 : x;
-        pdf.text(alt, captionX, yPosition + height + 5);
+        pdf.text(alt, captionX, yPosition + height + 3);
 
-        yPosition += height + 12;
+        yPosition += height + 6;
       }
     } catch {
       throw new Error("Failed to add image to PDF");
@@ -236,23 +232,20 @@ export async function generateMemberPDF(
 
   try {
     // Add header
-    pdf.setFillColor(accentColor[0], accentColor[1], accentColor[2]);
-    pdf.rect(0, 0, pageWidth, 20, "F");
-
-    pdf.setFontSize(16);
+    pdf.setFontSize(12);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-    pdf.text("I AM REDEEMER AND MASTER EVANGELICAL CHURCH", pageWidth / 2, 15, {
+    pdf.setTextColor(0, 0, 0);
+    pdf.text("I AM REDEEMER AND MASTER EVANGELICAL CHURCH", pageWidth / 2, 12, {
       align: "center",
     });
 
-    pdf.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    pdf.setDrawColor(0, 0, 0);
     pdf.setLineWidth(0.5);
-    pdf.line(margin, 22, pageWidth - margin, 22);
+    pdf.line(margin, 15, pageWidth - margin, 15);
 
     // Main title
-    addTitle("MEMBER INFORMATION", 18);
-    yPosition += 5;
+    addTitle("MEMBER INFORMATION", 12);
+    yPosition += 1;
 
     // Member name as subtitle
     const fullName = [
@@ -263,20 +256,20 @@ export async function generateMemberPDF(
       .filter(Boolean)
       .join(" ");
 
-    pdf.setFontSize(14);
+    pdf.setFontSize(10);
     pdf.setFont("helvetica", "bold");
-    pdf.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    pdf.setTextColor(0, 0, 0);
     const nameWidth = pdf.getTextWidth(fullName);
     pdf.text(fullName, (pageWidth - nameWidth) / 2, yPosition);
-    yPosition += 10;
+    yPosition += 5;
 
     // Add generation date
-    pdf.setFontSize(9);
-    pdf.setTextColor(lightTextColor[0], lightTextColor[1], lightTextColor[2]);
+    pdf.setFontSize(7);
+    pdf.setTextColor(100, 100, 100);
     const dateText = `Generated on ${format(new Date(), "MMMM dd, yyyy")}`;
     const dateWidth = pdf.getTextWidth(dateText);
     pdf.text(dateText, (pageWidth - dateWidth) / 2, yPosition);
-    yPosition += 15;
+    yPosition += 8;
 
     // Church Information Section
     if (memberData.churchName) {
@@ -303,7 +296,7 @@ export async function generateMemberPDF(
         churchAddressFieldHeight
       );
 
-      yPosition = churchStartY + maxHeight + 10;
+      yPosition = churchStartY + maxHeight + 3;
     }
 
     // Personal Information Section
@@ -311,8 +304,8 @@ export async function generateMemberPDF(
 
     // Add profile photo if available
     if (memberData.profilePicture) {
-      await addImage(memberData.profilePicture, "Profile Photo", 35, 45, true);
-      yPosition += 5;
+      await addImage(memberData.profilePicture, "Profile Photo", 25, 30, true);
+      yPosition += 1;
     }
 
     // Personal details in two columns
@@ -333,7 +326,7 @@ export async function generateMemberPDF(
     );
     maxHeight = Math.max(maxHeight, nameFieldHeight, genderFieldHeight);
 
-    const dobY = personalStartY + maxHeight + 2;
+    const dobY = personalStartY + maxHeight + 0.5;
     const dobFieldHeight = addField(
       "Date of Birth",
       formatDate(memberData.birthdate ?? null),
@@ -346,9 +339,9 @@ export async function generateMemberPDF(
       false,
       dobY
     );
-    maxHeight += Math.max(dobFieldHeight, yearJoinedFieldHeight) + 2;
+    maxHeight += Math.max(dobFieldHeight, yearJoinedFieldHeight) + 0.5;
 
-    yPosition = personalStartY + maxHeight + 10;
+    yPosition = personalStartY + maxHeight + 3;
 
     // Contact Information Section
     addSectionHeader("CONTACT INFORMATION");
@@ -370,7 +363,7 @@ export async function generateMemberPDF(
     );
     maxHeight = Math.max(maxHeight, mobileFieldHeight, emailFieldHeight);
 
-    yPosition = contactStartY + maxHeight + 10;
+    yPosition = contactStartY + maxHeight + 3;
 
     // Home Address (full width)
     addFullWidthField("Home Address", memberData.homeAddress);
@@ -400,16 +393,16 @@ export async function generateMemberPDF(
       );
       maxHeight = Math.max(maxHeight, facebookFieldHeight, xFieldHeight);
 
-      const instagramY = socialStartY + maxHeight + 2;
+      const instagramY = socialStartY + maxHeight + 0.5;
       const instagramFieldHeight = addField(
         "Instagram",
         memberData.instagramLink,
         true,
         instagramY
       );
-      maxHeight += instagramFieldHeight + 2;
+      maxHeight += instagramFieldHeight + 0.5;
 
-      yPosition = socialStartY + maxHeight + 10;
+      yPosition = socialStartY + maxHeight + 3;
     }
 
     // Work & Ministry Information Section
@@ -448,7 +441,7 @@ export async function generateMemberPDF(
       );
       maxHeight = Math.max(maxHeight, attainmentFieldHeight, schoolFieldHeight);
 
-      yPosition = eduStartY + maxHeight + 10;
+      yPosition = eduStartY + maxHeight + 3;
 
       // Degree (full width)
       addFullWidthField("Degree/Course", memberData.degree);
@@ -484,7 +477,7 @@ export async function generateMemberPDF(
     );
     maxHeight = Math.max(maxHeight, createdFieldHeight, updatedFieldHeight);
 
-    yPosition = regStartY + maxHeight + 20;
+    yPosition = regStartY + maxHeight + 8;
 
     // Add footer to each page
     const totalPages = pdf.internal.pages.length - 1;
@@ -493,22 +486,22 @@ export async function generateMemberPDF(
 
       // Footer line
       pdf.setDrawColor(200, 200, 200);
-      pdf.setLineWidth(0.3);
-      pdf.line(margin, pageHeight - 20, pageWidth - margin, pageHeight - 20);
+      pdf.setLineWidth(0.2);
+      pdf.line(margin, pageHeight - 12, pageWidth - margin, pageHeight - 12);
 
       // Footer text
-      pdf.setFontSize(8);
+      pdf.setFontSize(6);
       pdf.setTextColor(lightTextColor[0], lightTextColor[1], lightTextColor[2]);
       pdf.text(
         `Member Information - ${fullName} - Generated on ${format(new Date(), "MMM dd, yyyy")}`,
         margin,
-        pageHeight - 12
+        pageHeight - 8
       );
 
       pdf.text(
         `Page ${i} of ${totalPages}`,
-        pageWidth - margin - 20,
-        pageHeight - 12
+        pageWidth - margin - 15,
+        pageHeight - 8
       );
     }
 
