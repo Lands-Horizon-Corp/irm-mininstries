@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 import AllChurches from "@/modules/church/components/all-churches";
 import type { Church as ChurchType } from "@/modules/church/church-schema";
 
-export default function ChurchPage() {
+function ChurchPageContent() {
   const [selectedChurch, setSelectedChurch] = useState<ChurchType | null>(null);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -43,5 +43,13 @@ export default function ChurchPage() {
         />
       </div>
     </div>
+  );
+}
+
+export default function ChurchPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ChurchPageContent />
+    </Suspense>
   );
 }
