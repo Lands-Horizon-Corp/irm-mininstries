@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 
 import { asc, eq } from "drizzle-orm";
-import * as XLSX from "xlsx";
 
 import { db } from "@/db/drizzle";
+import { createExcelExport, createExcelResponse } from "@/lib/excel-export";
 import { churches } from "@/modules/church/church-schema";
 import { ministers } from "@/modules/ministry/ministry-schema";
-import { formatDate } from "@/lib/utils";
+import { formatDate, truncateText } from "@/lib/utils";
 
 // GET - Export all ministers to Excel
 export async function GET() {
@@ -69,142 +69,125 @@ export async function GET() {
       fullName.push(minister.lastName);
       if (minister.suffix) fullName.push(minister.suffix);
 
-      // Helper function to truncate text to Excel's limit
-      const truncateText = (text: string | null, maxLength = 32000) => {
-        if (!text) return "";
-        return text.length > maxLength
-          ? text.substring(0, maxLength) + "..."
-          : text;
-      };
-
       return {
-        ID: minister.id,
-        Church: truncateText(minister.churchName || "Unknown"),
-        "Full Name": truncateText(fullName.join(" ")),
-        "First Name": truncateText(minister.firstName),
-        "Middle Name": truncateText(minister.middleName || ""),
-        "Last Name": truncateText(minister.lastName),
-        Suffix: truncateText(minister.suffix || ""),
-        Nickname: truncateText(minister.nickname || ""),
-        "Date of Birth": formatDate(minister.dateOfBirth),
-        "Place of Birth": truncateText(minister.placeOfBirth || ""),
-        Address: truncateText(minister.address || "", 500),
-        "Present Address": truncateText(minister.presentAddress || "", 500),
-        "Permanent Address": truncateText(minister.permanentAddress || "", 500),
-        Gender: minister.gender,
-        "Height (Feet)": truncateText(minister.heightFeet || ""),
-        "Weight (Kg)": truncateText(minister.weightKg || ""),
-        "Civil Status": minister.civilStatus,
-        Email: truncateText(minister.email || ""),
-        Telephone: truncateText(minister.telephone || ""),
-        "Passport Number": truncateText(minister.passportNumber || ""),
-        "SSS Number": truncateText(minister.sssNumber || ""),
-        Philhealth: truncateText(minister.philhealth || ""),
-        TIN: truncateText(minister.tin || ""),
-        Biography: truncateText(minister.biography || "", 1000),
-        "Father Name": truncateText(minister.fatherName || ""),
-        "Father Province": truncateText(minister.fatherProvince || ""),
-        "Father Birthday": formatDate(minister.fatherBirthday),
-        "Father Occupation": truncateText(minister.fatherOccupation || ""),
-        "Mother Name": truncateText(minister.motherName || ""),
-        "Mother Province": truncateText(minister.motherProvince || ""),
-        "Mother Birthday": formatDate(minister.motherBirthday),
-        "Mother Occupation": truncateText(minister.motherOccupation || ""),
-        "Spouse Name": truncateText(minister.spouseName || ""),
-        "Spouse Province": truncateText(minister.spouseProvince || ""),
-        "Spouse Birthday": formatDate(minister.spouseBirthday),
-        "Spouse Occupation": truncateText(minister.spouseOccupation || ""),
-        "Wedding Date": formatDate(minister.weddingDate),
-        Skills: truncateText(minister.skills || "", 1000),
-        Hobbies: truncateText(minister.hobbies || "", 500),
-        Sports: truncateText(minister.sports || "", 500),
-        "Other Religious/Secular Training": truncateText(
+        id: minister.id,
+        church: truncateText(minister.churchName || "Unknown"),
+        fullName: truncateText(fullName.join(" ")),
+        firstName: truncateText(minister.firstName),
+        middleName: truncateText(minister.middleName || ""),
+        lastName: truncateText(minister.lastName),
+        suffix: truncateText(minister.suffix || ""),
+        nickname: truncateText(minister.nickname || ""),
+        dateOfBirth: formatDate(minister.dateOfBirth),
+        placeOfBirth: truncateText(minister.placeOfBirth || ""),
+        address: truncateText(minister.address || "", 500),
+        presentAddress: truncateText(minister.presentAddress || "", 500),
+        permanentAddress: truncateText(minister.permanentAddress || "", 500),
+        gender: minister.gender,
+        heightFeet: truncateText(minister.heightFeet || ""),
+        weightKg: truncateText(minister.weightKg || ""),
+        civilStatus: minister.civilStatus,
+        email: truncateText(minister.email || ""),
+        telephone: truncateText(minister.telephone || ""),
+        passportNumber: truncateText(minister.passportNumber || ""),
+        sssNumber: truncateText(minister.sssNumber || ""),
+        philhealth: truncateText(minister.philhealth || ""),
+        tin: truncateText(minister.tin || ""),
+        biography: truncateText(minister.biography || "", 1000),
+        fatherName: truncateText(minister.fatherName || ""),
+        fatherProvince: truncateText(minister.fatherProvince || ""),
+        fatherBirthday: formatDate(minister.fatherBirthday),
+        fatherOccupation: truncateText(minister.fatherOccupation || ""),
+        motherName: truncateText(minister.motherName || ""),
+        motherProvince: truncateText(minister.motherProvince || ""),
+        motherBirthday: formatDate(minister.motherBirthday),
+        motherOccupation: truncateText(minister.motherOccupation || ""),
+        spouseName: truncateText(minister.spouseName || ""),
+        spouseProvince: truncateText(minister.spouseProvince || ""),
+        spouseBirthday: formatDate(minister.spouseBirthday),
+        spouseOccupation: truncateText(minister.spouseOccupation || ""),
+        weddingDate: formatDate(minister.weddingDate),
+        skills: truncateText(minister.skills || "", 1000),
+        hobbies: truncateText(minister.hobbies || "", 500),
+        sports: truncateText(minister.sports || "", 500),
+        otherReligiousSecularTraining: truncateText(
           minister.otherReligiousSecularTraining || "",
           1000
         ),
-        "Certified By": truncateText(minister.certifiedBy || ""),
-        "Registration Date": formatDate(minister.createdAt),
-        "Registration Time": minister.createdAt
+        certifiedBy: truncateText(minister.certifiedBy || ""),
+        registrationDate: formatDate(minister.createdAt),
+        registrationTime: minister.createdAt
           ? new Date(minister.createdAt).toLocaleTimeString()
           : "",
-        "Last Updated": formatDate(minister.updatedAt),
+        lastUpdated: formatDate(minister.updatedAt),
       };
     });
 
-    // Create workbook and worksheet
-    const workbook = XLSX.utils.book_new();
-    const worksheet = XLSX.utils.json_to_sheet(exportData);
-
-    // Set column widths for better readability
-    worksheet["!cols"] = [
-      { wch: 5 }, // ID
-      { wch: 25 }, // Church
-      { wch: 30 }, // Full Name
-      { wch: 20 }, // First Name
-      { wch: 20 }, // Middle Name
-      { wch: 20 }, // Last Name
-      { wch: 15 }, // Suffix
-      { wch: 20 }, // Nickname
-      { wch: 15 }, // Date of Birth
-      { wch: 30 }, // Place of Birth
-      { wch: 40 }, // Address
-      { wch: 40 }, // Present Address
-      { wch: 40 }, // Permanent Address
-      { wch: 10 }, // Gender
-      { wch: 15 }, // Height (Feet)
-      { wch: 15 }, // Weight (Kg)
-      { wch: 15 }, // Civil Status
-      { wch: 30 }, // Email
-      { wch: 18 }, // Telephone
-      { wch: 20 }, // Passport Number
-      { wch: 15 }, // SSS Number
-      { wch: 20 }, // Philhealth
-      { wch: 15 }, // TIN
-      { wch: 50 }, // Biography
-      { wch: 25 }, // Father Name
-      { wch: 20 }, // Father Province
-      { wch: 15 }, // Father Birthday
-      { wch: 25 }, // Father Occupation
-      { wch: 25 }, // Mother Name
-      { wch: 20 }, // Mother Province
-      { wch: 15 }, // Mother Birthday
-      { wch: 25 }, // Mother Occupation
-      { wch: 25 }, // Spouse Name
-      { wch: 20 }, // Spouse Province
-      { wch: 15 }, // Spouse Birthday
-      { wch: 25 }, // Spouse Occupation
-      { wch: 15 }, // Wedding Date
-      { wch: 50 }, // Skills
-      { wch: 30 }, // Hobbies
-      { wch: 30 }, // Sports
-      { wch: 50 }, // Other Religious/Secular Training
-      { wch: 25 }, // Certified By
-      { wch: 18 }, // Registration Date
-      { wch: 18 }, // Registration Time
-      { wch: 18 }, // Last Updated
+    // Define Excel columns
+    const columns = [
+      { header: "ID", key: "id", width: 5 },
+      { header: "Church", key: "church", width: 25 },
+      { header: "Full Name", key: "fullName", width: 30 },
+      { header: "First Name", key: "firstName", width: 20 },
+      { header: "Middle Name", key: "middleName", width: 20 },
+      { header: "Last Name", key: "lastName", width: 20 },
+      { header: "Suffix", key: "suffix", width: 15 },
+      { header: "Nickname", key: "nickname", width: 20 },
+      { header: "Date of Birth", key: "dateOfBirth", width: 15 },
+      { header: "Place of Birth", key: "placeOfBirth", width: 30 },
+      { header: "Address", key: "address", width: 40 },
+      { header: "Present Address", key: "presentAddress", width: 40 },
+      { header: "Permanent Address", key: "permanentAddress", width: 40 },
+      { header: "Gender", key: "gender", width: 10 },
+      { header: "Height (Feet)", key: "heightFeet", width: 15 },
+      { header: "Weight (Kg)", key: "weightKg", width: 15 },
+      { header: "Civil Status", key: "civilStatus", width: 15 },
+      { header: "Email", key: "email", width: 30 },
+      { header: "Telephone", key: "telephone", width: 18 },
+      { header: "Passport Number", key: "passportNumber", width: 20 },
+      { header: "SSS Number", key: "sssNumber", width: 15 },
+      { header: "Philhealth", key: "philhealth", width: 20 },
+      { header: "TIN", key: "tin", width: 15 },
+      { header: "Biography", key: "biography", width: 50 },
+      { header: "Father Name", key: "fatherName", width: 25 },
+      { header: "Father Province", key: "fatherProvince", width: 20 },
+      { header: "Father Birthday", key: "fatherBirthday", width: 15 },
+      { header: "Father Occupation", key: "fatherOccupation", width: 25 },
+      { header: "Mother Name", key: "motherName", width: 25 },
+      { header: "Mother Province", key: "motherProvince", width: 20 },
+      { header: "Mother Birthday", key: "motherBirthday", width: 15 },
+      { header: "Mother Occupation", key: "motherOccupation", width: 25 },
+      { header: "Spouse Name", key: "spouseName", width: 25 },
+      { header: "Spouse Province", key: "spouseProvince", width: 20 },
+      { header: "Spouse Birthday", key: "spouseBirthday", width: 15 },
+      { header: "Spouse Occupation", key: "spouseOccupation", width: 25 },
+      { header: "Wedding Date", key: "weddingDate", width: 15 },
+      { header: "Skills", key: "skills", width: 50 },
+      { header: "Hobbies", key: "hobbies", width: 30 },
+      { header: "Sports", key: "sports", width: 30 },
+      {
+        header: "Other Religious/Secular Training",
+        key: "otherReligiousSecularTraining",
+        width: 50,
+      },
+      { header: "Certified By", key: "certifiedBy", width: 25 },
+      { header: "Registration Date", key: "registrationDate", width: 18 },
+      { header: "Registration Time", key: "registrationTime", width: 18 },
+      { header: "Last Updated", key: "lastUpdated", width: 18 },
     ];
 
-    // Add worksheet to workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Ministers");
-
     // Generate Excel buffer
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "buffer",
+    const excelBuffer = await createExcelExport({
+      sheetName: "Ministers",
+      columns,
+      data: exportData,
     });
 
-    // Create response with proper headers
-    const response = new NextResponse(excelBuffer);
-    response.headers.set(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
-    response.headers.set(
-      "Content-Disposition",
-      `attachment; filename="ministers-${new Date().toISOString().split("T")[0]}.xlsx"`
-    );
+    // Create filename
+    const filename = `ministers-${new Date().toISOString().split("T")[0]}.xlsx`;
 
-    return response;
+    // Return Excel response
+    return createExcelResponse(excelBuffer, filename);
   } catch {
     return NextResponse.json(
       {

@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 
 import { count, eq } from "drizzle-orm";
-import * as XLSX from "xlsx";
 
 import { db } from "@/db/drizzle";
+import { createExcelExport, createExcelResponse } from "@/lib/excel-export";
 import { churches } from "@/modules/church/church-schema";
 import { members } from "@/modules/member/member-schema";
 import { ministers } from "@/modules/ministry/ministry-schema";
@@ -32,62 +32,50 @@ export async function GET() {
         const ministerCount = ministerCountResult[0]?.count || 0;
 
         return {
-          ID: church.id,
-          Name: church.name,
-          Email: church.email || "",
-          Address: church.address || "",
-          Description: church.description || "",
-          Latitude: church.latitude || "",
-          Longitude: church.longitude || "",
-          "Member Count": memberCount,
-          "Minister Count": ministerCount,
-          "Total Count": memberCount + ministerCount,
-          "Created Date": new Date(church.createdAt).toLocaleDateString(),
-          "Last Updated": new Date(church.updatedAt).toLocaleDateString(),
+          id: church.id,
+          name: church.name,
+          email: church.email || "",
+          address: church.address || "",
+          description: church.description || "",
+          latitude: church.latitude || "",
+          longitude: church.longitude || "",
+          memberCount: memberCount,
+          ministerCount: ministerCount,
+          totalCount: memberCount + ministerCount,
+          createdDate: new Date(church.createdAt).toLocaleDateString(),
+          lastUpdated: new Date(church.updatedAt).toLocaleDateString(),
         };
       })
     );
 
-    // Create workbook and worksheet
-    const workbook = XLSX.utils.book_new();
-    const worksheet = XLSX.utils.json_to_sheet(churchData);
-
-    // Set column widths
-    worksheet["!cols"] = [
-      { width: 5 }, // ID
-      { width: 25 }, // Name
-      { width: 30 }, // Email
-      { width: 40 }, // Address
-      { width: 35 }, // Description
-      { width: 12 }, // Latitude
-      { width: 12 }, // Longitude
-      { width: 12 }, // Member Count
-      { width: 12 }, // Minister Count
-      { width: 12 }, // Total Count
-      { width: 15 }, // Created Date
-      { width: 15 }, // Last Updated
+    // Define Excel columns
+    const columns = [
+      { header: "ID", key: "id", width: 5 },
+      { header: "Name", key: "name", width: 25 },
+      { header: "Email", key: "email", width: 30 },
+      { header: "Address", key: "address", width: 40 },
+      { header: "Description", key: "description", width: 35 },
+      { header: "Latitude", key: "latitude", width: 12 },
+      { header: "Longitude", key: "longitude", width: 12 },
+      { header: "Member Count", key: "memberCount", width: 12 },
+      { header: "Minister Count", key: "ministerCount", width: 12 },
+      { header: "Total Count", key: "totalCount", width: 12 },
+      { header: "Created Date", key: "createdDate", width: 15 },
+      { header: "Last Updated", key: "lastUpdated", width: 15 },
     ];
 
-    // Add worksheet to workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Churches");
-
-    // Generate Excel file buffer
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "buffer",
+    // Generate Excel buffer
+    const excelBuffer = await createExcelExport({
+      sheetName: "Churches",
+      columns,
+      data: churchData,
     });
 
-    // Create response with proper headers
-    const response = new NextResponse(excelBuffer, {
-      status: 200,
-      headers: {
-        "Content-Type":
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "Content-Disposition": `attachment; filename="churches-export-${new Date().toISOString().split("T")[0]}.xlsx"`,
-      },
-    });
+    // Create filename
+    const filename = `churches-export-${new Date().toISOString().split("T")[0]}.xlsx`;
 
-    return response;
+    // Return Excel response
+    return createExcelResponse(excelBuffer, filename);
   } catch {
     return NextResponse.json(
       {
