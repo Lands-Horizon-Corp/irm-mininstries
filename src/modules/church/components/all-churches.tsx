@@ -282,115 +282,105 @@ function AllChurches({ onSelectChurch, selectedChurchId }: AllChurchesProps) {
 
         {/* Map Section */}
         {!isLoading && mapLocations.length > 0 && (
-          <MultiMapViewer
-            locations={mapLocations}
-            height="400px"
-            selectedLocationId={selectedChurchId}
-            onLocationSelect={handleMapLocationSelect}
-          />
+          <div className="relative">
+            <MultiMapViewer
+              locations={mapLocations}
+              height="400px"
+              selectedLocationId={selectedChurchId}
+              onLocationSelect={handleMapLocationSelect}
+            >
+              <div className="absolute top-10 z-10 w-48 max-w-xs sm:w-64">
+                {selectedChurchId &&
+                  (() => {
+                    const selectedChurch = filteredChurches.find(
+                      (c) => c.id === selectedChurchId
+                    );
+                    return selectedChurch ? (
+                      <div className="rounded-lg border p-2 shadow-lg backdrop-blur sm:p-3">
+                        {/* Header with image and basic info */}
+                        <div className="mb-2 flex items-start gap-2 sm:mb-3 sm:gap-3">
+                          <div
+                            className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border sm:size-10"
+                            aria-hidden="true"
+                          >
+                            {selectedChurch.imageUrl ? (
+                              <Image
+                                src={selectedChurch.imageUrl}
+                                alt={selectedChurch.name}
+                                width={32}
+                                height={32}
+                                className="h-full w-full object-cover sm:h-10 sm:w-10"
+                              />
+                            ) : (
+                              <Building2 className="opacity-60" size={16} />
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <h3 className="mb-0.5 text-xs leading-tight font-medium sm:mb-1 sm:text-sm">
+                              {selectedChurch.name}
+                            </h3>
+                            {selectedChurch.email && (
+                              <p className="text-muted-foreground truncate text-[10px] sm:text-xs">
+                                {selectedChurch.email}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Address and directions */}
+                        {selectedChurch.address && (
+                          <div className="mb-2 sm:mb-3">
+                            <p className="text-muted-foreground mb-0.5 line-clamp-2 text-[10px] sm:mb-1 sm:text-xs">
+                              {selectedChurch.address}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Action buttons - stacked vertically */}
+                        <div className="space-y-1 sm:space-y-2">
+                          <Link
+                            href={`/join/worker?churchId=${selectedChurch.id}`}
+                            className="block"
+                          >
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-6 w-full px-2 text-[10px] sm:h-8 sm:text-xs"
+                            >
+                              <UsersIcon className="mr-1 h-2.5 w-2.5 sm:mr-1.5 sm:h-3 sm:w-3" />
+                              <span className="hidden sm:inline">
+                                Join as Worker
+                              </span>
+                              <span className="sm:hidden">Worker</span>
+                            </Button>
+                          </Link>
+                          <Link
+                            href={`/join/member?churchId=${selectedChurch.id}`}
+                            className="block"
+                          >
+                            <Button
+                              size="sm"
+                              className="h-6 w-full px-2 text-[10px] sm:h-8 sm:text-xs"
+                            >
+                              <UserCheck className="mr-1 h-2.5 w-2.5 sm:mr-1.5 sm:h-3 sm:w-3" />
+                              <span className="hidden sm:inline">
+                                Join as Member
+                              </span>
+                              <span className="sm:hidden">Member</span>
+                            </Button>
+                          </Link>
+                        </div>
+                      </div>
+                    ) : null;
+                  })()}
+              </div>
+            </MultiMapViewer>
+          </div>
         )}
 
         {/* Churches Section */}
         {!isLoading && filteredChurches.length > 0 && (
           <div className="sm:space-y-4">
-            <div>
-              {selectedChurchId &&
-                (() => {
-                  const selectedChurch = filteredChurches.find(
-                    (c) => c.id === selectedChurchId
-                  );
-                  return selectedChurch ? (
-                    <div className="bg-background z-50 mx-4 max-w-full rounded-md border p-4 shadow-lg sm:mx-0">
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full border"
-                          aria-hidden="true"
-                        >
-                          {selectedChurch.imageUrl ? (
-                            <Image
-                              src={selectedChurch.imageUrl}
-                              alt={selectedChurch.name}
-                              width={36}
-                              height={36}
-                              className="h-full w-full object-cover"
-                            />
-                          ) : (
-                            <Building2 className="opacity-60" size={16} />
-                          )}
-                        </div>
-                        <div className="flex grow items-center gap-2 sm:gap-12">
-                          <div className="min-w-0 flex-1 space-y-1">
-                            <p className="truncate text-sm font-medium">
-                              {selectedChurch.name}
-                            </p>
-                            <div className="text-muted-foreground space-y-0.5 text-xs">
-                              {selectedChurch.email && (
-                                <p className="truncate">
-                                  {selectedChurch.email}
-                                </p>
-                              )}
-                              {selectedChurch.address && (
-                                <p className="truncate">
-                                  {selectedChurch.address}
-                                </p>
-                              )}
-                              {(selectedChurch.address ||
-                                (selectedChurch.latitude &&
-                                  selectedChurch.longitude)) && (
-                                <span
-                                  className="text-primary hover:text-primary/80 cursor-pointer underline"
-                                  onClick={() => {
-                                    if (
-                                      selectedChurch.latitude &&
-                                      selectedChurch.longitude
-                                    ) {
-                                      const url = `https://www.google.com/maps/dir/?api=1&destination=${selectedChurch.latitude},${selectedChurch.longitude}`;
-                                      window.open(url, "_blank");
-                                    } else if (selectedChurch.address) {
-                                      const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedChurch.address)}`;
-                                      window.open(url, "_blank");
-                                    }
-                                  }}
-                                >
-                                  Get directions
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex gap-3">
-                            <Link
-                              className="w-full"
-                              href={`/join/worker?churchId=${selectedChurch.id}`}
-                            >
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="hidden sm:flex"
-                              >
-                                <UsersIcon className="text-primary h-8 w-8" />{" "}
-                                Join as Worker
-                              </Button>
-                            </Link>
-                            <Link
-                              className="w-full"
-                              href={`/join/member?churchId=${selectedChurch.id}`}
-                            >
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="hidden sm:flex"
-                              >
-                                <UserCheck className="text-primary h-8 w-8" />{" "}
-                                Join as member
-                              </Button>
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ) : null;
-                })()}
-            </div>
             <Carousel
               opts={getCarouselOptions(filteredChurches.length)}
               className="w-full"
