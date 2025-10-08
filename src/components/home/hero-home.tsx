@@ -207,7 +207,7 @@ const HeroHome = () => {
             </div>
             <p className="text-muted-foreground mb-4">
               <RocketIcon className="mr-2 inline h-5 w-5" />
-              Please join us as one of the IRM Ministry.
+              Please join us as one of the IRM Ministries.
             </p>
             {/* Ministry Information */}
             <div className="border-border/50 grid grid-cols-3 gap-8 border-t pt-8">
