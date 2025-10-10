@@ -1,0 +1,1 @@
+ALTER TABLE "members" ADD COLUMN "tiktok_link" text;
