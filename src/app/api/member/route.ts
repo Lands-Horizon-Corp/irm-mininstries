@@ -146,6 +146,7 @@ export async function POST(request: NextRequest) {
         facebookLink: validatedData.facebookLink,
         xLink: validatedData.xLink,
         instagramLink: validatedData.instagramLink,
+        tiktokLink: validatedData.tiktokLink,
         notes: validatedData.notes,
       })
       .returning();

@@ -263,11 +263,11 @@ export default function ContactForm({
               <div className="font-noto-sansmb-3">
                 <p className="text-base font-semibold">Ministry Location</p>
                 <p className="text-muted-foreground text-sm font-light">
-                  International Revival Ministries
+                  351 Tandang Sora Avenue Pasong Tamo 1107,
                   <br />
-                  Serving communities worldwide
+                  Quezon City,
                   <br />
-                  Contact us for local services
+                  Philippines
                 </p>
               </div>
             </div>

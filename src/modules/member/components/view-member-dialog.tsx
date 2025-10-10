@@ -406,7 +406,10 @@ export function ViewMemberDialog({
             )}
 
             {/* Social Media Links */}
-            {(member.facebookLink || member.xLink || member.instagramLink) && (
+            {(member.facebookLink ||
+              member.xLink ||
+              member.instagramLink ||
+              member.tiktokLink) && (
               <Card>
                 <CardHeader className="pb-4">
                   <CardTitle className="text-lg">Social Media Links</CardTitle>
@@ -474,6 +477,28 @@ export function ViewMemberDialog({
                             target="_blank"
                           >
                             {member.instagramLink}
+                          </a>
+                        </p>
+                      </div>
+                    )}
+
+                    {member.tiktokLink && (
+                      <div className="md:col-span-2">
+                        <label className="text-muted-foreground text-sm font-medium">
+                          Instagram
+                        </label>
+                        <p className="mt-1">
+                          <a
+                            className="text-blue-600 hover:underline"
+                            href={
+                              member.tiktokLink.startsWith("http")
+                                ? member.tiktokLink
+                                : `https://tiktok.com/${member.tiktokLink}`
+                            }
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            {member.tiktokLink}
                           </a>
                         </p>
                       </div>

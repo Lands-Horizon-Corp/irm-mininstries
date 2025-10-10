@@ -77,6 +77,7 @@ const memberFormSchema = z.object({
   homeAddress: z.string().optional().nullable(),
   facebookLink: z.string().optional().nullable(),
   xLink: z.string().optional().nullable(),
+  tiktokLink: z.string().optional().nullable(),
   instagramLink: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
   privacyConsent: z.boolean().refine((val) => val === true, {
@@ -136,6 +137,7 @@ export default function MemberForm({
       homeAddress: null,
       facebookLink: null,
       xLink: null,
+      tiktokLink: null,
       instagramLink: null,
       notes: null,
       privacyConsent: false,
@@ -168,6 +170,7 @@ export default function MemberForm({
         homeAddress: member.homeAddress || null,
         facebookLink: member.facebookLink || null,
         xLink: member.xLink || null,
+        tiktokLink: member.tiktokLink || null,
         instagramLink: member.instagramLink || null,
         notes: member.notes || null,
         privacyConsent: true, // In edit mode, assume consent was already given
@@ -229,6 +232,7 @@ export default function MemberForm({
             homeAddress: null,
             facebookLink: null,
             xLink: null,
+            tiktokLink: null,
             instagramLink: null,
             notes: null,
             privacyConsent: false,
@@ -788,6 +792,26 @@ export default function MemberForm({
                   <FormField
                     control={form.control}
                     name="xLink"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium sm:text-base">
+                          X (Twitter)
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            className="h-10 text-sm sm:h-11 sm:text-base"
+                            placeholder="X URL or username"
+                            value={field.value || ""}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="tiktokLink"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium sm:text-base">

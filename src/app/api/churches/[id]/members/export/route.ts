@@ -65,6 +65,7 @@ export async function GET(
         homeAddress: members.homeAddress,
         facebookLink: members.facebookLink,
         xLink: members.xLink,
+        tiktokLink: members.tiktokLink,
         instagramLink: members.instagramLink,
         notes: members.notes,
         createdAt: members.createdAt,
@@ -101,6 +102,7 @@ export async function GET(
         homeAddress: truncateText(member.homeAddress || "", 500),
         facebookLink: truncateText(member.facebookLink || ""),
         xLink: truncateText(member.xLink || ""),
+        tiktokLink: truncateText(member.tiktokLink || ""),
         instagramLink: truncateText(member.instagramLink || ""),
         notes: truncateText(member.notes || "", 1000),
         registrationDate: member.createdAt
@@ -139,6 +141,7 @@ export async function GET(
       { header: "Home Address", key: "homeAddress", width: 40 },
       { header: "Facebook Link", key: "facebookLink", width: 25 },
       { header: "X Link", key: "xLink", width: 25 },
+      { header: "TikTok Link", key: "tiktokLink", width: 25 },
       { header: "Instagram Link", key: "instagramLink", width: 25 },
       { header: "Notes", key: "notes", width: 50 },
       { header: "Registration Date", key: "registrationDate", width: 18 },

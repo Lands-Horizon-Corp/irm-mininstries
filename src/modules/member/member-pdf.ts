@@ -35,6 +35,7 @@ interface MemberPDFData {
   // Social Media Links
   facebookLink?: string | null;
   xLink?: string | null;
+  tiktokLink?: string | null;
   instagramLink?: string | null;
 
   // Additional Information
@@ -372,7 +373,8 @@ export async function generateMemberPDF(
     if (
       memberData.facebookLink ||
       memberData.xLink ||
-      memberData.instagramLink
+      memberData.instagramLink ||
+      memberData.tiktokLink
     ) {
       addSectionHeader("SOCIAL MEDIA LINKS");
 
@@ -391,7 +393,18 @@ export async function generateMemberPDF(
         false,
         socialStartY
       );
-      maxHeight = Math.max(maxHeight, facebookFieldHeight, xFieldHeight);
+      const tikTokFieldHeight = addField(
+        "TikTok",
+        memberData.tiktokLink,
+        false,
+        socialStartY
+      );
+      maxHeight = Math.max(
+        maxHeight,
+        facebookFieldHeight,
+        xFieldHeight,
+        tikTokFieldHeight
+      );
 
       const instagramY = socialStartY + maxHeight + 0.5;
       const instagramFieldHeight = addField(

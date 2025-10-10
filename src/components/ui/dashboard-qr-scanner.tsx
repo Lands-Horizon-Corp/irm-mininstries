@@ -415,6 +415,7 @@ export function DashboardQRScanner({
           homeAddress: null,
           facebookLink: null,
           xLink: null,
+          tiktokLink: null,
           instagramLink: null,
           notes: null,
           createdAt: member.createdAt,

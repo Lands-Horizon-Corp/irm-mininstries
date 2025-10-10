@@ -194,6 +194,7 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
         homeAddress: member.homeAddress,
         facebookLink: member.facebookLink,
         xLink: member.xLink,
+        tiktokLink: member.tiktokLink,
         instagramLink: member.instagramLink,
         notes: member.notes,
         createdAt: member.createdAt,
