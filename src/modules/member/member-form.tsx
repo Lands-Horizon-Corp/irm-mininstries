@@ -815,7 +815,7 @@ export default function MemberForm({
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium sm:text-base">
-                          X (Twitter)
+                          Tiktok
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -834,7 +834,7 @@ export default function MemberForm({
                     control={form.control}
                     name="instagramLink"
                     render={({ field }) => (
-                      <FormItem className="md:col-span-2">
+                      <FormItem className="md:col-span-1">
                         <FormLabel className="text-sm font-medium sm:text-base">
                           Instagram
                         </FormLabel>
