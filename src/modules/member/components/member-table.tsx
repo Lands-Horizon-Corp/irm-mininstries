@@ -127,6 +127,7 @@ const MemberActions = ({ member }: MemberActionsProps) => {
         homeAddress: null,
         facebookLink: null,
         xLink: null,
+        tiktokLink: null,
         instagramLink: null,
         notes: null,
         createdAt: member.createdAt,

@@ -46,6 +46,7 @@ export const memberSchema = z.object({
   facebookLink: z.string().optional().nullable(),
   xLink: z.string().optional().nullable(),
   instagramLink: z.string().optional().nullable(),
+  tiktokLink: z.string().optional().nullable(),
 
   // Additional Information
   notes: z.string().optional().nullable(),

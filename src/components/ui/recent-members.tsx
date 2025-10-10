@@ -110,6 +110,7 @@ const MemberActions = ({ member, onRefresh }: MemberActionsProps) => {
         homeAddress: null, // Not available in recent members data
         facebookLink: null, // Not available in recent members data
         xLink: null, // Not available in recent members data
+        tiktokLink: null, // Not available in recent members data
         instagramLink: null, // Not available in recent members data
         notes: null, // Not available in recent members data
         createdAt: new Date(member.createdAt),

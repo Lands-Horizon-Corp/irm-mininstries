@@ -37,6 +37,7 @@ export const members = pgTable("members", {
   facebookLink: text("facebook_link"), // Can be URL or username
   xLink: text("x_link"), // Can be URL or username
   instagramLink: text("instagram_link"), // Can be URL or username
+  tiktokLink: text("tiktok_link"), // Can be URL or username
 
   // Additional Information
   notes: text("notes"),
