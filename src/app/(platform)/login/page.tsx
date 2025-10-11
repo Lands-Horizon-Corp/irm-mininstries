@@ -137,7 +137,7 @@ export default function LoginPage() {
                             {...field}
                             className="bg-background border-input pl-10"
                             disabled={isLoading}
-                            placeholder="admin@irmministries.org"
+                            placeholder="admin@irm-ministries.org"
                             type="email"
                           />
                         </div>

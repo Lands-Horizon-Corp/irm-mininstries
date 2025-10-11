@@ -95,7 +95,7 @@ export default function PrivacyPolicy() {
             <p className="mb-8 text-current/50">
               You have the right to access, correct, delete, or restrict your
               personal data. You may also opt out of ministry communications at
-              any time. Contact us at admin@irmministries.org for any
+              any time. Contact us at admin@irm-ministries.org for any
               data-related requests or privacy concerns.
             </p>
             <Separator className="my-8" />
@@ -133,7 +133,7 @@ export default function PrivacyPolicy() {
             </h3>
             <p className="mb-8 text-current/50">
               For questions about this Privacy Policy or to exercise your
-              privacy rights, please contact us at admin@irmministries.org or
+              privacy rights, please contact us at admin@irm-ministries.org or
               through our website contact form. Our ministry leadership is
               committed to addressing your privacy concerns promptly and
               transparently.
