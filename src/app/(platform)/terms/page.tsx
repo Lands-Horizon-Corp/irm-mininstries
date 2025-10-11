@@ -119,7 +119,7 @@ export default function TermsAndConditions() {
             </h3>
             <p className="mb-8 text-current/50">
               For questions, concerns, or support needs, please contact us at
-              admin@irmministries.org or through our website contact form. Our
+              admin@irm-ministries.org or through our website contact form. Our
               ministry leaders are available to provide guidance and assistance.
             </p>
             <Separator className="my-8" />
