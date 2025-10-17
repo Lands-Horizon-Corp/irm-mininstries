@@ -14,6 +14,7 @@ import {
   Eye,
   FileSpreadsheet,
   Filter,
+  Link as LinkIcon,
   Mail,
   MapPin,
   MoreHorizontal,
@@ -509,6 +510,22 @@ export default function ChurchTable() {
                     {church.email}
                   </p>
                 </div>
+
+                {/* Website Link */}
+                {church.link && (
+                  <div className="flex items-center gap-2">
+                    <LinkIcon className="text-muted-foreground h-4 w-4 shrink-0" />
+                    <a
+                      className="text-primary hover:text-primary/80 truncate text-sm transition-colors hover:underline"
+                      href={church.link}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      title={church.link}
+                    >
+                      {church.link.replace(/^https?:\/\//, "")}
+                    </a>
+                  </div>
+                )}
 
                 {/* Stats */}
                 <div className="border-border border-t pt-2">

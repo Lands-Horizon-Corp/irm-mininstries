@@ -60,6 +60,7 @@ export default function ChurchForm({
       address: initialData?.address || "",
       email: initialData?.email || "",
       description: initialData?.description || "",
+      link: initialData?.link || "",
     },
     resolver: zodResolver(churchSchema),
   });
@@ -163,6 +164,27 @@ export default function ChurchForm({
             )}
           />
         </div>
+
+        <FormField
+          control={form.control}
+          name="link"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-sm md:text-base">
+                Church Website/Link
+              </FormLabel>
+              <FormControl>
+                <Input
+                  className="bg-background"
+                  placeholder="https://example-church.com"
+                  type="url"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
