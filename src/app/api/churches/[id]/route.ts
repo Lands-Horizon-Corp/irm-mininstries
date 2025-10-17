@@ -120,6 +120,7 @@ export async function PUT(
         longitude: validatedData.longitude,
         updatedAt: new Date(),
         name: validatedData.name,
+        link: validatedData.link,
       })
       .where(eq(churches.id, id))
       .returning();

@@ -14,6 +14,7 @@ import {
   Edit,
   ExternalLink,
   FileSpreadsheet,
+  Link as LinkIcon,
   Mail,
   MapPin,
   Navigation,
@@ -443,6 +444,24 @@ export default function ChurchViewPage({ churchId }: ChurchViewPageProps) {
                     {church.email}
                   </p>
                 </div>
+
+                {church.link && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <LinkIcon className="text-muted-foreground h-4 w-4" />
+                      <span className="font-medium">Website</span>
+                    </div>
+                    <a
+                      className="text-primary hover:text-primary/80 text-sm transition-colors hover:underline"
+                      href={church.link}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      title={church.link}
+                    >
+                      {church.link}
+                    </a>
+                  </div>
+                )}
               </div>
 
               {church.latitude && church.longitude && (

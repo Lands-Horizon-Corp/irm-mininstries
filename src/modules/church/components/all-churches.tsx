@@ -11,6 +11,7 @@ import {
   Building2,
   UsersIcon,
   UserCheck,
+  ExternalLink,
 } from "lucide-react";
 
 import { ImageViewer } from "@/components/ui/image-viewer";
@@ -56,6 +57,13 @@ function ChurchCard({ church, onSelect, isSelected }: ChurchCardProps) {
     } else if (church.address) {
       const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(church.address)}`;
       window.open(url, "_blank");
+    }
+  };
+
+  const handleWebsiteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (church.link) {
+      window.open(church.link, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -118,17 +126,34 @@ function ChurchCard({ church, onSelect, isSelected }: ChurchCardProps) {
               </div>
             )}
 
-            {(church.address || (church.latitude && church.longitude)) && (
-              <Button
-                size="sm"
-                variant="outline"
-                className="h-8 min-h-[32px] w-full text-xs transition-transform active:scale-95"
-                onClick={handleDirections}
-              >
-                <Navigation className="mr-1 h-2.5 w-2.5" />
-                Directions
-              </Button>
-            )}
+            {/* Action Buttons */}
+            <div className="flex gap-1">
+              {(church.address || (church.latitude && church.longitude)) && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className={`h-8 min-h-[32px] text-xs transition-transform active:scale-95 ${
+                    church.link ? "flex-1" : "w-full"
+                  }`}
+                  onClick={handleDirections}
+                >
+                  <Navigation className="mr-1 h-2.5 w-2.5" />
+                  Directions
+                </Button>
+              )}
+
+              {church.link && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-8 min-h-[32px] w-8 p-0 transition-transform active:scale-95"
+                  onClick={handleWebsiteClick}
+                  title="Visit website"
+                >
+                  <ExternalLink className="h-2.5 w-2.5" />
+                </Button>
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>

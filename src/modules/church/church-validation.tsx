@@ -43,6 +43,12 @@ export const churchSchema = z.object({
     .max(1000, "Description too long")
     .optional()
     .or(z.literal("")),
+  link: z
+    .string()
+    .url("Please enter a valid URL")
+    .max(255, "Link is too long")
+    .optional()
+    .or(z.literal("")),
 });
 
 export const updateChurchSchema = churchSchema.partial();
@@ -68,6 +74,7 @@ export interface Church {
   address?: string | null;
   email?: string | null;
   description?: string | null;
+  link?: string | null;
   createdAt: Date;
   updatedAt: Date;
 }

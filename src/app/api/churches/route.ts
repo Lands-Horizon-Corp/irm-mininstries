@@ -30,7 +30,8 @@ export async function GET(request: NextRequest) {
           ilike(churches.address, `%${search}%`),
           ilike(churches.name, `%${search}%`),
           ilike(churches.email, `%${search}%`),
-          ilike(churches.description, `%${search}%`)
+          ilike(churches.description, `%${search}%`),
+          ilike(churches.link, `%${search}%`)
         )
       : undefined;
 
@@ -132,6 +133,7 @@ export async function POST(request: NextRequest) {
         latitude: validatedData.latitude,
         longitude: validatedData.longitude,
         name: validatedData.name,
+        link: validatedData.link,
       })
       .returning();
 
