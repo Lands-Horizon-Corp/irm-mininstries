@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { asc, count, desc, ilike, or } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, or } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "@/db/drizzle";
@@ -20,24 +20,38 @@ export async function GET(request: NextRequest) {
       Math.max(1, parseInt(searchParams.get("limit") || "10"))
     );
     const search = searchParams.get("search");
+    const isActiveParam = searchParams.get("isActive");
+    const isActive = isActiveParam ? isActiveParam === "true" : undefined;
     const sortBy = searchParams.get("sortBy") || "createdAt";
     const sortOrder = searchParams.get("sortOrder") || "desc";
 
     const offset = (page - 1) * limit;
 
-    // Build where clause for search
-    let whereClause;
+    // Build where clause for search and filters
+    const whereConditions = [];
+
+    // Add search condition
     if (search) {
-      whereClause = or(
-        ilike(members.firstName, `%${search}%`),
-        ilike(members.lastName, `%${search}%`),
-        ilike(members.middleName, `%${search}%`),
-        ilike(members.mobileNumber, `%${search}%`),
-        ilike(members.email, `%${search}%`),
-        ilike(members.occupation, `%${search}%`),
-        ilike(members.ministryInvolvement, `%${search}%`)
+      whereConditions.push(
+        or(
+          ilike(members.firstName, `%${search}%`),
+          ilike(members.lastName, `%${search}%`),
+          ilike(members.middleName, `%${search}%`),
+          ilike(members.mobileNumber, `%${search}%`),
+          ilike(members.email, `%${search}%`),
+          ilike(members.occupation, `%${search}%`),
+          ilike(members.ministryInvolvement, `%${search}%`)
+        )
       );
     }
+
+    // Add isActive filter
+    if (isActive !== undefined) {
+      whereConditions.push(eq(members.isActive, isActive));
+    }
+
+    const whereClause =
+      whereConditions.length > 0 ? and(...whereConditions) : undefined;
 
     // Build order clause
     const orderClause =
@@ -74,6 +88,7 @@ export async function GET(request: NextRequest) {
         ministryInvolvement: members.ministryInvolvement,
         occupation: members.occupation,
         profilePicture: members.profilePicture,
+        isActive: members.isActive,
         createdAt: members.createdAt,
         updatedAt: members.updatedAt,
       })
@@ -148,6 +163,7 @@ export async function POST(request: NextRequest) {
         instagramLink: validatedData.instagramLink,
         tiktokLink: validatedData.tiktokLink,
         notes: validatedData.notes,
+        isActive: validatedData.isActive,
       })
       .returning();
 

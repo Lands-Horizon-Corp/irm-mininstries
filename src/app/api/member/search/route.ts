@@ -60,6 +60,7 @@ export async function GET(request: NextRequest) {
         mobileNumber: members.mobileNumber,
         gender: members.gender,
         yearJoined: members.yearJoined,
+        isActive: members.isActive,
       })
       .from(members)
       .leftJoin(churches, eq(members.churchId, churches.id))

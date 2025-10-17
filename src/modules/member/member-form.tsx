@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Resolver } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,47 +43,7 @@ import { MemberSuccessDialog } from "./components/member-success-dialog";
 import { generateMemberPDF } from "./member-pdf";
 import { useCreateMember, useMember, useUpdateMember } from "./member-service";
 import { toast } from "sonner";
-
-// Create a form-specific schema that properly handles form input types
-const memberFormSchema = z.object({
-  churchId: z.number().int().min(1, "Please select a church"),
-  profilePicture: z.string().optional().nullable(),
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  middleName: z.string().optional().nullable(),
-  gender: z.enum(["male", "female"]),
-  birthdate: z.string().min(1, "Birthdate is required"),
-  yearJoined: z
-    .number()
-    .int()
-    .min(1900, "Invalid year")
-    .max(new Date().getFullYear(), "Year cannot be in the future"),
-  ministryInvolvement: z.string().optional().nullable(),
-  occupation: z.string().optional().nullable(),
-  educationalAttainment: z.string().optional().nullable(),
-  school: z.string().optional().nullable(),
-  degree: z.string().optional().nullable(),
-  mobileNumber: z.string().optional().nullable(),
-  email: z
-    .string()
-    .optional()
-    .nullable()
-    .refine(
-      (val) => !val || val === "" || z.string().email().safeParse(val).success,
-      {
-        message: "Invalid email format",
-      }
-    ),
-  homeAddress: z.string().optional().nullable(),
-  facebookLink: z.string().optional().nullable(),
-  xLink: z.string().optional().nullable(),
-  tiktokLink: z.string().optional().nullable(),
-  instagramLink: z.string().optional().nullable(),
-  notes: z.string().optional().nullable(),
-  privacyConsent: z.boolean().refine((val) => val === true, {
-    message: "You must accept the privacy declaration to proceed",
-  }),
-});
+import { memberSchema } from "./member-validation";
 
 interface MemberFormProps {
   onClose?: () => void;
@@ -113,11 +73,14 @@ export default function MemberForm({
   // State for success dialog
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [createdMemberId, setCreatedMemberId] = useState<number | null>(null);
+  const [isConsented, setConsented] = useState(false);
 
   const isEditMode = !!memberId;
 
-  const form = useForm<z.infer<typeof memberFormSchema>>({
-    resolver: zodResolver(memberFormSchema),
+  const form = useForm<z.infer<typeof memberSchema>>({
+    resolver: zodResolver(memberSchema) as unknown as Resolver<
+      z.infer<typeof memberSchema>
+    >,
     defaultValues: {
       churchId: churchIdFromUrl || 0,
       profilePicture: null,
@@ -140,7 +103,7 @@ export default function MemberForm({
       tiktokLink: null,
       instagramLink: null,
       notes: null,
-      privacyConsent: false,
+      isActive: true,
     },
     mode: "onChange",
   });
@@ -173,7 +136,7 @@ export default function MemberForm({
         tiktokLink: member.tiktokLink || null,
         instagramLink: member.instagramLink || null,
         notes: member.notes || null,
-        privacyConsent: true, // In edit mode, assume consent was already given
+        isActive: member.isActive ?? true,
       });
     }
   }, [isEditMode, member, isMemberLoading, form]);
@@ -187,11 +150,10 @@ export default function MemberForm({
     ) {
       form.setValue("churchId", churchIdFromUrl);
     }
-  }, [churchIdFromUrl, form, isEditMode]);
-
-  const onSubmit = async (values: z.infer<typeof memberFormSchema>) => {
+  });
+  const onSubmit = async (values: z.infer<typeof memberSchema>) => {
     // Remove privacyConsent from the data before sending to API
-    const { privacyConsent: _privacyConsent, ...memberData } = values;
+    const { ...memberData } = values;
 
     if (isEditMode && memberId) {
       // Update existing member
@@ -235,8 +197,11 @@ export default function MemberForm({
             tiktokLink: null,
             instagramLink: null,
             notes: null,
-            privacyConsent: false,
+            isActive: true,
           });
+
+          // Reset consent state
+          setConsented(false);
 
           if (isDialog && onClose) {
             onClose();
@@ -275,7 +240,7 @@ export default function MemberForm({
       }
 
       // Remove privacyConsent from form values before PDF generation
-      const { privacyConsent: _privacyConsent, ...pdfData } = formValues;
+      const { ...pdfData } = formValues;
 
       await generateMemberPDF({
         ...pdfData,
@@ -884,6 +849,31 @@ export default function MemberForm({
                     </FormItem>
                   )}
                 />
+
+                <FormField
+                  control={form.control}
+                  name="isActive"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-y-0 space-x-3">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel className="cursor-pointer text-sm font-medium sm:text-base">
+                          Active Member
+                        </FormLabel>
+                        <p className="text-muted-foreground text-xs sm:text-sm">
+                          Check this box if the member is currently active in
+                          the church
+                        </p>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
               </CardContent>
             </Card>
 
@@ -915,29 +905,25 @@ export default function MemberForm({
                     </div>
                   </div>
 
-                  <FormField
-                    control={form.control}
-                    name="privacyConsent"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-start space-y-0 space-x-3">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <div className="space-y-1 leading-none">
-                          <FormLabel className="cursor-pointer text-sm font-medium sm:text-base">
-                            I accept the declaration above and consent to the
-                            processing of my personal data for ministry
-                            registration purposes.
-                            <span className="text-destructive ml-1">*</span>
-                          </FormLabel>
-                          <FormMessage />
-                        </div>
-                      </FormItem>
-                    )}
-                  />
+                  <div className="flex flex-row items-start space-y-0 space-x-3">
+                    <Checkbox
+                      checked={isConsented}
+                      onCheckedChange={(checked) =>
+                        setConsented(checked === true)
+                      }
+                    />
+                    <div className="space-y-1 leading-none">
+                      <label
+                        className="cursor-pointer text-sm font-medium sm:text-base"
+                        onClick={() => setConsented(!isConsented)}
+                      >
+                        I accept the declaration above and consent to the
+                        processing of my personal data for ministry registration
+                        purposes.
+                        <span className="text-destructive ml-1">*</span>
+                      </label>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             )}
@@ -962,7 +948,11 @@ export default function MemberForm({
                 </Button>
               </div>
               <Button
-                disabled={createMember.isPending || updateMember.isPending}
+                disabled={
+                  createMember.isPending ||
+                  updateMember.isPending ||
+                  (!isEditMode && !isConsented)
+                }
                 type="submit"
               >
                 {isEditMode
