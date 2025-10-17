@@ -14,6 +14,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
 
     // Extract query parameters
+    const all = searchParams.get("all") === "true";
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const limit = Math.min(
       100,
@@ -22,8 +23,6 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get("search")?.trim() || "";
     const sortBy = searchParams.get("sortBy") || "createdAt";
     const sortOrder = searchParams.get("sortOrder") || "desc";
-
-    const offset = (page - 1) * limit;
 
     // Build where clause for search
     const whereClause = search
@@ -46,6 +45,24 @@ export async function GET(request: NextRequest) {
             churches[sortBy as keyof typeof churches._.columns] ||
               churches.createdAt
           );
+
+    // If requesting all churches without pagination
+    if (all) {
+      const results = await db
+        .select()
+        .from(churches)
+        .where(whereClause)
+        .orderBy(orderClause);
+
+      return NextResponse.json({
+        success: true,
+        data: results,
+        message: `Found ${results.length} churches`,
+      });
+    }
+
+    // Otherwise, use pagination
+    const offset = (page - 1) * limit;
 
     // Get total count for pagination
     const [totalResult] = await db

@@ -1,0 +1,4394 @@
+[
+  {
+    "name": "IRM Ministries – Tigbinan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tigbinan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Baay Labo",
+    "imageUrl": "https://directory.irmministries.org/media/2022/11/Baay-mission-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Baay Labo",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pinagbirayang Munti",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Pinagbirayang Munti",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Calaburnay",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Calaburnay",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Lorenzo",
+    "imageUrl": "https://directory.irmministries.org/media/2022/11/san-lorenzo-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "San Lorenzo",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Daet",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Daet",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Calaguas",
+    "imageUrl": "https://directory.irmministries.org/media/2022/11/Calaguas-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Calaguas",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sula",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sula",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Goa",
+    "imageUrl": "https://directory.irmministries.org/media/2022/11/goa-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Goa",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Naga",
+    "imageUrl": "https://directory.irmministries.org/media/2022/11/Naga-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Naga",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Dalupaon",
+    "imageUrl": "https://directory.irmministries.org/media/2022/11/Dalupaon-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Dalupaon",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Vicente, Camarines Sur",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Vicente, Camarines Sur",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pag-Oring",
+    "imageUrl": "https://directory.irmministries.org/media/2022/11/Pag-Oring-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Pag-Oring",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Mangga",
+    "imageUrl": "https://directory.irmministries.org/media/2022/11/Mangga-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Mangga",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Calagbangan, Sipocot",
+    "imageUrl": "https://directory.irmministries.org/media/2022/11/Calagbangan-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Calagbangan, Sipocot",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Libmanan",
+    "imageUrl": "https://directory.irmministries.org/media/2022/11/Libmanan-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Libmanan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bahao",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bahao",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Lourdes, Camarines Sur",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Lourdes, Camarines Sur",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Tara, Sipocot",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tara, Sipocot",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sinuknipan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sinuknipan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Catabangan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Catabangan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – F. Simeon, Ragay",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "F. Simeon, Ragay",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Cabugao",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Cabugao",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Tagbak",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tagbak",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sapang Bato",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sapang Bato",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bagong Sikat",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bagong Sikat",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Caima",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Caima",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Colacling",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Colacling",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Aslum",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/tabon-tabon-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Aslum",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Meycauayan",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Meycauayan-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Meycauayan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – California (Grace Alone Christian Ministries)",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/california-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "California (Grace Alone Christian Ministries)",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Singapore (Global Harvesters FGC)",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/singapore-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Singapore (Global Harvesters FGC)",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Anilao",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Anilao-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Anilao",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Nalwak",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/nalwak-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Nalwak",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pantol",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Pantol-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Pantol",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Buenavista, Tarlac",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Buenavista-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Buenavista, Tarlac",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Francisco, Isabela",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/San-Francisco-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "San Francisco, Isabela",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Mambabanga",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Mambabanga-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Mambabanga",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Villaflor",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Villaflor-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Villaflor",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sto. Tomas",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Sto.-Tomas-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Sto. Tomas",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Rosario",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Rosario-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Rosario",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Balaoan",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Balaoan-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Balaoan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Nag uma",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Nag-uma-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Nag uma",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Toran",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Toran-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Toran",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Aparri",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Aparri-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Aparri",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Dipaculao",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/dipaculao-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Dipaculao",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Barcenaga",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Barcenaga-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Barcenaga",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – BB1, Bongabong",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/bb1-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "BB1, Bongabong",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pinamalayan",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Pinamalayan-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Pinamalayan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Villaroces",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Villaroces-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Villaroces",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Poblacion 3, Victoria",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Victoria-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Poblacion 3, Victoria",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Socorro",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Socorro-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Socorro",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Cawayan",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Cawayan-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Cawayan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Adrialuna",
+    "imageUrl": "https://directory.irmministries.org/media/2022/10/Adrialuna-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Adrialuna",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Yabutan",
+    "imageUrl": "https://directory.irmministries.org/media/2022/09/Yabutan-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Yabutan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Balon, Mariveles",
+    "imageUrl": "https://directory.irmministries.org/media/2022/09/Marivelez-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Balon, Mariveles",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Balibago",
+    "imageUrl": "https://directory.irmministries.org/media/2022/09/BALIBAGO-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Balibago",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pulo",
+    "imageUrl": "https://directory.irmministries.org/media/2022/09/pulo-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Pulo",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pulong Mabilog Mission",
+    "imageUrl": "https://directory.irmministries.org/media/2022/09/pulong-mabilog-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Pulong Mabilog Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Cambaog",
+    "imageUrl": "https://directory.irmministries.org/media/2022/09/cambaog-900-1.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Cambaog",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Juan, Isabela",
+    "imageUrl": "https://directory.irmministries.org/media/2022/09/San-Juan-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "San Juan, Isabela",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Liwanag",
+    "imageUrl": "https://directory.irmministries.org/media/2022/09/liwanag-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Liwanag",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Cataguing",
+    "imageUrl": "https://directory.irmministries.org/media/2022/09/Cataguing-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Cataguing",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Allinguigan 1st",
+    "imageUrl": "https://directory.irmministries.org/media/2022/09/Allinguigan-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Allinguigan 1st",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Baculud",
+    "imageUrl": "https://directory.irmministries.org/media/2022/09/Baculud-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Baculud",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Virac",
+    "imageUrl": "https://directory.irmministries.org/media/2022/09/Virac-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Virac",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Andres",
+    "imageUrl": "https://directory.irmministries.org/media/2022/09/san-andres-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "San Andres",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bote, Bato",
+    "imageUrl": "https://directory.irmministries.org/media/2022/09/bote-900.png",
+    "longitude": null,
+    "latitude": null,
+    "address": "Bote, Bato",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Batalay",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Batalay",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Crispin",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Crispin",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Salacot, San Miguel",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Salacot, San Miguel",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Core Shelter",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Core Shelter",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Tidang Village",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tidang Village",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Santa Rosa",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Santa Rosa",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pingkian",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Pingkian",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – NVat",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "NVat",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Mabullog",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Mabullog",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Labni",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Labni",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Buyasyas",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Buyasyas",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Baliling",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Baliling",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Tulay na Lupa",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tulay na Lupa",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Isidro, Nueva Ecija",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Isidro, Nueva Ecija",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Caballero, Palayan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Caballero, Palayan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Butas na Bato",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Butas na Bato",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Furagui, Solana",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Furagui, Solana",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Nonong",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Nonong",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Isidro, Aurora",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Isidro, Aurora",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Baler",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Baler",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Payao",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Payao",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Enrique",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Enrique",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Isidro Ponteverda",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Isidro Ponteverda",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Nicolas",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Nicolas",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Washington",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Washington",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Dalakit, Catarman",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Dalakit, Catarman",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Melody",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Melody",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pao",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Pao",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Tugatog",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tugatog",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Alion",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Alion",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Lucena City",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Lucena City",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – General Luna",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "General Luna",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – New Born",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "New Born",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Payapa, Lemery",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Payapa, Lemery",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Prenza, Batangas",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Prenza, Batangas",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Lumaniag",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Lumaniag",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Calaca",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Calaca",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Lambique",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Lambique",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bonga Mayor",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bonga Mayor",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Christ’s Lane Fellowship",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Christ’s Lane Fellowship",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Kaliwanagan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Kaliwanagan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Porais",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Porais",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Malaganit",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Malaganit",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Tinajeros",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tinajeros",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Taguig",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Taguig",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Santo Cristo, Gapan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Santo Cristo, Gapan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Ricardo",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Ricardo",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Saysayin",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Saysayin",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Balanga",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Balanga",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Apollo",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Apollo",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Culis",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Culis",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Mabatang",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Mabatang",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Calaguiman",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Calaguiman",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Mambog",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Mambog",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Dinalupihan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Dinalupihan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Longos Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Longos Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Kalangkang",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Kalangkang",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sta. Cruz Bayan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sta. Cruz Bayan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Dolores",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Dolores",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Botilao",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Botilao",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Balanacan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Balanacan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Mapalad",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Mapalad",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Cuyapo",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Cuyapo",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Cumabol",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Cumabol",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Llanera",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Llanera",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pinagpanaan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Pinagpanaan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sto. Rosario",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sto. Rosario",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Tondo",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tondo",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Parañaque",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Parañaque",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pasay",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Pasay",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Mandaluyong",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Mandaluyong",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Punta",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Punta",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Kaunlaran",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Kaunlaran",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Karuhatan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Karuhatan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Casalat",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Casalat",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Alagao",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Alagao",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Gazelle",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Gazelle",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Juan, Tarlac",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Juan, Tarlac",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Villapaz",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Villapaz",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Rafael, Tarlac",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Rafael, Tarlac",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sapang Tagalog",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sapang Tagalog",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Adonai Christian Fellowship",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Adonai Christian Fellowship",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Meysulao",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Meysulao",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Hangga",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Hangga",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sitio Alagao",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sitio Alagao",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Towerville",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Towerville",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Tungko",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tungko",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Roque, Bulacan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Roque, Bulacan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Carissa",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Carissa",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Skyline",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Skyline",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Gumaoc",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Gumaoc",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Mateo, Bulacan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Mateo, Bulacan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Matictic",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Matictic",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Minuyan San Jose",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Minuyan San Jose",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bacao Palayan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bacao Palayan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Laur",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Laur",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Francisco",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Francisco",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Cabanatuan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Cabanatuan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Cubao",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Cubao",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Awakening",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Awakening",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – ECF",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "ECF",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Llano",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Llano",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Ugong",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Ugong",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Bartolome",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Bartolome",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Project 8",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Project 8",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – New Jerusalem",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "New Jerusalem",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Novaliches Bayan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Novaliches Bayan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Mapulang Lupa",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Mapulang Lupa",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Interville",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Interville",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – General T. De Leon",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "General T. De Leon",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Deparo",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Deparo",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Daang Nawasa",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Daang Nawasa",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Cavalry, Tungko",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Cavalry, Tungko",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bagong Silang Phase 10",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bagong Silang Phase 10",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bagong Silang Phase 8",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bagong Silang Phase 8",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bagong Silang Phase 3",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bagong Silang Phase 3",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Batobalani",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Batobalani",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Tabaco City",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tabaco City",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Calayucay, Sto. Domingo",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Calayucay, Sto. Domingo",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sorsogon City",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sorsogon City",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Vicente, Daraga",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Vicente, Daraga",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Ramon, Daraga",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Ramon, Daraga",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Malilipot",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Malilipot",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bascaran, Daraga",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bascaran, Daraga",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Anislag, Daraga",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Anislag, Daraga",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Reserva",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Reserva",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Urbiztondo",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Urbiztondo",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Malasiqui",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Malasiqui",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Calasiao",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Calasiao",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Basista",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Basista",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bonoan, Dagupan City",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bonoan, Dagupan City",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Diteki",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Diteki",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Hacienda, Aurora",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Hacienda, Aurora",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Maria Aurora",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Maria Aurora",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Zone 2",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Zone 2",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Banga",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Banga",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Parang",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Parang",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Vinzons",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Vinzons",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Iberica",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Iberica",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Boac",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Boac",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Buenavista, Marinduque",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Buenavista, Marinduque",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Balogo",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Balogo",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Gasan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Gasan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Ipil",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Ipil",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Mogpog",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Mogpog",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Tibagan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tibagan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sta. Cruz, Bulacan District 4",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sta. Cruz, Bulacan District 4",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Panducot",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Panducot",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Ligas",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Ligas",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Northville",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Northville",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bagong Barrio Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bagong Barrio Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Gatbuca",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Gatbuca",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Liciada",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Liciada",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Dubai",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Dubai",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Gabaldon",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Gabaldon",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Guanko",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Guanko",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Madapdap Phase 1",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Madapdap Phase 1",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Madapdap Phase 3",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Madapdap Phase 3",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Curva, Bongabon",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Curva, Bongabon",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Gulod",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Gulod",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Cupang",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Cupang",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Kalibo",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Kalibo",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Canlubang",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Canlubang",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – DRT",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "DRT",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Donsol",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Donsol",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Tanza",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tanza",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Atimonan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Atimonan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Guimba",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Guimba",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sarmiento",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sarmiento",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Crisville",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Crisville",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Area H",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Area H",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Area E",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Area E",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Balatong",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Balatong",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Citrus",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Citrus",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bulac",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bulac",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Area F",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Area F",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – South Korea",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "South Korea",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Germany",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Germany",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sydney, Australia",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sydney, Australia",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Thailand",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Thailand",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Abu Dhabi",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Abu Dhabi",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Ajman",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Ajman",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Ras Al Khaiman",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Ras Al Khaiman",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sharjah",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sharjah",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Doha Qatar",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Doha Qatar",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Awakening",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Awakening",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Global",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Global",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Guam",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Guam",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Yukon, Whitehorse",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Yukon, Whitehorse",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Lloydminster",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Lloydminster",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Leduc",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Leduc",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Edmonton",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Edmonton",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Calgary",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Calgary",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Winnipeg",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Winnipeg",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Steinbach",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Steinbach",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Toronto",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Toronto",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Scarborough",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Scarborough",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Thornhill",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Thornhill",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Venestahan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Venestahan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Calbayog",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Calbayog",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Romblon Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Romblon Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Poblacion Zone 2, Atimonan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Poblacion Zone 2, Atimonan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Lucban",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Lucban",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Tayabas City",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tayabas City",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sitio Subok Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sitio Subok Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Urdaneta",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Urdaneta",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Martin",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Martin",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pawican, Masbate",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Pawican, Masbate",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Quinlogan, Palawan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Quinlogan, Palawan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Narra, Palawan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Narra, Palawan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Quezon, Palawan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Quezon, Palawan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bayombong Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bayombong Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Narvacan Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Narvacan Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Nampicuan Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Nampicuan Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Culaylay",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Culaylay",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Aliaga Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Aliaga Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Himamaylan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Himamaylan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Cabadiagan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Cabadiagan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Tuburan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tuburan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Camarin",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Camarin",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Las Piñas",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Las Piñas",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Valenzuela",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Valenzuela",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Macamot Binangonan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Macamot Binangonan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Calumpang Binangonan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Calumpang Binangonan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Mabuhay",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Mabuhay",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Mamburao",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Mamburao",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Burgos Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Burgos Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sumu-sumo, Tago",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sumu-sumo, Tago",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Surigao City",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Surigao City",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bukidnon",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bukidnon",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Salakit",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Salakit",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Nomoh",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Nomoh",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Iligan City",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Iligan City",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Napnapon",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Napnapon",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Lumasal",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Lumasal",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Labangal",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Labangal",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Patahan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Patahan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Lankiwa Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Lankiwa Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pulong Sta Cruz",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Pulong Sta Cruz",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Allinguigan 3rd",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Allinguigan 3rd",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Fugaru",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Fugaru",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Irisan, Baguio",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Irisan, Baguio",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Carlos Heights",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Carlos Heights",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Pablo, Masbate",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Pablo, Masbate",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Rosario",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Rosario",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Lynville",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Lynville",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Antonio, Camarines Sur",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Antonio, Camarines Sur",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Labao",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Labao",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Banga Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Banga Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries –  Buenasuerte Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Buenasuerte Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries –  San Jose Talisay",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Jose Talisay",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries –  San Vicente Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Vicente Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries –  Sagip Guinacutan Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sagip Guinacutan Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries –  Caawigan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Caawigan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries –  Baliwag Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Baliwag Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries –  Siling Bata",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Siling Bata",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries –  Bubulong Munti Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bubulong Munti Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries –  San Marcos",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Marcos",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bulacan Meadows",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bulacan Meadows",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Matictic",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Matictic",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Balagtas",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Balagtas",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bitungol",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bitungol",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Cabcaben",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Cabcaben",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Alas Asin",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Alas Asin",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sumalo Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sumalo Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sanja, Aparri West",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sanja, Aparri West",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sto. Niño",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sto. Niño",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Legaspi City Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Legaspi City Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Miguel",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Miguel",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Lilo-An Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Lilo-An Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Tingtingon",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tingtingon",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Cabungalungan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Cabungalungan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Burdios, Quezon",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Burdios, Quezon",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Juan, Nueva Ecija",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Juan, Nueva Ecija",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Palusapis",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Palusapis",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Talugtog",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Talugtog",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Malibay Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Malibay Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Monumento",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Monumento",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Cupang, Antipolo",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Cupang, Antipolo",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Malibas, Masbate",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Malibas, Masbate",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pawican, Masbate",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Pawican, Masbate",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Lapulapu, Cebu",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Lapulapu, Cebu",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Vigan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Vigan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bagacay Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bagacay Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bagong Silang Phase 7",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bagong Silang Phase 7",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Graceville",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Graceville",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Norzagaray Heights",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Norzagaray Heights",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – NHV",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "NHV",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – La Poblacion",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "La Poblacion",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Hacienda, Zambales",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Hacienda, Zambales",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Castillejos",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Castillejos",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Antonio",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Antonio",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Buen",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Buen",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Rosaban",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Rosaban",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bucao",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bucao",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sta. Cruz, Zambales",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sta. Cruz, Zambales",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sta. Maria",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sta. Maria",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Gumaca",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Gumaca",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bodega",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bodega",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pandacaqui",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Pandacaqui",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sta. Lucia",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sta. Lucia",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Iyapit",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Iyapit",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Matawe",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Matawe",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries –  Camajuan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Camajuan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Manacsac",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Manacsac",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Baluga",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Baluga",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Perez, Meycauayan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Perez, Meycauayan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Morong Rizal",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Morong Rizal",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Village East",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Village East",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Commonwealth",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Commonwealth",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pasong Tamo",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Pasong Tamo",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Taytay",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Taytay",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Lungsod Silangan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Lungsod Silangan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Montalban",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Montalban",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Calumpang, Marikina",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Calumpang, Marikina",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Janoza, Talim Island",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Janoza, Talim Island",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bagong Silangan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bagong Silangan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Ampid",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Ampid",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Malanday",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Malanday",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Champaca",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Champaca",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pililia",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Pililia",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Cainta, Sumulong",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Cainta, Sumulong",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Mateo, NCR 1",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Mateo, NCR 1",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Cainta Junction",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Cainta Junction",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Tañong",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tañong",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Chorillo",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Chorillo",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Miguel, Mindoro Oriental",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Miguel, Mindoro Oriental",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Mina De Oro",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Mina De Oro",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Isidro, Mindoro Oriental",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Isidro, Mindoro Oriental",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bansud",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bansud",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Zigzag",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Zigzag",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Mapaya",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Mapaya",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Camburay",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Camburay",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Paluan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Paluan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Tina, San Miguel",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tina, San Miguel",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Gamut, Tago",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Gamut, Tago",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Upper Kitagas",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Upper Kitagas",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Soli Blucon",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Soli Blucon",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Lumoyon",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Lumoyon",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Poblacion",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Poblacion",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Tagnocon",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tagnocon",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Manat",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Manat",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Kao Nabunturan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Kao Nabunturan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Torrijos",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Torrijos",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Lipa, Sta. Cruz",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Lipa, Sta. Cruz",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Rafael, Laguna",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Rafael, Laguna",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Botocan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Botocan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pagsanjan, Laguna",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Pagsanjan, Laguna",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Lumban",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Lumban",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Lumot",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Lumot",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Layasin",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Layasin",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Luisiana",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Luisiana",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Pablo Bayan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Pablo Bayan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Santa Rosa Bayan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Santa Rosa Bayan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Linlingay",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Linlingay",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Manuel",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Manuel",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Padre Burgos",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Padre Burgos",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sto. Domingo",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sto. Domingo",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Badoc",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Badoc",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sunshineville",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sunshineville",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Carmen, Silang",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Carmen, Silang",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Silang",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Silang",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Wellington",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Wellington",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Naic",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Naic",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Dasmariñas",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Dasmariñas",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Trece",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Trece",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Imus",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Imus",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sibacungan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sibacungan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Roque, Catanduanes",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Roque, Catanduanes",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Guinobatan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Guinobatan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Boracay",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Boracay",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Altavas  Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Altavas  Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Lawaan Mission",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Lawaan Mission",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Jugas",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Jugas",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Banga, Aklan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Banga, Aklan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Balete",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Balete",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Kinalangay",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Kinalangay",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bacacay Proper",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bacacay Proper",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Panoypoy, Camalig",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Panoypoy, Camalig",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Daraga Town Proper",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Daraga Town Proper",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Galicia, Rapu-Rapu",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Galicia, Rapu-Rapu",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Tiwi",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Tiwi",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Simbahan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Simbahan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Gugo",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Gugo",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Limay",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Limay",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Batangas II",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Batangas II",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Cabog-Cabog",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Cabog-Cabog",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pantalan Luma",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Pantalan Luma",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Ilat, San Pascual",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Ilat, San Pascual",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bauan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bauan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Matingain, Lemery",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Matingain, Lemery",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Quilitisan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Quilitisan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Northomes",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Northomes",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sampol",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sampol",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Jose Proper",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Jose Proper",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Malolos (Love of Jesus)",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Malolos (Love of Jesus)",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Road 2",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Road 2",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Minuyan, Norzagaray",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Minuyan, Norzagaray",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Fresh Air",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Fresh Air",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Minuyan 5",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Minuyan 5",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Licao-Licao",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Licao-Licao",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Km. 37",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Km. 37",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Ville",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Ville",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sta. Rosa",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sta. Rosa",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Prenza",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Prenza",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Muzon",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Muzon",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – San Vicente, Bulacan District 3",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "San Vicente, Bulacan District 3",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bright Homes",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bright Homes",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Rock of Ages (M. Sapa)",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Rock of Ages (M. Sapa)",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – God is Love",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "God is Love",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Dulong Bayan",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Dulong Bayan",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Patag",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Patag",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Cathedral, Guyong",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Cathedral, Guyong",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Balasing",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Balasing",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Garden",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Garden",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Sta. Lucia, Bulacan District 3",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Sta. Lucia, Bulacan District 3",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Pulong Yantok",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Pulong Yantok",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Norzagaray, Bulacan District 3",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Norzagaray, Bulacan District 3",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Siling Matanda",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Siling Matanda",
+    "email": null,
+    "description": null
+  },
+  {
+    "name": "IRM Ministries – Bunsuran",
+    "imageUrl": null,
+    "longitude": null,
+    "latitude": null,
+    "address": "Bunsuran",
+    "email": null,
+    "description": null
+  }
+]
