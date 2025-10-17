@@ -15,6 +15,7 @@ export const churchesSeedData: NewChurch[] = churchesJsonData
     address: church.address || undefined,
     email: church.email || undefined,
     description: church.description || undefined,
+    link: church.link || undefined,
   }));
 
 // Statistics about the imported data (488 churches total from scraper)

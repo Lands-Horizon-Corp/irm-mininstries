@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail, MapPin } from "lucide-react";
+import { Building2Icon, BuildingIcon, Mail, MapPin } from "lucide-react";
 import type z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -251,6 +251,10 @@ export default function ContactForm({
                 <p className="text-base font-semibold">E-Mail</p>
                 <p className="text-muted-foreground text-sm font-light">
                   admin@irm-ministries.org
+                </p>
+                <p className="text-muted-foreground text-sm font-light">
+                  <strong> IRM Office : </strong>
+                  <span className="text-white">irm_ec@yahoo.com</span>
                 </p>
               </div>
             </div>
