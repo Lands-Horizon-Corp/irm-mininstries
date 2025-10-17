@@ -31,6 +31,7 @@ interface GetMembersParams {
   page?: number;
   limit?: number;
   search?: string;
+  isActive?: boolean;
   sortBy?: string;
   sortOrder?: "asc" | "desc";
 }
@@ -49,6 +50,7 @@ interface MemberSummary {
   ministryInvolvement: string | null;
   occupation: string | null;
   profilePicture: string | null;
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -64,6 +66,8 @@ const getMembers = async (
   if (params.page) searchParams.set("page", params.page.toString());
   if (params.limit) searchParams.set("limit", params.limit.toString());
   if (params.search) searchParams.set("search", params.search);
+  if (params.isActive !== undefined)
+    searchParams.set("isActive", params.isActive.toString());
   if (params.sortBy) searchParams.set("sortBy", params.sortBy);
   if (params.sortOrder) searchParams.set("sortOrder", params.sortOrder);
 

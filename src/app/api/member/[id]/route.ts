@@ -124,7 +124,9 @@ export async function PUT(
         facebookLink: validatedData.facebookLink,
         xLink: validatedData.xLink,
         instagramLink: validatedData.instagramLink,
+        tiktokLink: validatedData.tiktokLink,
         notes: validatedData.notes,
+        isActive: validatedData.isActive,
         updatedAt: new Date(),
       })
       .where(eq(members.id, id))

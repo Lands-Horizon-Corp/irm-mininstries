@@ -1,4 +1,11 @@
-import { date, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  date,
+  integer,
+  pgTable,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
 
 import { churches } from "../church/church-schema";
 
@@ -23,7 +30,7 @@ export const members = pgTable("members", {
   ministryInvolvement: text("ministry_involvement"), // Description
   occupation: text("occupation"),
 
-  // Educational Information
+  // Educational Informationca
   educationalAttainment: text("educational_attainment"), // Highest level achieved
   school: text("school"),
   degree: text("degree"),
@@ -41,6 +48,9 @@ export const members = pgTable("members", {
 
   // Additional Information
   notes: text("notes"),
+
+  // Status
+  isActive: boolean("is_active").default(true).notNull(),
 
   // Timestamps
   createdAt: timestamp("created_at").defaultNow().notNull(),

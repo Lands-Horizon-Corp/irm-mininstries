@@ -81,6 +81,7 @@ interface Member {
   ministryInvolvement: string | null;
   occupation: string | null;
   profilePicture: string | null;
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -365,6 +366,24 @@ const columns: ColumnDef<Member>[] = [
     },
   },
   {
+    accessorKey: "isActive",
+    header: "Status",
+    cell: ({ row }) => {
+      const isActive = row.getValue("isActive") as boolean;
+      return (
+        <Badge
+          className={
+            isActive
+              ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
+              : "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100"
+          }
+        >
+          {isActive ? "Active" : "Inactive"}
+        </Badge>
+      );
+    },
+  },
+  {
     accessorKey: "yearJoined",
     header: "Year Joined",
     cell: ({ row }) => {
@@ -411,6 +430,9 @@ export default function MemberTable() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [searchQuery, setSearchQuery] = useState("");
+  const [isActiveFilter, setIsActiveFilter] = useState<boolean | undefined>(
+    undefined
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const [isExporting, setIsExporting] = useState(false);
 
@@ -423,6 +445,7 @@ export default function MemberTable() {
     page: currentPage,
     limit: 10,
     search: searchQuery || undefined,
+    isActive: isActiveFilter,
     sortBy: sorting[0]?.id,
     sortOrder: sorting[0]?.desc ? "desc" : "asc",
   });
@@ -447,6 +470,11 @@ export default function MemberTable() {
   const handleSearch = (value: string) => {
     setSearchQuery(value);
     setCurrentPage(1); // Reset to first page when searching
+  };
+
+  const handleActiveFilter = (value: boolean | undefined) => {
+    setIsActiveFilter(value);
+    setCurrentPage(1); // Reset to first page when filtering
   };
 
   const handleExportToExcel = async () => {
@@ -526,6 +554,30 @@ export default function MemberTable() {
             onChange={(e) => handleSearch(e.target.value)}
           />
         </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">
+              Status:{" "}
+              {isActiveFilter === undefined
+                ? "All"
+                : isActiveFilter
+                  ? "Active"
+                  : "Inactive"}
+              <ChevronDown className="ml-2 h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => handleActiveFilter(undefined)}>
+              {isActiveFilter === undefined ? "✓ " : ""}All Members
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleActiveFilter(true)}>
+              {isActiveFilter === true ? "✓ " : ""}Active Only
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleActiveFilter(false)}>
+              {isActiveFilter === false ? "✓ " : ""}Inactive Only
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline">
