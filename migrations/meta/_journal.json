@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1756364983995,
-      "tag": "0000_huge_marvel_apes",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1760077260851,
-      "tag": "0001_fearless_ikaris",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1760688261192,
-      "tag": "0002_polite_mach_iv",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1760692243076,
-      "tag": "0003_daffy_landau",
+      "when": 1763016893150,
+      "tag": "0000_omniscient_mulholland_black",
       "breakpoints": true
     }
   ]

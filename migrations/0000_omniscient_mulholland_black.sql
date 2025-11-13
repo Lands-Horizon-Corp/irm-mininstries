@@ -7,6 +7,7 @@ CREATE TABLE "churches" (
 	"address" text,
 	"email" text,
 	"description" text,
+	"link" varchar(255),
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "churches_name_unique" UNIQUE("name")
@@ -45,7 +46,9 @@ CREATE TABLE "members" (
 	"facebook_link" text,
 	"x_link" text,
 	"instagram_link" text,
+	"tiktok_link" text,
 	"notes" text,
+	"is_active" boolean DEFAULT true NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
