@@ -55,7 +55,7 @@ interface MemberPDFData {
 export async function generateMemberPDF(
   memberData: MemberPDFData
 ): Promise<void> {
-  const doc = new jsPDF();
+  const pdf = new jsPDF("p", "mm", "a4");
 
   // Helper function to format organization for display
   const formatOrganization = (org: string | null | undefined): string => {
