@@ -18,10 +18,31 @@ export const memberSchema = z.object({
     .int()
     .min(1900, { message: "Invalid year" })
     .max(new Date().getFullYear(), { message: "Year cannot be in the future" }),
+  maritalStatus: z
+    .enum(["single", "married", "separated", "widowed"])
+    .default("single"),
 
   // Ministry & Work Information
   ministryInvolvement: z.string().optional().nullable(),
   occupation: z.string().optional().nullable(),
+  organization: z
+    .enum([
+      "children",
+      "ywap-teens",
+      "ywap-young-people",
+      "ywap-young-adult",
+      "young-married",
+      "single-adult",
+      "kalkab-male",
+      "kalkab-female",
+    ])
+    .optional()
+    .nullable()
+    .or(z.string().optional().nullable()), // Allow custom string for backwards compatibility
+
+  // Life Group Information
+  isLifegroupLeader: z.boolean().default(false),
+  lifegroupLeaderId: z.number().int().optional().nullable(),
 
   // Educational Information
   educationalAttainment: z.string().optional().nullable(),

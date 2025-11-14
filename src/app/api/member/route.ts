@@ -40,6 +40,7 @@ export async function GET(request: NextRequest) {
           ilike(members.mobileNumber, `%${search}%`),
           ilike(members.email, `%${search}%`),
           ilike(members.occupation, `%${search}%`),
+          ilike(members.organization, `%${search}%`),
           ilike(members.ministryInvolvement, `%${search}%`)
         )
       );
@@ -150,8 +151,12 @@ export async function POST(request: NextRequest) {
         gender: validatedData.gender,
         birthdate: validatedData.birthdate,
         yearJoined: validatedData.yearJoined,
+        maritalStatus: validatedData.maritalStatus,
         ministryInvolvement: validatedData.ministryInvolvement,
         occupation: validatedData.occupation,
+        organization: validatedData.organization,
+        isLifegroupLeader: validatedData.isLifegroupLeader,
+        lifegroupLeaderId: validatedData.lifegroupLeaderId,
         educationalAttainment: validatedData.educationalAttainment,
         school: validatedData.school,
         degree: validatedData.degree,

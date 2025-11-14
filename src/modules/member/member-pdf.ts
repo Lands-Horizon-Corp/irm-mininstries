@@ -17,10 +17,16 @@ interface MemberPDFData {
   gender: "male" | "female";
   birthdate?: string | null;
   yearJoined: number;
+  maritalStatus?: "single" | "married" | "separated" | "widowed" | null;
 
   // Ministry & Work Information
   ministryInvolvement?: string | null;
   occupation?: string | null;
+  organization?: string | null;
+
+  // Life Group Information
+  isLifegroupLeader?: boolean | null;
+  lifegroupLeaderId?: number | null;
 
   // Educational Information
   educationalAttainment?: string | null;
@@ -49,7 +55,25 @@ interface MemberPDFData {
 export async function generateMemberPDF(
   memberData: MemberPDFData
 ): Promise<void> {
-  const pdf = new jsPDF("p", "mm", "a4");
+  const doc = new jsPDF();
+
+  // Helper function to format organization for display
+  const formatOrganization = (org: string | null | undefined): string => {
+    if (!org) return "Not specified";
+    
+    const organizationLabels: { [key: string]: string } = {
+      "children": "Children (12yrs below)",
+      "ywap-teens": "YWAP Teens (13yrs - 17yrs)", 
+      "ywap-young-people": "YWAP Young People (18yrs - 23yrs)",
+      "ywap-young-adult": "YWAP Young Adult (24yrs - 39yrs)",
+      "young-married": "Young Married (40 years below married)",
+      "single-adult": "Single Adult (40 above with no spouse)",
+      "kalkab-male": "Kalkab - Kalalakihan (Married Men 41 Above)",
+      "kalkab-female": "Kalkab - Kababaihan (Married Women 41 Above)"
+    };
+    
+    return organizationLabels[org] || org;
+  };
   let yPosition = 20;
   const pageHeight = pdf.internal.pageSize.height;
   const pageWidth = pdf.internal.pageSize.width;
@@ -342,6 +366,16 @@ export async function generateMemberPDF(
     );
     maxHeight += Math.max(dobFieldHeight, yearJoinedFieldHeight) + 0.5;
 
+    // Add marital status
+    const maritalStatusY = dobY + maxHeight + 0.5;
+    const maritalStatusFieldHeight = addField(
+      "Marital Status",
+      memberData.maritalStatus ? memberData.maritalStatus.charAt(0).toUpperCase() + memberData.maritalStatus.slice(1) : "Single",
+      true,
+      maritalStatusY
+    );
+    maxHeight += maritalStatusFieldHeight + 0.5;
+
     yPosition = personalStartY + maxHeight + 3;
 
     // Contact Information Section
@@ -419,14 +453,25 @@ export async function generateMemberPDF(
     }
 
     // Work & Ministry Information Section
-    if (memberData.occupation || memberData.ministryInvolvement) {
+    if (memberData.occupation || memberData.ministryInvolvement || memberData.organization || memberData.isLifegroupLeader || memberData.lifegroupLeaderId) {
       addSectionHeader("WORK & MINISTRY INFORMATION");
 
       // Occupation
       addFullWidthField("Occupation", memberData.occupation);
 
+      // Organization
+      addFullWidthField("Organization", formatOrganization(memberData.organization));
+
       // Ministry Involvement
       addFullWidthField("Ministry Involvement", memberData.ministryInvolvement);
+
+      // Life Group Leadership
+      addFullWidthField("Life Group Leader", memberData.isLifegroupLeader ? "Yes" : "No");
+
+      // Life Group Leader ID (if they have one)
+      if (memberData.lifegroupLeaderId) {
+        addFullWidthField("Life Group Leader ID", memberData.lifegroupLeaderId.toString());
+      }
     }
 
     // Educational Information Section

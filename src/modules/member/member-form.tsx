@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useId } from "react";
 import { useForm, Resolver } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-import { CalendarIcon, Download } from "lucide-react";
+import { format, differenceInYears } from "date-fns";
+import { CalendarIcon, Download, ChevronDown } from "lucide-react";
 import { z } from "zod";
 
+import { Badge } from "@/components/ui/badge";
 import { Base64ImageUpload } from "@/components/ui/base64-image-upload";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -16,6 +17,22 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ChurchSelect } from "@/components/ui/church-select";
 import { EducationalAttainmentSelect } from "@/components/ui/educational-attainment-select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -25,6 +42,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
@@ -41,7 +59,13 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { MemberSuccessDialog } from "./components/member-success-dialog";
 import { generateMemberPDF } from "./member-pdf";
-import { useCreateMember, useMember, useUpdateMember } from "./member-service";
+import {
+  useCreateMember,
+  useMember,
+  useUpdateMember,
+  useMemberSearch,
+  useMemberById,
+} from "./member-service";
 import { toast } from "sonner";
 import { memberSchema } from "./member-validation";
 
@@ -60,6 +84,7 @@ export default function MemberForm({
   const searchParams = useSearchParams();
   const createMember = useCreateMember();
   const updateMember = useUpdateMember();
+  const id = useId();
 
   // Get church ID from URL parameters
   const urlChurchId = searchParams.get("churchId");
@@ -75,7 +100,94 @@ export default function MemberForm({
   const [createdMemberId, setCreatedMemberId] = useState<number | null>(null);
   const [isConsented, setConsented] = useState(false);
 
+  // State for member search
+  const [leaderSearchTerm, setLeaderSearchTerm] = useState("");
+  const [showLeaderSearch, setShowLeaderSearch] = useState(false);
+
+  // State for confirmation modal
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [formDataToSubmit, setFormDataToSubmit] = useState<z.infer<
+    typeof memberSchema
+  > | null>(null);
+
   const isEditMode = !!memberId;
+
+  // Function to calculate age from birthdate
+  const calculateAge = (birthdate: string): number => {
+    if (!birthdate) return 0;
+    return differenceInYears(new Date(), new Date(birthdate));
+  };
+
+  // Function to determine appropriate organization based on age and marital status
+  const getOrganizationOptions = (age: number, maritalStatus: string) => {
+    // All available organization options
+    const allOptions = [
+      {
+        value: "children",
+        label: "Children",
+        description: "12yrs below",
+        isDefault: age <= 12 && maritalStatus === "single",
+      },
+      {
+        value: "ywap-teens",
+        label: "YWAP Teens",
+        description: "13yrs - 17yrs",
+        isDefault: age >= 13 && age <= 17 && maritalStatus === "single",
+      },
+      {
+        value: "ywap-young-people",
+        label: "YWAP Young People",
+        description: "18yrs - 23yrs",
+        isDefault: age >= 18 && age <= 23 && maritalStatus === "single",
+      },
+      {
+        value: "ywap-young-adult",
+        label: "YWAP Young Adult",
+        description: "24yrs - 39yrs",
+        isDefault: age >= 24 && age <= 39 && maritalStatus === "single",
+      },
+      {
+        value: "single-adult",
+        label: "Single Adult",
+        description: "40 above with no spouse",
+        isDefault: age >= 40 && maritalStatus === "single",
+      },
+      {
+        value: "young-married",
+        label: "Young Married",
+        description: "40 years below married",
+        isDefault:
+          age < 40 &&
+          (maritalStatus === "married" ||
+            maritalStatus === "separated" ||
+            maritalStatus === "widowed"),
+      },
+      {
+        value: "kalkab-male",
+        label: "Kalkab - Kalalakihan",
+        description: "Married Men 41 Above",
+        isDefault:
+          age >= 41 &&
+          (maritalStatus === "married" ||
+            maritalStatus === "separated" ||
+            maritalStatus === "widowed"),
+      },
+      {
+        value: "kalkab-female",
+        label: "Kalkab - Kababaihan",
+        description: "Married Women 41 Above",
+        isDefault: false, // Never auto-selected, user needs to choose between male/female
+      },
+      {
+        value: "general-member",
+        label: "General Member",
+        description: "No specific organization",
+        isDefault: false,
+      },
+    ];
+
+    return allOptions;
+  };
 
   const form = useForm<z.infer<typeof memberSchema>>({
     resolver: zodResolver(memberSchema) as unknown as Resolver<
@@ -90,8 +202,12 @@ export default function MemberForm({
       gender: "male",
       birthdate: "",
       yearJoined: new Date().getFullYear(),
+      maritalStatus: "single",
       ministryInvolvement: null,
       occupation: null,
+      organization: null,
+      isLifegroupLeader: false,
+      lifegroupLeaderId: null,
       educationalAttainment: null,
       school: null,
       degree: null,
@@ -108,6 +224,22 @@ export default function MemberForm({
     mode: "onChange",
   });
 
+  // Watch for changes in birthdate and marital status to auto-select organization
+  const watchedBirthdate = form.watch("birthdate");
+  const watchedMaritalStatus = form.watch("maritalStatus");
+
+  // Member search for life group leader selection
+  const { data: memberSearchResults } = useMemberSearch(
+    leaderSearchTerm,
+    showLeaderSearch
+  );
+
+  // Get selected member details
+  const watchedLifegroupLeaderId = form.watch("lifegroupLeaderId");
+  const { data: selectedMemberData } = useMemberById(
+    watchedLifegroupLeaderId || null
+  );
+
   // Update form when member data is loaded
   const member = memberData?.data;
 
@@ -123,8 +255,12 @@ export default function MemberForm({
         gender: member.gender || "male",
         birthdate: member.birthdate || "",
         yearJoined: member.yearJoined || new Date().getFullYear(),
+        maritalStatus: member.maritalStatus || "single",
         ministryInvolvement: member.ministryInvolvement || null,
         occupation: member.occupation || null,
+        organization: member.organization || null,
+        isLifegroupLeader: member.isLifegroupLeader || false,
+        lifegroupLeaderId: member.lifegroupLeaderId || null,
         educationalAttainment: member.educationalAttainment || null,
         school: member.school || null,
         degree: member.degree || null,
@@ -151,9 +287,39 @@ export default function MemberForm({
       form.setValue("churchId", churchIdFromUrl);
     }
   });
+
+  // Auto-select organization based on age and marital status changes
+  useEffect(() => {
+    if (watchedBirthdate && watchedMaritalStatus && !isEditMode) {
+      const age = calculateAge(watchedBirthdate);
+      const options = getOrganizationOptions(age, watchedMaritalStatus);
+      const defaultOption = options.find((opt) => opt.isDefault);
+
+      if (defaultOption) {
+        form.setValue("organization", defaultOption.value);
+      }
+    }
+  }, [
+    watchedBirthdate,
+    watchedMaritalStatus,
+    form,
+    isEditMode,
+    calculateAge,
+    getOrganizationOptions,
+  ]);
+
   const onSubmit = async (values: z.infer<typeof memberSchema>) => {
+    // Store form data and show confirmation dialog
+    setFormDataToSubmit(values);
+    setShowConfirmation(true);
+  };
+
+  const handleConfirmSubmit = async () => {
+    if (!formDataToSubmit) return;
+
     // Remove privacyConsent from the data before sending to API
-    const { ...memberData } = values;
+    const { ...memberData } = formDataToSubmit;
+    setShowConfirmation(false);
 
     if (isEditMode && memberId) {
       // Update existing member
@@ -167,6 +333,10 @@ export default function MemberForm({
               setCreatedMemberId(memberId);
               setShowSuccessDialog(true);
             }
+            setFormDataToSubmit(null);
+          },
+          onError: () => {
+            setFormDataToSubmit(null);
           },
         }
       );
@@ -184,8 +354,12 @@ export default function MemberForm({
             gender: "male",
             birthdate: "",
             yearJoined: new Date().getFullYear(),
+            maritalStatus: "single",
             ministryInvolvement: null,
             occupation: null,
+            organization: null,
+            isLifegroupLeader: false,
+            lifegroupLeaderId: null,
             educationalAttainment: null,
             school: null,
             degree: null,
@@ -209,6 +383,10 @@ export default function MemberForm({
             setCreatedMemberId(result?.data?.id || null);
             setShowSuccessDialog(true);
           }
+          setFormDataToSubmit(null);
+        },
+        onError: () => {
+          setFormDataToSubmit(null);
         },
       });
     }
@@ -508,6 +686,38 @@ export default function MemberForm({
                       </FormItem>
                     )}
                   />
+
+                  <FormField
+                    control={form.control}
+                    name="maritalStatus"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium sm:text-base">
+                          Marital Status
+                          <span className="text-destructive ml-1">*</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Select
+                            value={field.value || "single"}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger className="h-10 text-sm sm:h-11 sm:text-base">
+                              <SelectValue placeholder="Select marital status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="single">Single</SelectItem>
+                              <SelectItem value="married">Married</SelectItem>
+                              <SelectItem value="separated">
+                                Separated
+                              </SelectItem>
+                              <SelectItem value="widowed">Widowed</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -565,6 +775,260 @@ export default function MemberForm({
                       </FormItem>
                     )}
                   />
+
+                  <FormField
+                    control={form.control}
+                    name="organization"
+                    render={({ field }) => {
+                      const currentAge = watchedBirthdate
+                        ? calculateAge(watchedBirthdate)
+                        : 0;
+                      const organizationOptions = getOrganizationOptions(
+                        currentAge,
+                        watchedMaritalStatus || "single"
+                      );
+
+                      if (organizationOptions.length === 0) {
+                        return (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium sm:text-base">
+                              Organization
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                className="h-10 text-sm sm:h-11 sm:text-base"
+                                placeholder="Enter your organization"
+                                value={field.value || ""}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        );
+                      }
+
+                      return (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium sm:text-base">
+                            Organization
+                          </FormLabel>
+                          <FormControl>
+                            <RadioGroup
+                              className="w-full gap-0 -space-y-px rounded-md shadow-xs"
+                              value={field.value || ""}
+                              onValueChange={field.onChange}
+                            >
+                              {organizationOptions.map((option) => (
+                                <div
+                                  key={`${id}-${option.value}`}
+                                  className="border-input has-data-[state=checked]:border-primary/50 has-data-[state=checked]:bg-accent relative flex flex-col gap-4 border p-4 outline-none first:rounded-t-md last:rounded-b-md has-data-[state=checked]:z-10"
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                      <RadioGroupItem
+                                        id={`${id}-${option.value}`}
+                                        value={option.value}
+                                        className="after:absolute after:inset-0"
+                                        aria-label={`organization-radio-${option.value}`}
+                                        aria-describedby={`${id}-${option.value}-description`}
+                                      />
+                                      <Label
+                                        className="inline-flex items-center gap-2"
+                                        htmlFor={`${id}-${option.value}`}
+                                      >
+                                        {option.label}
+                                        {option.isDefault && (
+                                          <Badge className="px-1.5 py-px text-xs">
+                                            Recommended
+                                          </Badge>
+                                        )}
+                                      </Label>
+                                    </div>
+                                    <div
+                                      id={`${id}-${option.value}-description`}
+                                      className="text-muted-foreground text-xs leading-[inherit]"
+                                    >
+                                      {option.description}
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </RadioGroup>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      );
+                    }}
+                  />
+
+                  <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="isLifegroupLeader"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-y-0 space-x-3">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="cursor-pointer text-sm font-medium sm:text-base">
+                              Are you a Life Group Leader?
+                            </FormLabel>
+                            <p className="text-muted-foreground text-xs sm:text-sm">
+                              Check this box if you are currently serving as a
+                              life group leader
+                            </p>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="lifegroupLeaderId"
+                      render={({ field }) => {
+                        // Get selected member from either search results or separate fetch
+                        const selectedMember =
+                          memberSearchResults?.data?.find(
+                            (member) => member.id === field.value
+                          ) || selectedMemberData?.data;
+
+                        return (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium sm:text-base">
+                              Life Group Leader (if you have one)
+                            </FormLabel>
+                            <FormControl>
+                              <Popover
+                                open={showLeaderSearch}
+                                onOpenChange={setShowLeaderSearch}
+                              >
+                                <PopoverTrigger asChild>
+                                  <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    aria-expanded={showLeaderSearch}
+                                    className="h-10 w-full justify-between text-sm sm:h-11 sm:text-base"
+                                  >
+                                    <div className="flex flex-1 items-center gap-2 text-left">
+                                      {selectedMember ? (
+                                        <>
+                                          {selectedMember.profilePicture ? (
+                                            <img
+                                              src={
+                                                selectedMember.profilePicture
+                                              }
+                                              alt={`${selectedMember.firstName} ${selectedMember.lastName}`}
+                                              className="h-6 w-6 rounded-full object-cover"
+                                            />
+                                          ) : (
+                                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-300 text-xs font-medium">
+                                              {selectedMember.firstName[0]}
+                                              {selectedMember.lastName[0]}
+                                            </div>
+                                          )}
+                                          <span className="truncate">
+                                            {selectedMember.firstName}{" "}
+                                            {selectedMember.lastName}
+                                          </span>
+                                        </>
+                                      ) : (
+                                        <span className="text-muted-foreground">
+                                          Search for a leader...
+                                        </span>
+                                      )}
+                                    </div>
+                                    <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                  </Button>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                  className="w-full p-0"
+                                  align="start"
+                                >
+                                  <Command>
+                                    <CommandInput
+                                      placeholder="Search members..."
+                                      value={leaderSearchTerm}
+                                      onValueChange={setLeaderSearchTerm}
+                                    />
+                                    <CommandEmpty>
+                                      {leaderSearchTerm.length > 0
+                                        ? "No members found."
+                                        : "Type to search members..."}
+                                    </CommandEmpty>
+                                    <CommandGroup className="max-h-64 overflow-auto">
+                                      {memberSearchResults?.data?.map(
+                                        (member) => (
+                                          <CommandItem
+                                            key={member.id}
+                                            value={`${member.firstName} ${member.lastName}`}
+                                            onSelect={() => {
+                                              field.onChange(member.id);
+                                              setShowLeaderSearch(false);
+                                              setLeaderSearchTerm("");
+                                            }}
+                                            className="flex items-center gap-2 p-2"
+                                          >
+                                            {member.profilePicture ? (
+                                              <img
+                                                src={member.profilePicture}
+                                                alt={`${member.firstName} ${member.lastName}`}
+                                                className="h-8 w-8 rounded-full object-cover"
+                                              />
+                                            ) : (
+                                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300 text-xs font-medium">
+                                                {member.firstName[0]}
+                                                {member.lastName[0]}
+                                              </div>
+                                            )}
+                                            <div className="flex w-full items-center justify-between">
+                                              <span>
+                                                {member.firstName}{" "}
+                                                {member.lastName}
+                                              </span>
+                                              <span className="text-muted-foreground text-xs">
+                                                ID: {member.id}
+                                              </span>
+                                            </div>
+                                          </CommandItem>
+                                        )
+                                      )}
+                                    </CommandGroup>
+                                  </Command>
+                                </PopoverContent>
+                              </Popover>
+                            </FormControl>
+                            {selectedMember && (
+                              <div className="text-muted-foreground flex items-center justify-between text-xs">
+                                <span>
+                                  Selected: {selectedMember.firstName}{" "}
+                                  {selectedMember.lastName} (ID:{" "}
+                                  {selectedMember.id})
+                                </span>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-auto p-1 text-xs"
+                                  onClick={() => {
+                                    field.onChange(null);
+                                    setLeaderSearchTerm("");
+                                  }}
+                                >
+                                  Clear
+                                </Button>
+                              </div>
+                            )}
+                            <FormMessage />
+                          </FormItem>
+                        );
+                      }}
+                    />
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -967,6 +1431,84 @@ export default function MemberForm({
           </form>
         </Form>
       )}
+
+      {/* Confirmation Dialog */}
+      <Dialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>
+              {isEditMode
+                ? "Confirm Member Update"
+                : "Confirm Member Registration"}
+            </DialogTitle>
+            <DialogDescription>
+              Are you sure about the data you have inputted? Please review all
+              information before confirming.
+            </DialogDescription>
+          </DialogHeader>
+
+          {formDataToSubmit && (
+            <div className="max-h-64 space-y-2 overflow-y-auto">
+              <div className="text-sm">
+                <p>
+                  <strong>Name:</strong> {formDataToSubmit.firstName}{" "}
+                  {formDataToSubmit.middleName} {formDataToSubmit.lastName}
+                </p>
+                <p>
+                  <strong>Gender:</strong> {formDataToSubmit.gender}
+                </p>
+                <p>
+                  <strong>Birthdate:</strong> {formDataToSubmit.birthdate}
+                </p>
+                <p>
+                  <strong>Marital Status:</strong>{" "}
+                  {formDataToSubmit.maritalStatus}
+                </p>
+                {formDataToSubmit.email && (
+                  <p>
+                    <strong>Email:</strong> {formDataToSubmit.email}
+                  </p>
+                )}
+                {formDataToSubmit.mobileNumber && (
+                  <p>
+                    <strong>Mobile:</strong> {formDataToSubmit.mobileNumber}
+                  </p>
+                )}
+                {formDataToSubmit.organization && (
+                  <p>
+                    <strong>Organization:</strong>{" "}
+                    {formDataToSubmit.organization}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
+          <DialogFooter className="gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowConfirmation(false);
+                setFormDataToSubmit(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleConfirmSubmit}
+              disabled={createMember.isPending || updateMember.isPending}
+            >
+              {isEditMode
+                ? updateMember.isPending
+                  ? "Updating..."
+                  : "Confirm Update"
+                : createMember.isPending
+                  ? "Registering..."
+                  : "Confirm Registration"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Success Dialog */}
       <MemberSuccessDialog

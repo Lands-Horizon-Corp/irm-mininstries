@@ -242,3 +242,26 @@ export const useDeleteMember = () => {
     },
   });
 };
+
+// Hook to search members for selection (e.g., life group leaders)
+export const useMemberSearch = (
+  searchTerm: string = "",
+  enabled: boolean = true
+) => {
+  return useQuery({
+    queryKey: ["member-search", searchTerm],
+    queryFn: () => getMembers({ search: searchTerm, limit: 50 }),
+    enabled: enabled && searchTerm.length > 0,
+    staleTime: 30 * 1000, // 30 seconds
+  });
+};
+
+// Hook to get member by ID for displaying selected members
+export const useMemberById = (memberId: number | null) => {
+  return useQuery({
+    queryKey: ["member-by-id", memberId],
+    queryFn: () => getMemberById(memberId!),
+    enabled: !!memberId,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+};

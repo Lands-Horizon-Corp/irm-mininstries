@@ -6,6 +6,7 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 
 import { churches } from "../church/church-schema";
 
@@ -25,10 +26,18 @@ export const members = pgTable("members", {
   gender: text("gender", { enum: ["male", "female"] }).notNull(),
   birthdate: date("birthdate").notNull(),
   yearJoined: integer("year_joined").notNull(),
+  maritalStatus: text("marital_status", { 
+    enum: ["single", "married", "separated", "widowed"] 
+  }).default("single").notNull(),
 
   // Ministry & Work Information
   ministryInvolvement: text("ministry_involvement"), // Description
   occupation: text("occupation"),
+  organization: text("organization"),
+  
+  // Life Group Information
+  isLifegroupLeader: boolean("is_lifegroup_leader").default(false).notNull(),
+  lifegroupLeaderId: integer("lifegroup_leader_id"),
 
   // Educational Informationca
   educationalAttainment: text("educational_attainment"), // Highest level achieved
@@ -59,3 +68,16 @@ export const members = pgTable("members", {
 
 export type Member = typeof members.$inferSelect;
 export type NewMember = typeof members.$inferInsert;
+
+// Relations
+export const membersRelations = relations(members, ({ one, many }) => ({
+  church: one(churches, {
+    fields: [members.churchId],
+    references: [churches.id],
+  }),
+  lifegroupLeader: one(members, {
+    fields: [members.lifegroupLeaderId],
+    references: [members.id],
+  }),
+  lifegroupMembers: many(members),
+}));
