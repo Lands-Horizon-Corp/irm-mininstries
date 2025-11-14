@@ -94,9 +94,7 @@
       "uniqueConstraints": {
         "churches_name_unique": {
           "name": "churches_name_unique",
-          "columns": [
-            "name"
-          ],
+          "columns": ["name"],
           "nullsNotDistinct": false
         }
       },
@@ -358,13 +356,9 @@
         "members_church_id_churches_id_fk": {
           "name": "members_church_id_churches_id_fk",
           "tableFrom": "members",
-          "columnsFrom": [
-            "church_id"
-          ],
+          "columnsFrom": ["church_id"],
           "tableTo": "churches",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         }
@@ -423,13 +417,9 @@
         "minister_awards_recognitions_minister_id_ministers_id_fk": {
           "name": "minister_awards_recognitions_minister_id_ministers_id_fk",
           "tableFrom": "minister_awards_recognitions",
-          "columnsFrom": [
-            "minister_id"
-          ],
+          "columnsFrom": ["minister_id"],
           "tableTo": "ministers",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         }
@@ -488,13 +478,9 @@
         "minister_case_reports_minister_id_ministers_id_fk": {
           "name": "minister_case_reports_minister_id_ministers_id_fk",
           "tableFrom": "minister_case_reports",
-          "columnsFrom": [
-            "minister_id"
-          ],
+          "columnsFrom": ["minister_id"],
           "tableTo": "ministers",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         }
@@ -565,13 +551,9 @@
         "minister_children_minister_id_ministers_id_fk": {
           "name": "minister_children_minister_id_ministers_id_fk",
           "tableFrom": "minister_children",
-          "columnsFrom": [
-            "minister_id"
-          ],
+          "columnsFrom": ["minister_id"],
           "tableTo": "ministers",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         }
@@ -648,13 +630,9 @@
         "minister_education_backgrounds_minister_id_ministers_id_fk": {
           "name": "minister_education_backgrounds_minister_id_ministers_id_fk",
           "tableFrom": "minister_education_backgrounds",
-          "columnsFrom": [
-            "minister_id"
-          ],
+          "columnsFrom": ["minister_id"],
           "tableTo": "ministers",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         }
@@ -725,13 +703,9 @@
         "minister_emergency_contacts_minister_id_ministers_id_fk": {
           "name": "minister_emergency_contacts_minister_id_ministers_id_fk",
           "tableFrom": "minister_emergency_contacts",
-          "columnsFrom": [
-            "minister_id"
-          ],
+          "columnsFrom": ["minister_id"],
           "tableTo": "ministers",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         }
@@ -802,13 +776,9 @@
         "minister_employment_records_minister_id_ministers_id_fk": {
           "name": "minister_employment_records_minister_id_ministers_id_fk",
           "tableFrom": "minister_employment_records",
-          "columnsFrom": [
-            "minister_id"
-          ],
+          "columnsFrom": ["minister_id"],
           "tableTo": "ministers",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         }
@@ -879,26 +849,18 @@
         "minister_ministry_experiences_minister_id_ministers_id_fk": {
           "name": "minister_ministry_experiences_minister_id_ministers_id_fk",
           "tableFrom": "minister_ministry_experiences",
-          "columnsFrom": [
-            "minister_id"
-          ],
+          "columnsFrom": ["minister_id"],
           "tableTo": "ministers",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         },
         "minister_ministry_experiences_ministry_rank_id_ministry_ranks_id_fk": {
           "name": "minister_ministry_experiences_ministry_rank_id_ministry_ranks_id_fk",
           "tableFrom": "minister_ministry_experiences",
-          "columnsFrom": [
-            "ministry_rank_id"
-          ],
+          "columnsFrom": ["ministry_rank_id"],
           "tableTo": "ministry_ranks",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         }
@@ -969,26 +931,18 @@
         "minister_ministry_records_minister_id_ministers_id_fk": {
           "name": "minister_ministry_records_minister_id_ministers_id_fk",
           "tableFrom": "minister_ministry_records",
-          "columnsFrom": [
-            "minister_id"
-          ],
+          "columnsFrom": ["minister_id"],
           "tableTo": "ministers",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         },
         "minister_ministry_records_church_location_id_churches_id_fk": {
           "name": "minister_ministry_records_church_location_id_churches_id_fk",
           "tableFrom": "minister_ministry_records",
-          "columnsFrom": [
-            "church_location_id"
-          ],
+          "columnsFrom": ["church_location_id"],
           "tableTo": "churches",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         }
@@ -1041,26 +995,18 @@
         "minister_ministry_skills_minister_id_ministers_id_fk": {
           "name": "minister_ministry_skills_minister_id_ministers_id_fk",
           "tableFrom": "minister_ministry_skills",
-          "columnsFrom": [
-            "minister_id"
-          ],
+          "columnsFrom": ["minister_id"],
           "tableTo": "ministers",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         },
         "minister_ministry_skills_ministry_skill_id_ministry_skills_id_fk": {
           "name": "minister_ministry_skills_ministry_skill_id_ministry_skills_id_fk",
           "tableFrom": "minister_ministry_skills",
-          "columnsFrom": [
-            "ministry_skill_id"
-          ],
+          "columnsFrom": ["ministry_skill_id"],
           "tableTo": "ministry_skills",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         }
@@ -1137,13 +1083,9 @@
         "minister_seminars_conferences_minister_id_ministers_id_fk": {
           "name": "minister_seminars_conferences_minister_id_ministers_id_fk",
           "tableFrom": "minister_seminars_conferences",
-          "columnsFrom": [
-            "minister_id"
-          ],
+          "columnsFrom": ["minister_id"],
           "tableTo": "ministers",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         }
@@ -1442,13 +1384,9 @@
         "ministers_church_id_churches_id_fk": {
           "name": "ministers_church_id_churches_id_fk",
           "tableFrom": "ministers",
-          "columnsFrom": [
-            "church_id"
-          ],
+          "columnsFrom": ["church_id"],
           "tableTo": "churches",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "no action",
           "onDelete": "no action"
         }
@@ -1513,9 +1451,7 @@
       "uniqueConstraints": {
         "ministry_ranks_name_unique": {
           "name": "ministry_ranks_name_unique",
-          "columns": [
-            "name"
-          ],
+          "columns": ["name"],
           "nullsNotDistinct": false
         }
       },
@@ -1577,9 +1513,7 @@
       "uniqueConstraints": {
         "ministry_skills_name_unique": {
           "name": "ministry_skills_name_unique",
-          "columns": [
-            "name"
-          ],
+          "columns": ["name"],
           "nullsNotDistinct": false
         }
       },

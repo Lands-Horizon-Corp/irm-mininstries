@@ -26,15 +26,17 @@ export const members = pgTable("members", {
   gender: text("gender", { enum: ["male", "female"] }).notNull(),
   birthdate: date("birthdate").notNull(),
   yearJoined: integer("year_joined").notNull(),
-  maritalStatus: text("marital_status", { 
-    enum: ["single", "married", "separated", "widowed"] 
-  }).default("single").notNull(),
+  maritalStatus: text("marital_status", {
+    enum: ["single", "married", "separated", "widowed"],
+  })
+    .default("single")
+    .notNull(),
 
   // Ministry & Work Information
   ministryInvolvement: text("ministry_involvement"), // Description
   occupation: text("occupation"),
   organization: text("organization"),
-  
+
   // Life Group Information
   isLifegroupLeader: boolean("is_lifegroup_leader").default(false).notNull(),
   lifegroupLeaderId: integer("lifegroup_leader_id"),
